@@ -16,7 +16,7 @@ public class PlayerActivity extends BoundActivity {
             return;
         }
         setContentView(R.layout.activity_player);
-        applyInsets();
+        prepareWindow();
         player = findViewById(R.id.np);
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         findViewById(R.id.btn_queue).setOnClickListener(v -> startActivity(new Intent(this, QueueActivity.class)));
@@ -29,7 +29,7 @@ public class PlayerActivity extends BoundActivity {
     }
 
     @Override
-    public void onPlaybackChanged() {
+    protected void onPlaybackUpdated() {
         if (player != null) player.refresh();
     }
 

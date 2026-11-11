@@ -112,6 +112,49 @@ public class LibraryActivityTest {
     }
 
     @Test
+    public void showsAnUpdateBannerThatCanBeDismissed() throws Exception {
+        Application app = RuntimeEnvironment.getApplication();
+        TestMedia.resetSingletons();
+        String json = "{\"tag_name\":\"v9.9.9\",\"assets\":[{\"name\":\"a.apk\","
+                + "\"browser_download_url\":\"https://example.org/a.apk\",\"size\":10}]}";
+        Prefs.get(app).saveUpdateCheck(System.currentTimeMillis(), json);
+        Updater.replaceForTests(new Updater(app, new Updater.Config("http://127.0.0.1:1", "o/r", true,
+                java.nio.file.Files.createTempDirectory("banner").toFile(), "1.1.0", (c, f, v) -> 0, (c, f) -> { })));
+
+        ActivityController<LibraryActivity> c =
+                Robolectric.buildActivity(LibraryActivity.class).create().start().resume().visible();
+        LibraryActivity a = c.get();
+        View banner = a.findViewById(R.id.update_banner);
+        assertEquals(View.VISIBLE, banner.getVisibility());
+        assertTrue(((TextView) a.findViewById(R.id.update_banner_text)).getText().toString().contains("9.9.9"));
+
+        a.findViewById(R.id.update_banner_close).performClick();
+        assertEquals(View.GONE, banner.getVisibility());
+        assertEquals("9.9.9", Prefs.get(app).dismissedUpdate());
+        c.pause().stop().destroy();
+    }
+
+    @Test
+    public void noBannerWhenThereIsNothingNewer() throws Exception {
+        Application app = RuntimeEnvironment.getApplication();
+        TestMedia.resetSingletons();
+        Updater.replaceForTests(new Updater(app, new Updater.Config("http://127.0.0.1:1", "o/r", true,
+                java.nio.file.Files.createTempDirectory("nobanner").toFile(), "1.1.0", (c, f, v) -> 0, (c, f) -> { })));
+        ActivityController<LibraryActivity> c =
+                Robolectric.buildActivity(LibraryActivity.class).create().start().resume().visible();
+        assertEquals(View.GONE, c.get().findViewById(R.id.update_banner).getVisibility());
+        c.pause().stop().destroy();
+    }
+
+    @Test
+    public void menuOpensSettings() {
+        ActivityController<LibraryActivity> c = launch();
+        LibraryActivity a = c.get();
+        a.findViewById(R.id.btn_more).performClick();
+        c.pause().stop().destroy();
+    }
+
+    @Test
     public void tappingASongStartsPlaybackAndShowsTheMiniPlayer() throws Exception {
         Application app = RuntimeEnvironment.getApplication();
         TestMedia.install(app);

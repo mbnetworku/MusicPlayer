@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
         <item name="android:colorPrimary">@color/surface</item>
         <item name="android:colorPrimaryDark">@color/bg</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorAccent">@color/accent_text</item>
         <item name="android:colorBackground">@color/bg</item>
         <item name="android:windowBackground">@color/bg</item>
         <item name="android:statusBarColor">@color/bg</item>
@@ -11,7 +11,7 @@
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:textColorHint">@color/text_tertiary</item>
-        <item name="android:colorControlActivated">@color/accent</item>
+        <item name="android:colorControlActivated">@color/accent_text</item>
         <item name="android:colorControlHighlight">@color/ripple</item>
         <item name="android:alertDialogTheme">@style/AppDialog</item>
         <item name="android:popupMenuStyle">@style/AppPopup</item>
@@ -19,7 +19,7 @@
 
     <style name="AppDialog" parent="android:Theme.Material.Dialog.Alert">
         <item name="android:colorBackground">@color/surface_raised</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorAccent">@color/accent_text</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
@@ -134,6 +134,59 @@
     <style name="CtlMid" parent="CtlButton">
         <item name="android:layout_height">@dimen/ctl_mid</item>
         <item name="android:padding">@dimen/ctl_mid_pad</item>
+    </style>
+
+    <style name="BannerAction">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="SettingsCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="SettingTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="SettingSub">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="SettingRadio">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="SectionLabel">

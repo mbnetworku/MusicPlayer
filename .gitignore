@@ -11,7 +11,7 @@ captures/
 # Local copies of release files kept for sharing
 dist/
 
-# Signing keys (see README: Release signing)
+# Signing keys and their settings. Never commit these (see README: Signing and updates).
 keystore.properties
 *.jks
 *.keystore

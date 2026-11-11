@@ -22,7 +22,7 @@ public class QueueActivity extends BoundActivity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_queue);
-        applyInsets();
+        prepareWindow();
         list = findViewById(R.id.list);
         empty = findViewById(R.id.empty);
         subtitle = findViewById(R.id.subtitle);
@@ -46,7 +46,7 @@ public class QueueActivity extends BoundActivity {
     }
 
     @Override
-    public void onPlaybackChanged() {
+    protected void onPlaybackUpdated() {
         if (service == null) return;
         PlayQueue q = service.queue();
         if (q.version() != shownVersion) {

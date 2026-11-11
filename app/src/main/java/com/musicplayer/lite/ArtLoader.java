@@ -130,6 +130,11 @@ final class ArtLoader {
         });
     }
 
+    /** The two colours a cover without artwork is drawn with; also tints the glass backdrop. */
+    static int[] paletteFor(String key) {
+        return PALETTE[(key.hashCode() & 0x7fffffff) % PALETTE.length];
+    }
+
     Drawable placeholder(String key) {
         int i = (key.hashCode() & 0x7fffffff) % PALETTE.length;
         Drawable.ConstantState cs = placeholders[i];

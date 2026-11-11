@@ -35,12 +35,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider" />
+        android:background="@color/divider"
+        android:tag="glass:hide" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:tag="glass:card,margin">
 
         <ListView
             android:id="@+id/list"

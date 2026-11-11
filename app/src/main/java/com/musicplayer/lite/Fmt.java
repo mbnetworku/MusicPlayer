@@ -61,6 +61,13 @@ final class Fmt {
         return false;
     }
 
+    /** "850 KB", "2.1 MB". */
+    static String size(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024L * 1024L) return Math.round(bytes / 1024f) + " KB";
+        return String.format(Locale.US, "%.1f MB", bytes / (1024f * 1024f));
+    }
+
     static int clamp(int v, int lo, int hi) {
         return v < lo ? lo : (v > hi ? hi : v);
     }

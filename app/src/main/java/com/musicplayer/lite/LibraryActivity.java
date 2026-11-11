@@ -28,7 +28,7 @@ import java.util.Random;
  * On car head units and tablets in landscape it also hosts the player on the left.
  */
 public class LibraryActivity extends BoundActivity
-        implements Library.Listener, RowAdapter.HeaderListener {
+        implements Library.Listener, RowAdapter.HeaderListener, Updater.Listener {
 
     private static final int TAB_SONGS = 0;
     private static final int TAB_FOLDERS = 1;
@@ -59,6 +59,9 @@ public class LibraryActivity extends BoundActivity
     private final TextView[] tabViews = new TextView[4];
     private MiniPlayerView mini;
     private NowPlayingView panel;
+    private View updateBanner;
+    private TextView updateBannerText;
+    private Updater updater;
 
     private int tab;
     /** Null means the top of the folder tree. */
@@ -79,7 +82,7 @@ public class LibraryActivity extends BoundActivity
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_library);
-        applyInsets();
+        prepareWindow();
         library = Library.get(this);
         prefs = Prefs.get(this);
 
@@ -93,6 +96,16 @@ public class LibraryActivity extends BoundActivity
         searchInput = findViewById(R.id.search_input);
         mini = findViewById(R.id.mini);
         panel = findViewById(R.id.np);
+        updater = Updater.get(this);
+        updateBanner = findViewById(R.id.update_banner);
+        updateBannerText = findViewById(R.id.update_banner_text);
+        findViewById(R.id.update_banner_action).setOnClickListener(
+                v -> startActivity(new Intent(this, SettingsActivity.class)));
+        findViewById(R.id.update_banner_close).setOnClickListener(v -> {
+            Release newer = updater.newerRelease();
+            if (newer != null) prefs.dismissUpdate(newer.version);
+            refreshBanner();
+        });
         tabViews[TAB_SONGS] = findViewById(R.id.tab_songs);
         tabViews[TAB_FOLDERS] = findViewById(R.id.tab_folders);
         tabViews[TAB_ALBUMS] = findViewById(R.id.tab_albums);
@@ -165,6 +178,33 @@ public class LibraryActivity extends BoundActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        updater.addListener(this);
+        updater.autoCheckIfDue();
+        refreshBanner();
+    }
+
+    @Override
+    protected void onStop() {
+        updater.removeListener(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onUpdaterChanged() {
+        refreshBanner();
+    }
+
+    /** Shows "Version X is available" when a newer version is known and has not been dismissed. */
+    private void refreshBanner() {
+        Release newer = updater.newerRelease();
+        boolean show = newer != null && !newer.version.equals(prefs.dismissedUpdate());
+        updateBanner.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) updateBannerText.setText(getString(R.string.upd_banner_text, newer.version));
+    }
+
+    @Override
     protected void onDestroy() {
         library.removeListener(this);
         super.onDestroy();
@@ -191,7 +231,7 @@ public class LibraryActivity extends BoundActivity
     }
 
     @Override
-    public void onPlaybackChanged() {
+    protected void onPlaybackUpdated() {
         if (service == null) return;
         Track t = service.currentTrack();
         adapter.setCurrentTrack(t == null ? -1 : t.id);
@@ -535,21 +575,17 @@ public class LibraryActivity extends BoundActivity
         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
 
-    // ---- overflow menu, scan, about ------------------------------------------------------------------
+    // ---- overflow menu and scan ------------------------------------------------------------------
 
     private void showMenu(View anchor) {
         PopupMenu menu = new PopupMenu(this, anchor);
         menu.inflate(R.menu.library);
-        menu.getMenu().findItem(R.id.menu_show_all).setChecked(prefs.showAllAudio());
         menu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.menu_scan) {
+            if (id == R.id.menu_settings) {
+                startActivity(new Intent(this, SettingsActivity.class));
+            } else if (id == R.id.menu_scan) {
                 startScan();
-            } else if (id == R.id.menu_show_all) {
-                prefs.setShowAllAudio(!prefs.showAllAudio());
-                library.refresh();
-            } else if (id == R.id.menu_about) {
-                showAbout();
             }
             return true;
         });
@@ -573,19 +609,5 @@ public class LibraryActivity extends BoundActivity
                     Toast.LENGTH_SHORT).show();
             lib.refresh();
         });
-    }
-
-    private void showAbout() {
-        String version = "";
-        try {
-            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException ignored) {
-            // leave the version blank
-        }
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.app_name)
-                .setMessage(getString(R.string.about_body, version))
-                .setPositiveButton(R.string.ok, null)
-                .show();
     }
 }

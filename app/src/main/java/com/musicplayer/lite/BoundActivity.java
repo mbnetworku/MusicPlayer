@@ -2,9 +2,11 @@ package com.musicplayer.lite;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -14,11 +16,17 @@ import android.view.View;
 /** An activity that is bound to the playback service while it is on screen. */
 abstract class BoundActivity extends Activity implements PlaybackService.Listener {
     private static final int TICK_MS = 500;
+    private static final int BACKDROP_ART_PX = 96;
 
     /** Non-null between {@link #onServiceReady()} and onStop. */
     protected PlaybackService service;
 
     private boolean bound;
+    /** The look (theme mode and glass) this screen was built with. */
+    private int look;
+    /** The glass look's window background; null in the flat looks. */
+    private BackdropDrawable backdrop;
+    private String backdropKey = "";
     private final Handler ticker = new Handler(Looper.getMainLooper());
     private final Runnable tick = new Runnable() {
         @Override
@@ -43,6 +51,24 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
             service = null;
         }
     };
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(Appearance.wrap(base));
+    }
+
+    @Override
+    protected void onCreate(Bundle state) {
+        look = Appearance.signature(this);
+        super.onCreate(state);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // The look was changed in Settings while this screen waited in the background.
+        if (Appearance.signature(this) != look) recreate();
+    }
 
     @Override
     protected void onStart() {
@@ -73,15 +99,37 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     protected void onTick() {
     }
 
+    /** Track, play state, queue or modes changed. Called on the main thread. */
+    protected void onPlaybackUpdated() {
+    }
+
     @Override
-    public void onPlaybackChanged() {
+    public final void onPlaybackChanged() {
+        if (backdrop != null) updateBackdrop();
+        onPlaybackUpdated();
+    }
+
+    private void updateBackdrop() {
+        final Track t = service == null ? null : service.currentTrack();
+        final String key = t == null ? "" : t.artKey();
+        if (key.equals(backdropKey)) return;
+        backdropKey = key;
+        if (t == null) {
+            backdrop.setArt(null, "", true);
+            return;
+        }
+        ArtLoader.get(this).loadAsync(t, BACKDROP_ART_PX, bitmap -> {
+            if (backdrop != null && key.equals(backdropKey)) backdrop.setArt(bitmap, key, true);
+        });
     }
 
     /**
-     * Keeps content clear of the status and navigation bars when the system draws
-     * edge to edge (Android 15 and newer). On older versions the insets are zero.
+     * Call right after setContentView. Keeps content clear of the status and navigation bars
+     * when the system draws edge to edge (Android 15 and newer; older versions report zero),
+     * styles the system bars for the light or dark look, and applies the liquid-glass look
+     * when it is switched on.
      */
-    protected void applyInsets() {
+    protected void prepareWindow() {
         final View content = findViewById(android.R.id.content);
         content.setOnApplyWindowInsetsListener((v, insets) -> {
             int left = insets.getSystemWindowInsetLeft();
@@ -100,5 +148,14 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
             v.setPadding(left, top, right, bottom);
             return insets;
         });
+
+        final boolean glass = Appearance.glass(this);
+        Appearance.styleSystemBars(this, glass);
+        if (glass) {
+            backdrop = new BackdropDrawable(this);
+            backdrop.setArt(null, "", false);
+            getWindow().setBackgroundDrawable(backdrop);
+            Glass.decorate(content);
+        }
     }
 }

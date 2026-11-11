@@ -57,7 +57,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:tag="glass:card,padded"
+            tools:ignore="NestedWeights">
 
             <com.musicplayer.lite.EqCurveView
                 android:id="@+id/eq_curve"
@@ -97,17 +99,24 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/eq_effects" />
 
-                <include
-                    android:id="@+id/fx_bass"
-                    layout="@layout/row_effect" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:tag="glass:card,padded">
 
-                <include
-                    android:id="@+id/fx_virt"
-                    layout="@layout/row_effect" />
+                    <include
+                        android:id="@+id/fx_bass"
+                        layout="@layout/row_effect" />
 
-                <include
-                    android:id="@+id/fx_loud"
-                    layout="@layout/row_effect" />
+                    <include
+                        android:id="@+id/fx_virt"
+                        layout="@layout/row_effect" />
+
+                    <include
+                        android:id="@+id/fx_loud"
+                        layout="@layout/row_effect" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

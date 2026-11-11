@@ -47,7 +47,7 @@ public class NowPlayingView extends LinearLayout {
         play = findViewById(R.id.np_play);
         next = findViewById(R.id.np_next);
         repeat = findViewById(R.id.np_repeat);
-        accent = ColorStateList.valueOf(context.getColor(R.color.accent));
+        accent = ColorStateList.valueOf(context.getColor(R.color.accent_text));
         dim = ColorStateList.valueOf(context.getColor(R.color.icon_dim));
 
         play.setOnClickListener(v -> {

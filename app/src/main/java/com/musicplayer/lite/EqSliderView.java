@@ -25,6 +25,7 @@ public class EqSliderView extends View {
     private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint tick = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint thumb = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint ring = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final float thumbRadius;
     private final float inset;
     private final float tickHalf;
@@ -44,6 +45,9 @@ public class EqSliderView extends View {
         tickHalf = 9 * d;
         accent = context.getColor(R.color.accent);
         dim = context.getColor(R.color.icon_dim);
+        ring.setStyle(Paint.Style.STROKE);
+        ring.setStrokeWidth(2 * d);
+        ring.setColor(context.getColor(R.color.accent_text));
 
         track.setColor(context.getColor(R.color.eq_track));
         track.setStrokeWidth(6 * d);
@@ -106,6 +110,7 @@ public class EqSliderView extends View {
         c.drawLine(cx - tickHalf, y0, cx + tickHalf, y0, tick);
         thumb.setColor(on ? accent : dim);
         c.drawCircle(cx, y, thumbRadius, thumb);
+        if (on) c.drawCircle(cx, y, thumbRadius - ring.getStrokeWidth() / 2f, ring);
     }
 
     @Override

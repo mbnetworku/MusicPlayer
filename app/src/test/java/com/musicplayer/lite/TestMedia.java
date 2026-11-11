@@ -96,7 +96,7 @@ final class TestMedia {
 
     /** The app keeps one Library, Prefs and ArtLoader per process; tests need fresh ones. */
     static void resetSingletons() {
-        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class}) {
+        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class}) {
             try {
                 java.lang.reflect.Field f = c.getDeclaredField("instance");
                 f.setAccessible(true);

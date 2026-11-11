@@ -13,6 +13,7 @@
 
     <com.musicplayer.lite.MiniPlayerView
         android:id="@+id/mini"
+        android:tag="glass:margin"
         tools:ignore="InconsistentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

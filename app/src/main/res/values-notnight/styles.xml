@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light versions of the three theme styles; everything else follows the colour tokens. -->
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/surface</item>
+        <item name="android:colorPrimaryDark">@color/bg</item>
+        <item name="android:colorAccent">@color/accent_text</item>
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="android:colorControlActivated">@color/accent_text</item>
+        <item name="android:colorControlHighlight">@color/ripple</item>
+        <item name="android:alertDialogTheme">@style/AppDialog</item>
+        <item name="android:popupMenuStyle">@style/AppPopup</item>
+    </style>
+
+    <style name="AppDialog" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:colorAccent">@color/accent_text</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+    </style>
+
+    <style name="AppPopup" parent="android:Widget.Material.Light.PopupMenu">
+        <item name="android:popupBackground">@color/surface</item>
+    </style>
+</resources>

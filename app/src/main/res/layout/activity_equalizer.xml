@@ -68,34 +68,48 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
-            <com.musicplayer.lite.EqCurveView
-                android:id="@+id/eq_curve"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/eq_curve_height"
-                android:layout_marginTop="16dp" />
-
             <LinearLayout
-                android:id="@+id/eq_bands"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/eq_band_height"
-                android:orientation="horizontal" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:tag="glass:card,padded">
+
+                <com.musicplayer.lite.EqCurveView
+                    android:id="@+id/eq_curve"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/eq_curve_height" />
+
+                <LinearLayout
+                    android:id="@+id/eq_bands"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/eq_band_height"
+                    android:orientation="horizontal" />
+            </LinearLayout>
 
             <TextView
                 style="@style/SectionLabel"
                 android:layout_marginTop="24dp"
                 android:text="@string/eq_effects" />
 
-            <include
-                android:id="@+id/fx_bass"
-                layout="@layout/row_effect" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:tag="glass:card,padded">
 
-            <include
-                android:id="@+id/fx_virt"
-                layout="@layout/row_effect" />
+                <include
+                    android:id="@+id/fx_bass"
+                    layout="@layout/row_effect" />
 
-            <include
-                android:id="@+id/fx_loud"
-                layout="@layout/row_effect" />
+                <include
+                    android:id="@+id/fx_virt"
+                    layout="@layout/row_effect" />
+
+                <include
+                    android:id="@+id/fx_loud"
+                    layout="@layout/row_effect" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

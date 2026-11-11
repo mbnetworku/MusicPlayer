@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Dark palette (the default). values-notnight/colors.xml holds the light palette. -->
     <!-- Graphite surfaces with a dashboard-amber accent. -->
     <color name="bg">#0E1114</color>
     <color name="surface">#161B20</color>
@@ -9,6 +10,8 @@
     <color name="text_secondary">#9AA5B1</color>
     <color name="text_tertiary">#7A8591</color>
     <color name="accent">#FFB020</color>
+    <!-- Amber for text and thin icons: bright on dark, darker on light so it stays readable. -->
+    <color name="accent_text">#FFB020</color>
     <color name="on_accent">#1B1300</color>
     <color name="outline">#3A444F</color>
     <color name="icon">#E6E9ED</color>

@@ -123,6 +123,7 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     private final int accent;
     private final int primary;
     private final ColorStateList accentTint;
+    private final boolean glass;
 
     private List<Row> rows = Collections.emptyList();
     private long currentId = -1;
@@ -138,9 +139,10 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         this.inflater = LayoutInflater.from(context);
         this.headerListener = headerListener;
         this.artPx = context.getResources().getDimensionPixelSize(R.dimen.row_art);
-        this.accent = context.getColor(R.color.accent);
+        this.accent = context.getColor(R.color.accent_text);
         this.primary = context.getColor(R.color.text_primary);
         this.accentTint = ColorStateList.valueOf(accent);
+        this.glass = Appearance.glass(context);
     }
 
     void setRows(List<Row> newRows, boolean indexed) {
@@ -279,6 +281,10 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         setTextOrHide(h.title, r.title);
         setTextOrHide(h.sub, r.sub);
         h.actions.setVisibility(r.actions ? View.VISIBLE : View.GONE);
+        if (glass && r.actions) {
+            h.play.setBackground(Glass.pill(context, true));
+            h.shuffle.setBackground(Glass.pill(context, false));
+        }
         h.play.setOnClickListener(x -> {
             if (headerListener != null) headerListener.onHeaderAction(r, false);
         });

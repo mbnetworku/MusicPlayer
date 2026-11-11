@@ -10,7 +10,11 @@ final class Prefs {
     private static Prefs instance;
 
     static synchronized Prefs get(Context c) {
-        if (instance == null) instance = new Prefs(c.getApplicationContext());
+        if (instance == null) {
+            // Activities ask during attachBaseContext, before getApplicationContext() is reliable.
+            Context app = c.getApplicationContext();
+            instance = new Prefs(app != null ? app : c);
+        }
         return instance;
     }
 
@@ -36,6 +40,69 @@ final class Prefs {
 
     void setLastTab(int tab) {
         sp.edit().putInt("tab", tab).apply();
+    }
+
+    // ---- appearance ----------------------------------------------------------
+
+    /** One of {@link Appearance#FOLLOW_DEVICE}, {@link Appearance#LIGHT}, {@link Appearance#DARK}. */
+    int themeMode() {
+        return sp.getInt("theme_mode", Appearance.FOLLOW_DEVICE);
+    }
+
+    void setThemeMode(int mode) {
+        sp.edit().putInt("theme_mode", mode).apply();
+    }
+
+    boolean glass() {
+        return sp.getBoolean("glass", false);
+    }
+
+    void setGlass(boolean on) {
+        sp.edit().putBoolean("glass", on).apply();
+    }
+
+    // ---- updates --------------------------------------------------------------
+
+    /** Look for a newer version once a day when the app opens. */
+    boolean autoUpdateCheck() {
+        return sp.getBoolean("upd_auto", true);
+    }
+
+    void setAutoUpdateCheck(boolean on) {
+        sp.edit().putBoolean("upd_auto", on).apply();
+    }
+
+    /** When a check last succeeded, in milliseconds since 1970 (0 = never). */
+    long lastUpdateCheck() {
+        return sp.getLong("upd_checked", 0);
+    }
+
+    /** When the last automatic check was tried, so a failing one is not repeated at every launch. */
+    long lastUpdateAttempt() {
+        return sp.getLong("upd_attempt", 0);
+    }
+
+    void saveUpdateAttempt(long time) {
+        sp.edit().putLong("upd_attempt", time).apply();
+    }
+
+    /** Remembers the newest release (the raw GitHub answer) so "update available" survives a restart. */
+    void saveUpdateCheck(long time, String releaseJson) {
+        sp.edit().putLong("upd_checked", time).putLong("upd_attempt", time)
+                .putString("upd_json", releaseJson).apply();
+    }
+
+    String cachedReleaseJson() {
+        return sp.getString("upd_json", null);
+    }
+
+    /** The version whose banner the user closed. */
+    String dismissedUpdate() {
+        return sp.getString("upd_dismissed", "");
+    }
+
+    void dismissUpdate(String version) {
+        sp.edit().putString("upd_dismissed", version).apply();
     }
 
     // ---- saved queue --------------------------------------------------------

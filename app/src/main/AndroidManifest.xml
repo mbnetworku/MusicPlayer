@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Read the music on the device. No internet permission: nothing leaves the device. -->
+    <!-- Read the music on the device. -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!-- Only for updates: looking for a newer release on GitHub and downloading it. Music never uses the network. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- Car head units and TV boxes may not report a touchscreen the way phones do. -->
     <uses-feature
@@ -57,10 +61,19 @@
             android:name=".EqualizerActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
         <service
             android:name=".PlaybackService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+
+        <!-- Android reports here after an update install was started from Settings. -->
+        <receiver
+            android:name=".InstallReceiver"
+            android:exported="false" />
 
         <!-- Headset, Bluetooth and steering-wheel keys while the player is not running. -->
         <receiver

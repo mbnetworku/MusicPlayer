@@ -82,7 +82,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_equalizer);
-        applyInsets();
+        prepareWindow();
         toggle = findViewById(R.id.eq_switch);
         content = findViewById(R.id.eq_content);
         unavailable = findViewById(R.id.eq_unavailable);
@@ -187,7 +187,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
         chip.setTextColor(getColorStateList(R.color.chip_text));
         chip.setTextSize(14);
         chip.setGravity(android.view.Gravity.CENTER);
-        chip.setBackgroundResource(R.drawable.bg_chip);
+        chip.setBackground(Appearance.glass(this) ? Glass.chip(this) : getDrawable(R.drawable.bg_chip));
         chip.setPadding(dp(20), 0, dp(20), 0);
         if (onClick != null) chip.setOnClickListener(onClick);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
