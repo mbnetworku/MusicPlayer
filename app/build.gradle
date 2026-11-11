@@ -69,6 +69,15 @@ android {
             returnDefaultValues = true
             // Robolectric smoke tests need the merged manifest and resources.
             includeAndroidResources = true
+            all {
+                // Print the real cause of a failing test in the build log (useful on CI).
+                testLogging {
+                    events 'failed'
+                    exceptionFormat 'full'
+                    showCauses true
+                    showStackTraces true
+                }
+            }
         }
     }
 }

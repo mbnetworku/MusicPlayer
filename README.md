@@ -69,7 +69,7 @@ The app remembers your queue and position and carries on where you left off.
 
 ## Build from source
 
-You need JDK 17 or newer and the Android SDK with platform 35 (Android Studio installs both).
+You need JDK 17 or newer and the Android SDK with platform 35 (Android Studio installs both). The Robolectric tests below need JDK 21 or newer; Android Studio's bundled JDK is fine.
 
 ```bash
 ./gradlew assembleRelease        # macOS / Linux
@@ -92,7 +92,7 @@ The APK is written to `app/build/outputs/apk/release/app-release.apk`. If you bu
 * Plain JVM tests for the play queue (shuffle, repeat, editing), the folder tree and volume naming, equalizer presets and text formatting.
 * Robolectric smoke tests that open every screen against a fake MediaStore and play through a fake `MediaPlayer`. They download an Android SDK jar from Maven Central on first run.
 
-The GitHub Actions workflow in `.github/workflows/build.yml` runs the tests and lint and builds the APK on every push.
+The GitHub Actions workflow in `.github/workflows/build.yml` builds the APK on every push (and uploads it first), then runs the tests and lint.
 
 ## How it works
 
