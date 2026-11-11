@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ProgressBar
+        android:id="@+id/mini_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:max="1000"
+        android:progressDrawable="@drawable/mini_progress" />
+
+    <LinearLayout
+        android:id="@+id/mini_body"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mini_height"
+        android:background="@color/surface"
+        android:contentDescription="@string/cd_now_playing"
+        android:foreground="@drawable/bg_row"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="4dp">
+
+        <com.musicplayer.lite.RoundedImageView
+            android:id="@+id/mini_art"
+            android:layout_width="@dimen/mini_art"
+            android:layout_height="@dimen/mini_art"
+            android:background="@drawable/bg_art"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mini_title"
+                style="@style/RowTitle"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/mini_artist"
+                style="@style/RowSub"
+                android:layout_marginTop="1dp"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/mini_play"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_play"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/mini_next"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_next"
+            android:src="@drawable/ic_skip_next" />
+    </LinearLayout>
+</merge>

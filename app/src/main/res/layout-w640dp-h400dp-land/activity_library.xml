@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Car head units and tablets in landscape: player on the left, library on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@color/surface"
+        android:orientation="vertical">
+
+        <LinearLayout style="@style/TopBar">
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/now_playing" />
+
+            <ImageButton
+                android:id="@+id/btn_queue"
+                tools:ignore="InconsistentLayout"
+                style="@style/IconButton"
+                android:contentDescription="@string/cd_queue"
+                android:src="@drawable/ic_queue_music" />
+        </LinearLayout>
+
+        <com.musicplayer.lite.NowPlayingView
+            android:id="@+id/np"
+            tools:ignore="InconsistentLayout,NestedWeights"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/part_library_main"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+</LinearLayout>

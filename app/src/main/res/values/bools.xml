@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- True when the library and the player share one screen (car head units, tablets). -->
+    <bool name="split_layout">false</bool>
+</resources>

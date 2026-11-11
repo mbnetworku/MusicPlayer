@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Music Player</string>
+    <string name="pair">%1$s \u00B7 %2$s</string>
+
+    <string name="tab_songs">Songs</string>
+    <string name="tab_folders">Folders</string>
+    <string name="tab_albums">Albums</string>
+    <string name="tab_artists">Artists</string>
+
+    <plurals name="songs_count">
+        <item quantity="one">%d song</item>
+        <item quantity="other">%d songs</item>
+    </plurals>
+    <plurals name="albums_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="folders_count">
+        <item quantity="one">%d folder</item>
+        <item quantity="other">%d folders</item>
+    </plurals>
+    <plurals name="scan_added">
+        <item quantity="one">Found %d new file</item>
+        <item quantity="other">Found %d new files</item>
+    </plurals>
+
+    <string name="search_hint">Search songs, artists, albums</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_search_close">Close search</string>
+    <string name="cd_equalizer">Equalizer</string>
+    <string name="cd_more">More options</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_queue">Up next</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_next">Next</string>
+    <string name="cd_previous">Previous</string>
+    <string name="cd_shuffle">Shuffle</string>
+    <string name="cd_repeat">Repeat</string>
+    <string name="cd_album_art">Album art</string>
+    <string name="cd_now_playing">Open now playing</string>
+
+    <string name="menu_scan">Scan storage for music</string>
+    <string name="menu_show_all">Show all audio files</string>
+    <string name="menu_about">About</string>
+
+    <string name="empty_permission_title">Allow access to your music</string>
+    <string name="empty_permission_body">Music Player needs permission to read the audio files on this device. It never connects to the internet.</string>
+    <string name="empty_permission_action">Allow access</string>
+    <string name="empty_permission_settings">Open settings</string>
+    <string name="empty_none_title">No music found</string>
+    <string name="empty_none_body">Copy songs to this device, or plug in a USB drive or SD card, then scan.</string>
+    <string name="empty_none_action">Scan storage</string>
+    <string name="empty_search_title">No matches</string>
+    <string name="empty_search_body">Try a different title, artist or album.</string>
+
+    <string name="scanning">Scanning storage…</string>
+    <string name="scan_nothing_new">No new music found</string>
+
+    <string name="all_folders">All folders</string>
+    <string name="label_album">Album</string>
+    <string name="label_artist">Artist</string>
+    <string name="play_all">Play all</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="folder_up">Up</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="unknown_album">Unknown album</string>
+    <string name="various_artists">Various artists</string>
+
+    <string name="nothing_playing">Nothing playing</string>
+    <string name="nothing_playing_hint">Choose a song from your library</string>
+    <string name="now_playing">Now playing</string>
+    <string name="up_next">Up next</string>
+    <string name="queue_empty">The queue is empty</string>
+    <string name="queue_hint">Tap to play · long-press to remove</string>
+
+    <string name="action_play">Play</string>
+    <string name="action_shuffle">Shuffle</string>
+    <string name="action_play_next">Play next</string>
+    <string name="action_add_queue">Add to queue</string>
+    <string name="action_remove">Remove from queue</string>
+    <string name="toast_added">Added to queue</string>
+    <string name="toast_play_next">Will play next</string>
+    <string name="toast_skipped">Skipped a file that can\'t be played</string>
+    <string name="toast_cant_play">Can\'t play this file</string>
+
+    <string name="eq_title">Equalizer</string>
+    <string name="eq_custom">Custom</string>
+    <string name="eq_effects">Sound effects</string>
+    <string name="eq_bass">Bass boost</string>
+    <string name="eq_virtualizer">Surround</string>
+    <string name="eq_loudness">Volume boost</string>
+    <string name="eq_reset">Reset all</string>
+    <string name="eq_system">Open system sound settings</string>
+    <string name="eq_unavailable">The equalizer isn\'t available on this device\'s audio system.</string>
+    <string name="eq_switch">Equalizer on or off</string>
+
+    <string name="preset_flat">Flat</string>
+    <string name="preset_bass">Bass boost</string>
+    <string name="preset_treble">Treble boost</string>
+    <string name="preset_vocal">Vocal</string>
+    <string name="preset_rock">Rock</string>
+    <string name="preset_pop">Pop</string>
+    <string name="preset_jazz">Jazz</string>
+    <string name="preset_classical">Classical</string>
+    <string name="preset_dance">Dance</string>
+    <string name="preset_hiphop">Hip-hop</string>
+    <string name="preset_car">Car</string>
+
+    <string name="about_body">Version %1$s\n\nA lightweight, offline music player for Android 8.0 and newer, made for phones and car head units.\n\nNo internet access, no ads, no tracking.</string>
+    <string name="ok">OK</string>
+
+    <string name="channel_playback">Playback</string>
+    <string name="notif_starting">Starting playback…</string>
+</resources>

@@ -1,0 +1,83 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Optional release signing: create keystore.properties (git-ignored) with
+// storeFile, storePassword, keyAlias, keyPassword. Without it the release
+// APK is signed with the local debug key so it is still installable.
+def keystoreProps = new Properties()
+def keystoreFile = rootProject.file('keystore.properties')
+if (keystoreFile.exists()) {
+    keystoreFile.withInputStream { keystoreProps.load(it) }
+}
+
+android {
+    namespace 'com.musicplayer.lite'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.musicplayer.lite'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile rootProject.file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig keystoreFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // Smaller APK: no signing-blob metadata, no extra packaging files.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+    packaging {
+        resources {
+            excludes += ['/META-INF/**', '/kotlin/**']
+        }
+    }
+
+    lint {
+        abortOnError true
+        checkReleaseBuilds true
+    }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            // Robolectric smoke tests need the merged manifest and resources.
+            includeAndroidResources = true
+        }
+    }
+}
+
+dependencies {
+    // Intentionally no runtime dependencies: framework APIs only.
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation('org.robolectric:robolectric:4.17') {
+        // Only needed for pixel-accurate rendering tests, which this project does not run.
+        exclude group: 'org.robolectric', module: 'nativeruntime-dist-compat'
+    }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/TopBar"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_back"
+            android:src="@drawable/ic_arrow_back" />
+
+        <TextView
+            style="@style/SectionLabel"
+            android:layout_width="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/now_playing" />
+
+        <ImageButton
+            android:id="@+id/btn_queue"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_queue"
+            android:src="@drawable/ic_queue_music" />
+
+        <ImageButton
+            android:id="@+id/btn_eq"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_equalizer"
+            android:src="@drawable/ic_equalizer" />
+    </LinearLayout>
+
+    <com.musicplayer.lite.NowPlayingView
+        android:id="@+id/np"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

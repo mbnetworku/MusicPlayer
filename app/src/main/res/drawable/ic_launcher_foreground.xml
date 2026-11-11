@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- radio dial ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54m-26,0a26,26 0 1,1 52,0a26,26 0 1,1 -52,0"
+        android:strokeColor="#FFB020"
+        android:strokeWidth="5" />
+    <!-- play mark -->
+    <path
+        android:fillColor="#FFB020"
+        android:pathData="M46.5,41L46.5,67L69,54Z" />
+</vector>

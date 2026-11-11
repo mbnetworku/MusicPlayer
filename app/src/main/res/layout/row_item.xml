@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/row_height"
+    android:background="@drawable/bg_row"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/gutter"
+    android:paddingEnd="@dimen/gutter">
+
+    <FrameLayout
+        android:layout_width="@dimen/row_art"
+        android:layout_height="@dimen/row_art">
+
+        <com.musicplayer.lite.RoundedImageView
+            android:id="@+id/row_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_art"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/row_playing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_playing"
+            android:importantForAccessibility="no"
+            android:padding="13dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_equalizer"
+            android:tint="@color/accent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/row_title"
+            style="@style/RowTitle" />
+
+        <TextView
+            android:id="@+id/row_sub"
+            style="@style/RowSub"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/row_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFeatureSettings="tnum"
+        android:textColor="@color/text_tertiary"
+        android:textSize="@dimen/text_row_sub" />
+
+    <ImageView
+        android:id="@+id/row_chevron"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_chevron_right"
+        android:tint="@color/icon_dim"
+        android:visibility="gone" />
+</LinearLayout>
