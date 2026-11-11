@@ -10,29 +10,11 @@ A small, fast, **offline** music player for Android 8.0 and newer. It is made fo
 
 ## Screenshots
 
-These are renders of the app's real layouts with sample (fictional) songs and generated cover art.
+These are renders of the app's real layouts with sample (fictional) songs and generated cover art. Phone screens are on top, and a 1280 × 720 car head unit in landscape is below.
 
-<table>
-  <tr>
-    <td><img src="docs/screenshots/phone-songs.png" width="220" alt="Songs tab with the mini player"></td>
-    <td><img src="docs/screenshots/phone-folders.png" width="220" alt="Folder browser"></td>
-    <td><img src="docs/screenshots/phone-now-playing.png" width="220" alt="Now playing"></td>
-    <td><img src="docs/screenshots/phone-equalizer.png" width="220" alt="Equalizer"></td>
-  </tr>
-  <tr>
-    <td align="center">Songs</td>
-    <td align="center">Folders</td>
-    <td align="center">Now playing</td>
-    <td align="center">Equalizer</td>
-  </tr>
-</table>
+<img src="docs/screenshots/overview.png" alt="Songs, Folders, Now playing and Equalizer on a phone; the player with the library, and the equalizer, on a car head unit">
 
-Car head unit (1280 × 720, landscape):
-
-<img src="docs/screenshots/car-library.png" width="480" alt="Car layout: player on the left, library on the right">
-<img src="docs/screenshots/car-equalizer.png" width="480" alt="Car equalizer">
-
-More: [Albums](docs/screenshots/phone-albums.png), [Up next queue](docs/screenshots/phone-queue.png).
+Single screens: [Songs](docs/screenshots/phone-songs.png), [Folders](docs/screenshots/phone-folders.png), [Albums](docs/screenshots/phone-albums.png), [Now playing](docs/screenshots/phone-now-playing.png), [Equalizer](docs/screenshots/phone-equalizer.png), [Up next](docs/screenshots/phone-queue.png), [Car library](docs/screenshots/car-library.png), [Car equalizer](docs/screenshots/car-equalizer.png).
 
 ## Install
 

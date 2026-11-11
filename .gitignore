@@ -8,6 +8,9 @@ captures/
 .externalNativeBuild/
 .cxx/
 
+# Local copies of release files kept for sharing
+dist/
+
 # Signing keys (see README: Release signing)
 keystore.properties
 *.jks
