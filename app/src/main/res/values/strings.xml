@@ -128,6 +128,11 @@
     <string name="mode_dark">dark</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="set_bar_style">Equalizer design</string>
+    <string name="bar_style_bars">Bars</string>
+    <string name="bar_style_dots">Dots</string>
+    <string name="bar_style_mirror">Mirror</string>
+    <string name="bar_style_wave">Wave</string>
     <string name="set_bars">Bars follow the music</string>
     <string name="set_bars_sub">The moving bars rise and fall with the sound of your music. Android calls the permission for this microphone access; the app only reads its own music.</string>
     <string name="set_glass">Liquid glass</string>

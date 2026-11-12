@@ -107,6 +107,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             recreate();
         });
 
+        bindBarStyle();
         barsSwitch = setupRow(R.id.row_bars, R.string.set_bars, R.string.set_bars_sub, true);
         syncBarsSwitch();
         barsSwitch.setOnCheckedChangeListener((b, on) -> {
@@ -123,6 +124,15 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
                     syncBarsSwitch();
                 });
             }
+        });
+    }
+
+    private void bindBarStyle() {
+        final int[] ids = {R.id.bar_style_bars, R.id.bar_style_dots, R.id.bar_style_mirror, R.id.bar_style_wave};
+        RadioGroup g = findViewById(R.id.bar_style_group);
+        g.check(ids[prefs.barStyle()]);
+        g.setOnCheckedChangeListener((group, id) -> {
+            for (int i = 0; i < ids.length; i++) if (ids[i] == id) prefs.setBarStyle(i);
         });
     }
 

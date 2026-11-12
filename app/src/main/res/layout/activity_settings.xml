@@ -103,6 +103,44 @@
                 <include
                     android:id="@+id/row_bars"
                     layout="@layout/row_setting" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    style="@style/SettingTitle"
+                    android:paddingTop="8dp"
+                    android:text="@string/set_bar_style" />
+
+                <RadioGroup
+                    android:id="@+id/bar_style_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/bar_style_bars"
+                        style="@style/SettingRadio"
+                        android:text="@string/bar_style_bars" />
+
+                    <RadioButton
+                        android:id="@+id/bar_style_dots"
+                        style="@style/SettingRadio"
+                        android:text="@string/bar_style_dots" />
+
+                    <RadioButton
+                        android:id="@+id/bar_style_mirror"
+                        style="@style/SettingRadio"
+                        android:text="@string/bar_style_mirror" />
+
+                    <RadioButton
+                        android:id="@+id/bar_style_wave"
+                        style="@style/SettingRadio"
+                        android:text="@string/bar_style_wave" />
+                </RadioGroup>
             </LinearLayout>
 
             <TextView

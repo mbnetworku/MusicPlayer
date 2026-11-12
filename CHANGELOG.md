@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.4.0] - 2026-11-12
+
+- New: you can choose how the moving equalizer looks. Open Settings and pick Bars, Dots, Mirror or Wave under "Equalizer design". It changes the bars on the player, the lists and the equalizer screen.
+- Checked again: tapping a song, a folder, a Play all button and every tab works in portrait, landscape and on a wide car screen.
+
 ## [1.3.1] - 2026-11-12
 
 - Fixed: tapping a song, a folder, an album or an artist did nothing on Android 8 and newer, so no song could be started by touch. This began in version 1.2.0. Taps now work on the whole row, in portrait, in landscape and on the car screen. If you installed 1.2.0 or 1.3.0, please update.

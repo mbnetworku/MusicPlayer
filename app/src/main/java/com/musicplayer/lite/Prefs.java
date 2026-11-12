@@ -64,6 +64,16 @@ final class Prefs {
         sp.edit().putBoolean("bars_follow", on).apply();
     }
 
+    /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave. */
+    int barStyle() {
+        int v = sp.getInt("bar_style", 0);
+        return v < 0 || v > 3 ? 0 : v;
+    }
+
+    void setBarStyle(int style) {
+        sp.edit().putInt("bar_style", style).apply();
+    }
+
     /** True once the glass pop-up that asks for the permission has been shown, so it is shown only once. */
     boolean barsAsked() {
         return sp.getBoolean("bars_asked", false);

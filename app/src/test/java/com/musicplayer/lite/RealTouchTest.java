@@ -297,6 +297,45 @@ public class RealTouchTest {
         c.pause().stop().destroy();
     }
 
+    /** Every tab, upright and sideways, phone and wide screen: a finger on a song plays it. */
+    @Test
+    public void everyTabPlaysInEveryOrientation() throws Exception {
+        String[] screens = {"w360dp-h640dp-port", "w640dp-h360dp-land", "w1024dp-h600dp-land-night"};
+        int[] tabs = {R.id.tab_songs, R.id.tab_folders, R.id.tab_albums, R.id.tab_artists, R.id.tab_favorites};
+        loadLibrary();
+        Favorites.get(app).toggle(Library.get(app).tracks().get(0));
+        for (String q : screens) {
+            RuntimeEnvironment.setQualifiers("+" + q);
+            for (int tabId : tabs) {
+                ActivityController<LibraryActivity> c = openLibrary();
+                LibraryActivity a = c.get();
+                tap(a, a.findViewById(tabId));
+                measure(a);
+                ListView list = a.findViewById(R.id.list);
+                // Open folders, albums and artists until a song row shows; then tap it.
+                for (int depth = 0; depth < 6; depth++) {
+                    int songAt = -1, openAt = -1;
+                    for (int i = 0; i < list.getChildCount(); i++) {
+                        RowAdapter.Row r = (RowAdapter.Row) list.getAdapter().getItem(
+                                list.getFirstVisiblePosition() + i);
+                        if (r.type == RowAdapter.TRACK && songAt < 0) songAt = i;
+                        if ((r.type == RowAdapter.GROUP || (r.type == RowAdapter.FOLDER && r.tag != null))
+                                && openAt < 0) openAt = i;
+                    }
+                    if (songAt >= 0) {
+                        tap(a, list.getChildAt(songAt));
+                        assertNotNull(q + " tab " + tabId + ": the tap started a song", service.currentTrack());
+                        break;
+                    }
+                    if (openAt < 0) break;               // an empty tab (no favorites yet) has nothing to tap
+                    tap(a, list.getChildAt(openAt));
+                    measure(a);
+                }
+                c.pause().stop().destroy();
+            }
+        }
+    }
+
     @Test
     public void tappingAFolderOpensIt() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();

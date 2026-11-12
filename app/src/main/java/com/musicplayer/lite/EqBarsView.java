@@ -189,6 +189,17 @@ public class EqBarsView extends View {
     private long frozenAt;
     private float[] envelope;
 
+    static final int STYLE_BARS = 0, STYLE_DOTS = 1, STYLE_MIRROR = 2, STYLE_WAVE = 3;
+    /** -1 reads the setting; the tests and pictures set it. */
+    private int style = -1;
+    private float[] frames = new float[0];
+    private final android.graphics.Path wave = new android.graphics.Path();
+
+    void setStyle(int s) {
+        style = s;
+        invalidate();
+    }
+
     public EqBarsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EqBarsView);
@@ -348,6 +359,8 @@ public class EqBarsView extends View {
         // The real sound, when it is coming in; otherwise the bars' own motion.
         final SoundBars live = sound != null && sound.following() ? sound : null;
         final float[] shape = envelope != null ? envelope : (live == null ? ownShape : null);
+        if (frames.length != n) frames = new float[n];
+        final float[] fr = frames;
         for (int i = 0; i < n; i++) {
             final float base;
             if (live != null) {
@@ -356,11 +369,54 @@ public class EqBarsView extends View {
             } else {
                 base = height(i, t, moving, restScale);
             }
-            final float fraction = Math.max(0f, Math.min(1f, base * envelopeAt(shape, i, n)));
-            final float barHeight = Math.max(shortest, h * fraction);
-            final float x = getPaddingLeft() + i * step;
-            rect.set(x, bottom - barHeight, x + barWidth, bottom);
-            canvas.drawRoundRect(rect, radius, radius, paint);
+            fr[i] = Math.max(0f, Math.min(1f, base * envelopeAt(shape, i, n)));
         }
+        final int look = style >= 0 ? style : Prefs.get(getContext()).barStyle();
+        if (look == STYLE_WAVE) {
+            drawWave(canvas, fr, w, h, bottom);
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            final float x = getPaddingLeft() + i * step;
+            if (look == STYLE_DOTS) {
+                final float dot = Math.max(1f, Math.min(barWidth, h / 12f));
+                final int cells = Math.max(1, (int) (h / (dot * 1.5f)));
+                final int lit = Math.max(1, Math.round(fr[i] * cells));
+                for (int k = 0; k < lit; k++) {
+                    final float y = bottom - k * dot * 1.5f;
+                    rect.set(x, y - dot, x + barWidth, y);
+                    canvas.drawRoundRect(rect, dot / 2f, dot / 2f, paint);
+                }
+            } else if (look == STYLE_MIRROR) {
+                final float half = Math.max(shortest / 2f, h * fr[i] / 2f);
+                final float mid = getPaddingTop() + h / 2f;
+                rect.set(x, mid - half, x + barWidth, mid + half);
+                canvas.drawRoundRect(rect, radius, radius, paint);
+            } else {
+                final float barHeight = Math.max(shortest, h * fr[i]);
+                rect.set(x, bottom - barHeight, x + barWidth, bottom);
+                canvas.drawRoundRect(rect, radius, radius, paint);
+            }
+        }
+    }
+
+    /** A filled smooth line through the levels. */
+    private void drawWave(Canvas canvas, float[] fr, float w, float h, float bottom) {
+        final int n = fr.length;
+        final float left = getPaddingLeft();
+        final float dx = n > 1 ? w / (n - 1) : w;
+        wave.reset();
+        wave.moveTo(left, bottom);
+        wave.lineTo(left, bottom - Math.max(1f, h * fr[0]));
+        for (int i = 1; i < n; i++) {
+            final float x0 = left + (i - 1) * dx;
+            final float x1 = left + i * dx;
+            final float y0 = bottom - Math.max(1f, h * fr[i - 1]);
+            final float y1 = bottom - Math.max(1f, h * fr[i]);
+            wave.cubicTo((x0 + x1) / 2f, y0, (x0 + x1) / 2f, y1, x1, y1);
+        }
+        wave.lineTo(left + (n - 1) * dx, bottom);
+        wave.close();
+        canvas.drawPath(wave, paint);
     }
 }
