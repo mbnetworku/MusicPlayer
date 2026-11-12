@@ -30,6 +30,8 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
 
     private TextView action;
     private TextView secondary;
+    private Switch barsSwitch;
+    private boolean syncingBars;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -58,6 +60,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     @Override
     protected void onResume() {
         super.onResume();
+        syncBarsSwitch();   // the permission may have been changed in Android's own settings
         // Back from Android's "install unknown apps" screen with the permission granted: carry on.
         if (updater.state() == Updater.State.NEEDS_PERMISSION && Updater.canInstall(this)) {
             updater.install(this);
@@ -103,6 +106,45 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             prefs.setGlass(on);
             recreate();
         });
+
+        barsSwitch = setupRow(R.id.row_bars, R.string.set_bars, R.string.set_bars_sub, true);
+        syncBarsSwitch();
+        barsSwitch.setOnCheckedChangeListener((b, on) -> {
+            if (syncingBars) return;
+            prefs.setBarsFollow(on);
+            if (!on) {
+                SoundBars.get(this).refresh();
+            } else if (Permissions.hasRecord(this)) {
+                SoundBars.get(this).refresh();
+            } else {
+                // Explain first, then Android asks. "Not allowed" puts the switch back.
+                Permissions.askForBars(this, REQ_BARS, () -> {
+                    prefs.setBarsFollow(false);
+                    syncBarsSwitch();
+                });
+            }
+        });
+    }
+
+    /** On only when the bars may follow the sound and Android has said yes. */
+    private void syncBarsSwitch() {
+        syncingBars = true;
+        barsSwitch.setChecked(prefs.barsFollow() && Permissions.hasRecord(this));
+        syncingBars = false;
+    }
+
+    @Override
+    protected void onBarsPermission(boolean granted) {
+        if (granted) {
+            prefs.setBarsFollow(true);
+        } else {
+            prefs.setBarsFollow(false);
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+                Permissions.askForSettings(this, R.drawable.ic_bars, R.string.perm_bars_title,
+                        R.string.perm_bars_settings, null);
+            }
+        }
+        syncBarsSwitch();
     }
 
     // ---- glass background --------------------------------------------------------------------------

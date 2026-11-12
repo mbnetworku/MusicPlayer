@@ -54,6 +54,7 @@ final class Library {
     private static final class Snapshot {
         List<Track> tracks = Collections.emptyList();
         Map<Long, Track> byId = Collections.emptyMap();
+        Map<String, Track> byPath = Collections.emptyMap();
         List<Group> albums = Collections.emptyList();
         List<Group> artists = Collections.emptyList();
         FolderTree.Node root = new FolderTree.Node("", "", null);
@@ -112,6 +113,11 @@ final class Library {
 
     Track byId(long id) {
         return data.byId.get(id);
+    }
+
+    /** The song stored at this file path, or null. */
+    Track byPath(String path) {
+        return data.byPath.get(path);
     }
 
     List<Group> albums() {
@@ -302,10 +308,15 @@ final class Library {
         });
 
         final Map<Long, Track> byId = new HashMap<>(out.size() * 2);
-        for (Track t : out) byId.put(t.id, t);
+        final Map<String, Track> byPath = new HashMap<>(out.size() * 2);
+        for (Track t : out) {
+            byId.put(t.id, t);
+            byPath.put(t.path(), t);
+        }
 
         s.tracks = Collections.unmodifiableList(out);
         s.byId = byId;
+        s.byPath = byPath;
         s.albums = buildAlbums(out, coll);
         s.artists = buildArtists(out, coll);
         s.root = FolderTree.build(out);

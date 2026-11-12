@@ -46,8 +46,14 @@ public class QueueActivity extends BoundActivity {
     }
 
     @Override
+    protected void onFavoritesChanged() {
+        adapter.refreshFavorites();
+    }
+
+    @Override
     protected void onPlaybackUpdated() {
         if (service == null) return;
+        adapter.setPlaying(service.isPlaying());
         PlayQueue q = service.queue();
         if (q.version() != shownVersion) {
             shownVersion = q.version();

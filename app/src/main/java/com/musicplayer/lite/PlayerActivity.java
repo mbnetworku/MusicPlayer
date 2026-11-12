@@ -6,6 +6,7 @@ import android.os.Bundle;
 /** Full-screen Now Playing for phones and portrait screens. */
 public class PlayerActivity extends BoundActivity {
     private NowPlayingView player;
+    private EqBarsView eqBars;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -21,7 +22,8 @@ public class PlayerActivity extends BoundActivity {
         player.setMoreListener(t -> showSongMenu(t.title, java.util.Collections.singletonList(t), true, true));
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         findViewById(R.id.btn_queue).setOnClickListener(v -> startActivity(new Intent(this, QueueActivity.class)));
-        findViewById(R.id.btn_eq).setOnClickListener(v -> startActivity(new Intent(this, EqualizerActivity.class)));
+        eqBars = findViewById(R.id.btn_eq);
+        eqBars.setOnClickListener(v -> startActivity(new Intent(this, EqualizerActivity.class)));
     }
 
     @Override
@@ -32,6 +34,8 @@ public class PlayerActivity extends BoundActivity {
     @Override
     protected void onPlaybackUpdated() {
         if (player != null) player.refresh();
+        if (eqBars != null && service != null) eqBars.setPlaying(service.isPlaying());
+        if (service != null && service.isPlaying()) offerSoundBars();
     }
 
     @Override

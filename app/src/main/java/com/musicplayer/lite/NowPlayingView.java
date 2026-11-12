@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,8 +27,12 @@ public class NowPlayingView extends LinearLayout {
     private final ImageButton next;
     private final ImageButton repeat;
     private final ImageButton more;
+    private final ImageButton favorite;
+    private final EqBarsView bars;
+    private final Favorites favorites;
     private final ColorStateList accent;
     private final ColorStateList dim;
+    private final ColorStateList plain;
 
     /** The "more" button next to the title. */
     interface MoreListener {
@@ -38,6 +43,9 @@ public class NowPlayingView extends LinearLayout {
     private MoreListener moreListener;
     private boolean dragging;
     private String shownArt = "";
+    /** The song on screen: the heart belongs to it. */
+    private Track shown;
+    private final Favorites.Listener favoritesListener = this::syncFavorite;
 
     public NowPlayingView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,12 +63,22 @@ public class NowPlayingView extends LinearLayout {
         next = findViewById(R.id.np_next);
         repeat = findViewById(R.id.np_repeat);
         more = findViewById(R.id.np_more);
+        favorite = findViewById(R.id.np_fav);
+        bars = findViewById(R.id.np_bars);
+        favorites = Favorites.get(context);
         accent = ColorStateList.valueOf(context.getColor(R.color.accent_text));
         dim = ColorStateList.valueOf(context.getColor(R.color.icon_dim));
+        plain = ColorStateList.valueOf(context.getColor(R.color.icon));
 
         more.setOnClickListener(v -> {
             Track t = service == null ? null : service.currentTrack();
             if (t != null && moreListener != null) moreListener.onMore(t);
+        });
+        favorite.setOnClickListener(v -> {
+            Track t = service == null ? null : service.currentTrack();
+            if (t == null) return;
+            // The Favorites listener redraws the heart here and in every other view that shows it.
+            if (favorites.toggle(t)) pop(favorite);
         });
         play.setOnClickListener(v -> {
             if (service != null) service.togglePlayPause();
@@ -101,6 +119,39 @@ public class NowPlayingView extends LinearLayout {
         moreListener = l;
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        favorites.addListener(favoritesListener);
+        syncFavorite();   // it may have changed while this view was away
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        favorites.removeListener(favoritesListener);
+        super.onDetachedFromWindow();
+    }
+
+    /** A little bounce for the heart when a song becomes a favorite. */
+    private static void pop(View v) {
+        v.animate().cancel();
+        v.setScaleX(1f);
+        v.setScaleY(1f);
+        v.animate().scaleX(1.3f).scaleY(1.3f).setDuration(120)
+                .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(120)).start();
+    }
+
+    /** The favorites changed (here or elsewhere): show the heart as the song on screen now has it. */
+    private void syncFavorite() {
+        showFavorite(shown != null && favorites.contains(shown));
+    }
+
+    private void showFavorite(boolean on) {
+        favorite.setImageResource(on ? R.drawable.ic_favorite : R.drawable.ic_favorite_border);
+        favorite.setImageTintList(on ? accent : plain);
+        favorite.setContentDescription(getContext().getString(on ? R.string.cd_favorite_remove : R.string.cd_favorite_add));
+    }
+
     void bind(PlaybackService s) {
         service = s;
         refresh();
@@ -127,6 +178,7 @@ public class NowPlayingView extends LinearLayout {
     /** Pure view update from plain values, so it can also draw a sample state. */
     void render(Track t, boolean playing, int posMs, int durMs, boolean shuffleOn, int repeatMode) {
         final boolean has = t != null;
+        shown = t;
         final Context c = getContext();
         title.setText(has ? t.title : c.getString(R.string.nothing_playing));
         artist.setText(has ? t.artist + " · " + t.album : c.getString(R.string.nothing_playing_hint));
@@ -144,6 +196,11 @@ public class NowPlayingView extends LinearLayout {
         repeat.setImageResource(repeatMode == PlayQueue.REPEAT_ONE ? R.drawable.ic_repeat_one : R.drawable.ic_repeat);
         repeat.setImageTintList(repeatMode == PlayQueue.REPEAT_OFF ? dim : accent);
         more.setVisibility(has ? VISIBLE : INVISIBLE);
+        favorite.setVisibility(has ? VISIBLE : INVISIBLE);
+        showFavorite(has && favorites.contains(t));
+        // Visible first, then told to move: the bars ease in from their resting height.
+        bars.setVisibility(has ? VISIBLE : GONE);
+        bars.setPlaying(has && playing);
         final float alpha = has ? 1f : 0.4f;
         play.setAlpha(alpha);
         prev.setAlpha(alpha);

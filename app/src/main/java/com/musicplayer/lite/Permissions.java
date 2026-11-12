@@ -37,6 +37,23 @@ final class Permissions {
                 .show();
     }
 
+    /** Android calls it the microphone permission; the bars only use it to read the app's own sound. */
+    static boolean hasRecord(Context c) {
+        return c.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /** Before asking Android whether the bars may follow the sound. */
+    static void askForBars(final Activity a, final int requestCode, Runnable denied) {
+        GlassDialog.alert(a)
+                .icon(R.drawable.ic_bars)
+                .title(R.string.perm_bars_title)
+                .message(R.string.perm_bars_body)
+                .positive(R.string.perm_allow,
+                        () -> a.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, requestCode))
+                .negative(R.string.perm_deny, denied)
+                .show();
+    }
+
     /** Android 10 and older need write access to delete a file the app did not create. */
     static boolean hasWrite(Context c) {
         return hasWrite(Build.VERSION.SDK_INT,

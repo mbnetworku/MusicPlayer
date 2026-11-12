@@ -16,6 +16,7 @@ import android.view.DisplayCutout;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     private static final int BACKDROP_ART_PX = 96;
     private static final int REQ_DELETE = 9001;
     private static final int REQ_WRITE = 9002;
+    protected static final int REQ_BARS = 9003;
 
     /** Non-null between {@link #onServiceReady()} and onStop. */
     protected PlaybackService service;
@@ -40,6 +42,7 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     private String backdropKey = "";
     /** Songs waiting for the user's answer to a permission or system question before they are deleted. */
     private List<Track> pendingDelete = Collections.emptyList();
+    private final Favorites.Listener favoritesListener = this::onFavoritesChanged;
     private final Handler ticker = new Handler(Looper.getMainLooper());
     private final Runnable tick = new Runnable() {
         @Override
@@ -88,11 +91,13 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
         super.onStart();
         bound = bindService(new Intent(this, PlaybackService.class), connection, BIND_AUTO_CREATE);
         ticker.postDelayed(tick, TICK_MS);
+        Favorites.get(this).addListener(favoritesListener);
     }
 
     @Override
     protected void onStop() {
         ticker.removeCallbacks(tick);
+        Favorites.get(this).removeListener(favoritesListener);
         if (service != null) {
             service.removeListener(this);
             service = null;
@@ -110,6 +115,25 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
 
     /** About twice a second while the screen is visible and the service is connected. */
     protected void onTick() {
+    }
+
+    /**
+     * Asks once, in a glass pop-up, whether the bars may follow the real sound (which Android
+     * counts as microphone access). Call it when music is playing on a screen that shows the big bars.
+     */
+    protected final void offerSoundBars() {
+        final Prefs prefs = Prefs.get(this);
+        if (prefs.barsAsked() || !prefs.barsFollow() || Permissions.hasRecord(this)) return;
+        prefs.setBarsAsked(true);
+        Permissions.askForBars(this, REQ_BARS, null);
+    }
+
+    /** The user answered Android's question about listening to the sound. */
+    protected void onBarsPermission(boolean granted) {
+    }
+
+    /** A song was added to the favorites or taken off, here or on another screen. Main thread. */
+    protected void onFavoritesChanged() {
     }
 
     /** Track, play state, queue or modes changed. Called on the main thread. */
@@ -211,12 +235,30 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
                 toast(R.string.toast_added);
             });
         }
+        final boolean allFavorite = Favorites.get(this).containsAll(tracks);
+        sheet.item(allFavorite ? R.drawable.ic_favorite : R.drawable.ic_favorite_border,
+                allFavorite ? (single ? R.string.action_favorite_remove : R.string.action_favorite_remove_all)
+                        : (single ? R.string.action_favorite_add : R.string.action_favorite_add_all),
+                () -> toggleFavorites(tracks, !allFavorite));
         if (single) {
             sheet.item(R.drawable.ic_info, R.string.action_info, () -> showSongInfo(tracks.get(0)));
         }
         sheet.destructiveItem(R.drawable.ic_delete, single ? R.string.action_delete : R.string.action_delete_many,
                 () -> confirmDelete(tracks, title));
         sheet.show();
+    }
+
+    /** Adds the songs to the favorites, or takes them off, and says so. */
+    protected final void toggleFavorites(List<Track> tracks, boolean add) {
+        final Favorites favorites = Favorites.get(this);
+        final int changed = add ? favorites.add(tracks) : favorites.remove(tracks);
+        if (tracks.size() == 1) {
+            toast(add ? R.string.toast_fav_added : R.string.toast_fav_removed);
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getQuantityString(
+                    add ? R.plurals.toast_fav_added_many : R.plurals.toast_fav_removed_many, changed, changed),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Plays {@code tracks} from the top, in order or shuffled. */
@@ -270,8 +312,16 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     private void finishDelete(Set<Long> gone, int asked) {
         pendingDelete = Collections.emptyList();
         if (!gone.isEmpty()) {
+            final Library library = Library.get(this);
+            // A deleted song is no longer a favorite. Looked up now, while the library still has it.
+            final List<Track> deleted = new ArrayList<>();
+            for (long id : gone) {
+                Track t = library.byId(id);
+                if (t != null) deleted.add(t);
+            }
+            Favorites.get(this).remove(deleted);
             if (service != null) service.removeTracks(gone);
-            Library.get(this).refresh();
+            library.refresh();
         }
         if (gone.size() == asked) {
             Toast.makeText(getApplicationContext(),
@@ -294,6 +344,12 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode == REQ_BARS) {
+            final boolean granted = results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED;
+            if (granted) SoundBars.get(this).refresh();
+            onBarsPermission(granted);
+            return;
+        }
         if (requestCode != REQ_WRITE) return;
         List<Track> asked = pendingDelete;
         pendingDelete = Collections.emptyList();

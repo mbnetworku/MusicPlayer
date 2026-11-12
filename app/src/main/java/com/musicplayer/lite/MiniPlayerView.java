@@ -20,6 +20,7 @@ public class MiniPlayerView extends LinearLayout {
     private final TextView title;
     private final TextView artist;
     private final ImageButton play;
+    private final EqBarsView bars;
 
     private PlaybackService service;
     private String shownArt = "";
@@ -33,6 +34,7 @@ public class MiniPlayerView extends LinearLayout {
         title = findViewById(R.id.mini_title);
         artist = findViewById(R.id.mini_artist);
         play = findViewById(R.id.mini_play);
+        bars = findViewById(R.id.mini_bars);
 
         findViewById(R.id.mini_body).setOnClickListener(
                 v -> context.startActivity(new Intent(context, PlayerActivity.class)));
@@ -74,6 +76,9 @@ public class MiniPlayerView extends LinearLayout {
         artist.setText(t.artist);
         play.setImageResource(playing ? R.drawable.ic_pause : R.drawable.ic_play);
         play.setContentDescription(getContext().getString(playing ? R.string.cd_pause : R.string.cd_play));
+        // The bars are there only while the music plays: a paused mini player stays quiet.
+        bars.setVisibility(playing ? View.VISIBLE : View.GONE);
+        bars.setPlaying(playing);
         setProgress(posMs, durMs);
         String key = t.artKey();
         if (!key.equals(shownArt)) {

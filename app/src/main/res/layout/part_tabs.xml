@@ -31,4 +31,10 @@
         style="@style/Tab"
         android:drawableTop="@drawable/ic_person"
         android:text="@string/tab_artists" />
+
+    <TextView
+        android:id="@+id/tab_favorites"
+        style="@style/Tab"
+        android:drawableTop="@drawable/ic_favorite"
+        android:text="@string/tab_favorites" />
 </LinearLayout>

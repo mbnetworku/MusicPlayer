@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- How many thin bars the big visualizer over the cover on the Now Playing screen has. -->
+    <integer name="np_bars">48</integer>
+</resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -54,6 +55,20 @@
             android:paddingStart="@dimen/gutter"
             android:paddingEnd="@dimen/gutter"
             android:paddingBottom="24dp">
+
+            <!-- Moving bars while music plays; their heights follow the equalizer sliders below. -->
+            <com.musicplayer.lite.EqBarsView
+                android:id="@+id/eq_bars"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/eq_bars_height"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_card"
+                android:importantForAccessibility="no"
+                android:padding="16dp"
+                android:tag="glass:card"
+                app:barColor="@color/accent"
+                app:bars="20" />
 
             <include layout="@layout/part_eq_device" />
 

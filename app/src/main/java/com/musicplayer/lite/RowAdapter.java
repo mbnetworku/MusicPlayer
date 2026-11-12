@@ -92,7 +92,8 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
 
     private static final class ItemHolder {
         final ImageView art;
-        final ImageView playing;
+        final EqBarsView playing;
+        final View favorite;
         final View more;
         final TextView title;
         final TextView sub;
@@ -100,6 +101,7 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         ItemHolder(View v) {
             art = v.findViewById(R.id.row_art);
             playing = v.findViewById(R.id.row_playing);
+            favorite = v.findViewById(R.id.row_fav);
             more = v.findViewById(R.id.row_more);
             title = v.findViewById(R.id.row_title);
             sub = v.findViewById(R.id.row_sub);
@@ -133,9 +135,12 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     private final int primary;
     private final ColorStateList accentTint;
     private final boolean glass;
+    private final Favorites favorites;
 
     private List<Row> rows = Collections.emptyList();
     private long currentId = -1;
+    /** The music is playing (the bars on the current row move) or paused (they rest). */
+    private boolean playing;
     /** When set (the queue screen), the playing row is picked by position, not by track id. */
     private int currentIndex = -1;
 
@@ -152,6 +157,7 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         this.primary = context.getColor(R.color.text_primary);
         this.accentTint = ColorStateList.valueOf(accent);
         this.glass = Appearance.glass(context);
+        this.favorites = Favorites.get(context);
     }
 
     void setMoreListener(MoreListener l) {
@@ -173,6 +179,17 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     void setCurrentTrack(long id) {
         if (id == currentId) return;
         currentId = id;
+        notifyDataSetChanged();
+    }
+
+    void setPlaying(boolean on) {
+        if (on == playing) return;
+        playing = on;
+        notifyDataSetChanged();
+    }
+
+    /** The favorites changed: redraw the hearts. */
+    void refreshFavorites() {
         notifyDataSetChanged();
     }
 
@@ -260,6 +277,8 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         h.more.setVisibility(menu ? View.VISIBLE : View.GONE);
         h.more.setOnClickListener(menu ? x -> moreListener.onMore(r, x) : null);
         h.playing.setVisibility(current ? View.VISIBLE : View.GONE);
+        h.playing.setPlaying(current && playing);
+        h.favorite.setVisibility(r.type == TRACK && favorites.contains(r.track) ? View.VISIBLE : View.GONE);
 
         if (r.track != null) {
             h.art.setScaleType(ImageView.ScaleType.CENTER_CROP);

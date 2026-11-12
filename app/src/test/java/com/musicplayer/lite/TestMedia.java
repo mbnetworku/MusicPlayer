@@ -112,7 +112,8 @@ final class TestMedia {
     /** The app keeps one Library, Prefs and ArtLoader per process; tests need fresh ones. */
     static void resetSingletons() {
         DELETED.clear();
-        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class}) {
+        EqBarsView.resetClock();
+        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class, Favorites.class, SoundBars.class}) {
             try {
                 java.lang.reflect.Field f = c.getDeclaredField("instance");
                 f.setAccessible(true);

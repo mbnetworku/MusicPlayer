@@ -10,6 +10,7 @@
     <dimen name="text_np_title">18sp</dimen>
     <dimen name="text_np_artist">13sp</dimen>
     <dimen name="np_art_pad">8dp</dimen>
+    <dimen name="np_bars_height">84dp</dimen>
     <dimen name="ctl_vpad">0dp</dimen>
     <dimen name="ctl_small">44dp</dimen>
     <dimen name="ctl_mid">52dp</dimen>
@@ -19,5 +20,6 @@
     <dimen name="ctl_big_pad">10dp</dimen>
 
     <dimen name="eq_curve_height">72dp</dimen>
+    <dimen name="eq_bars_height">64dp</dimen>
     <dimen name="eq_band_height">150dp</dimen>
 </resources>

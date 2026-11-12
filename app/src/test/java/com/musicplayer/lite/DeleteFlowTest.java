@@ -56,6 +56,12 @@ public class DeleteFlowTest {
         return ShadowDialog.getLatestDialog().findViewById(id);
     }
 
+    /** Delete is always the last action of the sheet, whatever is added above it. */
+    private static View deleteRow() {
+        LinearLayout items = (LinearLayout) dialogView(R.id.gd_items);
+        return items.getChildAt(items.getChildCount() - 1);
+    }
+
     @Test
     public void everySongRowHasAMoreButtonThatOpensTheGlassMenu() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
@@ -65,9 +71,9 @@ public class DeleteFlowTest {
 
         row.findViewById(R.id.row_more).performClick();
         LinearLayout items = (LinearLayout) dialogView(R.id.gd_items);
-        // Play next, Add to queue, Song info and Delete.
-        assertEquals(4, items.getChildCount());
-        TextView last = items.getChildAt(3).findViewById(R.id.gd_item_label);
+        // Play next, Add to queue, Add to Favorites, Song info and Delete.
+        assertEquals(5, items.getChildCount());
+        TextView last = deleteRow().findViewById(R.id.gd_item_label);
         assertEquals("Delete…", last.getText().toString());
         assertEquals("red, because it cannot be undone", app.getColor(R.color.accent_text), last.getCurrentTextColor());
         c.pause().stop().destroy();
@@ -88,7 +94,7 @@ public class DeleteFlowTest {
         ActivityController<LibraryActivity> c = openLibrary();
         ListView list = c.get().findViewById(R.id.list);
         list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
-        ((LinearLayout) dialogView(R.id.gd_items)).getChildAt(3).performClick();
+        deleteRow().performClick();
 
         // The confirmation: what is deleted, that it is for good, and a way out.
         assertEquals("Delete “Ember”?", ((TextView) dialogView(R.id.gd_title)).getText().toString());
@@ -106,7 +112,7 @@ public class DeleteFlowTest {
 
         ListView list = c.get().findViewById(R.id.list);
         list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
-        ((LinearLayout) dialogView(R.id.gd_items)).getChildAt(3).performClick();
+        deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();
 
         assertEquals("Ember (id 5) was deleted at once", Collections.singletonList(5L), TestMedia.DELETED);
@@ -125,9 +131,9 @@ public class DeleteFlowTest {
         // The first album alphabetically is "Afterglow", which has two songs.
         list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
         LinearLayout items = (LinearLayout) dialogView(R.id.gd_items);
-        // Play, Shuffle, Play next, Add to queue and Delete all.
-        assertEquals(5, items.getChildCount());
-        items.getChildAt(4).performClick();
+        // Play, Shuffle, Play next, Add to queue, Add all to Favorites and Delete all.
+        assertEquals(6, items.getChildCount());
+        deleteRow().performClick();
         assertEquals("Delete 2 songs?", ((TextView) dialogView(R.id.gd_title)).getText().toString());
         dialogView(R.id.gd_positive).performClick();
 
@@ -144,7 +150,7 @@ public class DeleteFlowTest {
 
         ListView list = c.get().findViewById(R.id.list);
         list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
-        ((LinearLayout) dialogView(R.id.gd_items)).getChildAt(3).performClick();
+        deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();       // confirm the delete
 
         assertTrue("nothing deleted yet", TestMedia.DELETED.isEmpty());
@@ -167,7 +173,7 @@ public class DeleteFlowTest {
         ActivityController<LibraryActivity> c = openLibrary();
         ListView list = c.get().findViewById(R.id.list);
         list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
-        ((LinearLayout) dialogView(R.id.gd_items)).getChildAt(3).performClick();
+        deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();
 
         // The test runtime has no MediaStore to build the system request, so the app says so instead of crashing;

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -7,15 +9,45 @@
         android:layout_weight="1"
         android:padding="@dimen/np_art_pad">
 
-        <com.musicplayer.lite.SquareImageView
-            android:id="@+id/np_art"
+        <!-- The cover and the moving bars on it share one rounded, raised box. The frame around it
+             gives the padding and the height; this one wraps the square cover. -->
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/bg_art_big"
-            android:contentDescription="@string/cd_album_art"
             android:elevation="10dp"
-            android:scaleType="centerCrop" />
+            tools:ignore="UselessParent">
+
+            <!-- Both children are match_parent on purpose: a FrameLayout only measures its children a
+                 second time, at the size it settled on, when two or more of them ask to fill it. -->
+            <com.musicplayer.lite.SquareImageView
+                android:id="@+id/np_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_art_big"
+                android:contentDescription="@string/cd_album_art"
+                android:scaleType="centerCrop" />
+
+            <com.musicplayer.lite.EqBarsView
+                android:id="@+id/np_bars"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/np_bars_height"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_np_bars"
+                android:importantForAccessibility="no"
+                android:paddingStart="14dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone"
+                app:barColor="@color/np_bars"
+                app:barGap="0.9"
+                app:barRadius="0.3"
+                app:barRest="0.45"
+                app:bars="@integer/np_bars"
+                app:spectrum="true" />
+        </FrameLayout>
     </FrameLayout>
 
     <LinearLayout
@@ -52,6 +84,17 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_np_artist" />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/np_fav"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_circle_tint"
+            android:contentDescription="@string/cd_favorite_add"
+            android:scaleType="center"
+            android:src="@drawable/ic_favorite_border"
+            android:tint="@color/icon" />
 
         <ImageButton
             android:id="@+id/np_more"

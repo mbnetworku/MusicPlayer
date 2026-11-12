@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The moving equalizer bars (EqBarsView). -->
+    <declare-styleable name="EqBarsView">
+        <!-- How many bars to draw. -->
+        <attr name="bars" format="integer" />
+        <!-- The colour of the bars. -->
+        <attr name="barColor" format="color" />
+        <!-- The gap between bars, as a fraction of a bar's width (0.55 if not set). -->
+        <attr name="barGap" format="float" />
+        <!-- How round the ends of a bar are: 0 is square, 0.5 (the default) is a full round end. -->
+        <attr name="barRadius" format="float" />
+        <!-- How high bars stand when paused, compared with the usual (1 if not set). -->
+        <attr name="barRest" format="float" />
+        <!-- While playing without the real sound, move like a music spectrum: tall at the bass end. -->
+        <attr name="spectrum" format="boolean" />
+    </declare-styleable>
+</resources>

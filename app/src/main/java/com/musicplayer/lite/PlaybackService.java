@@ -131,6 +131,7 @@ public final class PlaybackService extends Service {
 
         effects = new EffectsController(this, audioSessionId);
         broadcastEffectSession(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
+        SoundBars.get(this).setSession(audioSessionId);
 
         // Bring back the last queue (paused, at the saved position) once the library is known.
         library.whenLoaded(this::restoreQueue);
@@ -178,6 +179,7 @@ public final class PlaybackService extends Service {
         releasePlayer();
         abandonFocus();
         unregisterNoisy();
+        SoundBars.get(this).setSession(0);
         broadcastEffectSession(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
         effects.release();
         session.release();

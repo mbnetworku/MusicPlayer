@@ -97,6 +97,16 @@
         <item name="android:tint">@color/icon</item>
     </style>
 
+    <!-- The Equalizer button of a top bar: the moving bars, 22dp inside the 48dp touch area. -->
+    <style name="EqBarsButton">
+        <item name="android:layout_width">@dimen/icon_btn</item>
+        <item name="android:layout_height">@dimen/icon_btn</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">13dp</item>
+    </style>
+
     <!-- One item of the bottom tab bar: an icon above a short label (set drawableTop in the layout). -->
     <style name="Tab">
         <item name="android:layout_width">0dp</item>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Landscape (car): curve and band sliders on the left, presets and effects on the right. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -88,6 +89,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <!-- Moving bars while music plays; their heights follow the equalizer sliders. -->
+                <com.musicplayer.lite.EqBarsView
+                    android:id="@+id/eq_bars"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/eq_bars_height"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_card"
+                    android:importantForAccessibility="no"
+                    android:padding="16dp"
+                    android:tag="glass:card"
+                    app:barColor="@color/accent"
+                    app:bars="20" />
 
                 <include layout="@layout/part_eq_device" />
 

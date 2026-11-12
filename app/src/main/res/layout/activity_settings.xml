@@ -94,6 +94,15 @@
                 <include
                     android:id="@+id/row_glass"
                     layout="@layout/row_setting" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <include
+                    android:id="@+id/row_bars"
+                    layout="@layout/row_setting" />
             </LinearLayout>
 
             <TextView

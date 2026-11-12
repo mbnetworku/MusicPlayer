@@ -42,6 +42,37 @@ final class Prefs {
         sp.edit().putInt("tab", tab).apply();
     }
 
+    // ---- favourites ------------------------------------------------------------
+
+    /** The favourite songs' paths, as written by {@link Favorites#encode}. */
+    String favorites() {
+        return sp.getString("favorites", "");
+    }
+
+    void setFavorites(String text) {
+        sp.edit().putString("favorites", text).apply();
+    }
+
+    // ---- moving bars that follow the sound -----------------------------------------
+
+    /** Whether the bars may follow the real sound (the permission is asked for separately). */
+    boolean barsFollow() {
+        return sp.getBoolean("bars_follow", true);
+    }
+
+    void setBarsFollow(boolean on) {
+        sp.edit().putBoolean("bars_follow", on).apply();
+    }
+
+    /** True once the glass pop-up that asks for the permission has been shown, so it is shown only once. */
+    boolean barsAsked() {
+        return sp.getBoolean("bars_asked", false);
+    }
+
+    void setBarsAsked(boolean asked) {
+        sp.edit().putBoolean("bars_asked", asked).apply();
+    }
+
     // ---- appearance ----------------------------------------------------------
 
     /** One of {@link Appearance#FOLLOW_DEVICE}, {@link Appearance#LIGHT}, {@link Appearance#DARK}. */

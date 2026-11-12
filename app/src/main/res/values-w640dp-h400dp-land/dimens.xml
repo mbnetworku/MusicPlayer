@@ -17,6 +17,7 @@
     <dimen name="text_np_artist">17sp</dimen>
 
     <dimen name="np_art_pad">20dp</dimen>
+    <dimen name="np_bars_height">130dp</dimen>
     <dimen name="ctl_small">64dp</dimen>
     <dimen name="ctl_mid">80dp</dimen>
     <dimen name="ctl_big">96dp</dimen>
@@ -25,6 +26,7 @@
     <dimen name="ctl_big_pad">16dp</dimen>
 
     <dimen name="eq_curve_height">90dp</dimen>
+    <dimen name="eq_bars_height">72dp</dimen>
     <dimen name="eq_band_height">180dp</dimen>
     <dimen name="eq_chip_height">48dp</dimen>
 </resources>

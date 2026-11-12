@@ -9,6 +9,7 @@
     <string name="tab_folders">Folders</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_artists">Artists</string>
+    <string name="tab_favorites">Favorites</string>
 
     <plurals name="songs_count">
         <item quantity="one">%d song</item>
@@ -42,6 +43,9 @@
     <string name="cd_repeat">Repeat</string>
     <string name="cd_album_art">Album art</string>
     <string name="cd_now_playing">Open now playing</string>
+    <string name="cd_favorite_add">Add to Favorites</string>
+    <string name="cd_favorite_remove">Remove from Favorites</string>
+    <string name="cd_favorite_mark">Favorite</string>
 
     <string name="menu_scan">Scan storage for music</string>
     <string name="menu_settings">Settings</string>
@@ -124,6 +128,8 @@
     <string name="mode_dark">dark</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="set_bars">Bars follow the music</string>
+    <string name="set_bars_sub">The moving bars rise and fall with the sound of your music. Android calls the permission for this microphone access; the app only reads its own music.</string>
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels. Choose what is behind them below.</string>
 
@@ -194,8 +200,27 @@
     <string name="perm_write_settings">Android will not ask again. Open this app\'s settings, choose Permissions, and allow access to files and media.</string>
     <string name="perm_install_title">Allow installing updates?</string>
     <string name="perm_install_body">Android asks you once to let Music Player install apps. The app only installs files that come from this project\'s releases and carry its signature.</string>
+    <string name="perm_bars_title">Make the bars follow the music?</string>
+    <string name="perm_bars_body">To draw bars that move with your music, Android asks for microphone access. Music Player never uses the microphone: it only looks at the sound of its own music, and nothing is recorded or sent anywhere. If you say Not allowed, the bars still move, they just do not follow the sound. You can change this in Settings.</string>
+    <string name="perm_bars_settings">Android will not ask again. Open this app\'s settings, choose Permissions, and allow the microphone.</string>
     <string name="perm_wallpaper_title">Use your wallpaper?</string>
     <string name="perm_wallpaper_body">Music Player asks Android for your wallpaper picture. It stays on this device. If Android refuses, the wallpaper\'s colours are used instead.</string>
+    <string name="action_favorite_add">Add to Favorites</string>
+    <string name="action_favorite_remove">Remove from Favorites</string>
+    <string name="action_favorite_add_all">Add all to Favorites</string>
+    <string name="action_favorite_remove_all">Remove all from Favorites</string>
+    <string name="toast_fav_added">Added to Favorites</string>
+    <string name="toast_fav_removed">Removed from Favorites</string>
+    <plurals name="toast_fav_added_many">
+        <item quantity="one">Added %d song to Favorites</item>
+        <item quantity="other">Added %d songs to Favorites</item>
+    </plurals>
+    <plurals name="toast_fav_removed_many">
+        <item quantity="one">Removed %d song from Favorites</item>
+        <item quantity="other">Removed %d songs from Favorites</item>
+    </plurals>
+    <string name="empty_fav_title">No favorites yet</string>
+    <string name="empty_fav_body">Tap the heart on the Now Playing screen, or choose Add to Favorites in the … menu of a song.</string>
     <string name="action_info">Song info</string>
     <string name="action_delete">Delete…</string>
     <string name="action_delete_many">Delete all these songs…</string>

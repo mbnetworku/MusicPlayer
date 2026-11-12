@@ -19,6 +19,8 @@
     <color name="ripple">#33FFFFFF</color>
     <color name="eq_track">#3A3A3C</color>
     <color name="playing_scrim">#B3000000</color>
+    <!-- The moving bars over the big cover on the Now Playing screen. -->
+    <color name="np_bars">#F2FFFFFF</color>
     <!-- Settings and other grouped lists: a page colour and the colour of the cards on it. -->
     <color name="grouped_bg">#000000</color>
     <color name="grouped_card">#1C1C1E</color>

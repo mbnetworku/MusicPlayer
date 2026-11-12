@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +33,11 @@ public class LibraryActivity extends BoundActivity
     private static final int TAB_FOLDERS = 1;
     private static final int TAB_ALBUMS = 2;
     private static final int TAB_ARTISTS = 3;
+    private static final int TAB_FAVORITES = 4;
     private static final int REQ_PERMISSIONS = 1;
     private static final String SEP = " · ";
-    private static final int[] TAB_TITLES = {R.string.tab_songs, R.string.tab_folders, R.string.tab_albums, R.string.tab_artists};
+    private static final int[] TAB_TITLES = {R.string.tab_songs, R.string.tab_folders, R.string.tab_albums,
+            R.string.tab_artists, R.string.tab_favorites};
     private static final String STATE_TAB = "tab";
     private static final String STATE_FOLDER = "folder";
     private static final String STATE_GROUP = "group";
@@ -42,6 +45,15 @@ public class LibraryActivity extends BoundActivity
 
     private interface ServiceAction {
         void run(PlaybackService s);
+    }
+
+    /** The tag of the header above the favorites: the songs that Play and Shuffle start. */
+    private static final class TrackList {
+        final List<Track> tracks;
+
+        TrackList(List<Track> tracks) {
+            this.tracks = tracks;
+        }
     }
 
     private Library library;
@@ -52,10 +64,12 @@ public class LibraryActivity extends BoundActivity
     private TextView emptyTitle;
     private TextView emptyBody;
     private TextView emptyAction;
+    private ImageView emptyIcon;
+    private EqBarsView eqBars;
     private TextView subtitle;
     private View searchBar;
     private EditText searchInput;
-    private final View[] tabViews = new View[4];
+    private final View[] tabViews = new View[5];
     private TextView titleView;
     private MiniPlayerView mini;
     private NowPlayingView panel;
@@ -91,6 +105,8 @@ public class LibraryActivity extends BoundActivity
         emptyTitle = findViewById(R.id.empty_title);
         emptyBody = findViewById(R.id.empty_body);
         emptyAction = findViewById(R.id.empty_action);
+        emptyIcon = findViewById(R.id.empty_icon);
+        eqBars = findViewById(R.id.btn_eq);
         subtitle = findViewById(R.id.subtitle);
         titleView = findViewById(R.id.title);
         searchBar = findViewById(R.id.search_bar);
@@ -114,6 +130,7 @@ public class LibraryActivity extends BoundActivity
         tabViews[TAB_FOLDERS] = findViewById(R.id.tab_folders);
         tabViews[TAB_ALBUMS] = findViewById(R.id.tab_albums);
         tabViews[TAB_ARTISTS] = findViewById(R.id.tab_artists);
+        tabViews[TAB_FAVORITES] = findViewById(R.id.tab_favorites);
 
         adapter = new RowAdapter(this, this);
         adapter.setMoreListener((row, anchor) -> onRowLongClick(row));
@@ -159,7 +176,7 @@ public class LibraryActivity extends BoundActivity
                 searchBar.setVisibility(View.VISIBLE);
             }
         } else {
-            tab = Fmt.clamp(prefs.lastTab(), 0, 3);
+            tab = Fmt.clamp(prefs.lastTab(), 0, tabViews.length - 1);
         }
 
         library.addListener(this);
@@ -240,6 +257,9 @@ public class LibraryActivity extends BoundActivity
         if (service == null) return;
         Track t = service.currentTrack();
         adapter.setCurrentTrack(t == null ? -1 : t.id);
+        adapter.setPlaying(service.isPlaying());
+        eqBars.setPlaying(service.isPlaying());
+        if (panel != null && service.isPlaying()) offerSoundBars();   // the car layout has the big bars here
         if (mini != null) mini.refresh();
         if (panel != null) panel.refresh();
     }
@@ -248,6 +268,11 @@ public class LibraryActivity extends BoundActivity
     protected void onTick() {
         if (mini != null) mini.tick();
         if (panel != null) panel.tick();
+    }
+
+    @Override
+    protected void onFavoritesChanged() {
+        rebuild();
     }
 
     @Override
@@ -338,6 +363,9 @@ public class LibraryActivity extends BoundActivity
             case TAB_ARTISTS:
                 addGroupRows(rows, false);
                 break;
+            case TAB_FAVORITES:
+                addFavoriteRows(rows);
+                break;
             default: {
                 List<Track> src = searching ? library.search(query) : library.tracks();
                 context = src;
@@ -352,8 +380,8 @@ public class LibraryActivity extends BoundActivity
         list.setFastScrollEnabled(rows.size() > 40);
         for (int i = 0; i < tabViews.length; i++) tabViews[i].setSelected(i == shown);
         titleView.setText(searching ? R.string.search_title : TAB_TITLES[shown]);
-        updateSubtitle();
-        updateEmpty(searching, rows.isEmpty());
+        updateSubtitle(shown);
+        updateEmpty(searching, shown, rows.isEmpty());
         if (service != null) adapter.setCurrentTrack(currentId());
     }
 
@@ -406,7 +434,23 @@ public class LibraryActivity extends BoundActivity
         }
     }
 
-    private void updateSubtitle() {
+    /** The favorites, newest first, under a header with Play and Shuffle. */
+    private void addFavoriteRows(List<RowAdapter.Row> rows) {
+        final List<Track> tracks = Favorites.get(this).tracks(library);
+        context = tracks;
+        if (tracks.isEmpty()) return;
+        rows.add(RowAdapter.Row.header(null, "", plural(R.plurals.songs_count, tracks.size()), true,
+                new TrackList(tracks)));
+        for (int i = 0; i < tracks.size(); i++) {
+            rows.add(RowAdapter.Row.track(tracks.get(i), RowAdapter.SUB_ARTIST_ALBUM, i));
+        }
+    }
+
+    private void updateSubtitle(int shown) {
+        if (shown == TAB_FAVORITES) {
+            subtitle.setText("");   // the header row above the list says how many songs there are
+            return;
+        }
         int songs = library.tracks().size();
         if (songs == 0) {
             subtitle.setText("");
@@ -416,10 +460,11 @@ public class LibraryActivity extends BoundActivity
                 plural(R.plurals.folders_count, library.folderCount())));
     }
 
-    private void updateEmpty(boolean searching, boolean rowsEmpty) {
+    private void updateEmpty(boolean searching, int shown, boolean rowsEmpty) {
         final boolean permitted = Library.hasPermission(this);
         boolean show = true;
         emptyAction.setVisibility(View.VISIBLE);
+        emptyIcon.setImageResource(R.drawable.ic_music_note);
         if (!permitted) {
             emptyTitle.setText(R.string.empty_permission_title);
             emptyBody.setText(R.string.empty_permission_body);
@@ -436,6 +481,11 @@ public class LibraryActivity extends BoundActivity
         } else if (rowsEmpty && searching) {
             emptyTitle.setText(R.string.empty_search_title);
             emptyBody.setText(R.string.empty_search_body);
+            emptyAction.setVisibility(View.GONE);
+        } else if (rowsEmpty && shown == TAB_FAVORITES && library.isLoaded()) {
+            emptyIcon.setImageResource(R.drawable.ic_favorite_border);
+            emptyTitle.setText(R.string.empty_fav_title);
+            emptyBody.setText(R.string.empty_fav_body);
             emptyAction.setVisibility(View.GONE);
         } else {
             show = false;
@@ -526,6 +576,7 @@ public class LibraryActivity extends BoundActivity
         if (r.tag instanceof FolderTree.Node) return FolderTree.flatten((FolderTree.Node) r.tag);
         if (r.tag instanceof FolderTree.Entry) return FolderTree.flatten(((FolderTree.Entry) r.tag).node);
         if (r.tag instanceof Library.Group) return ((Library.Group) r.tag).tracks;
+        if (r.tag instanceof TrackList) return ((TrackList) r.tag).tracks;
         return null;
     }
 

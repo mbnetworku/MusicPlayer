@@ -71,6 +71,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
     private ViewGroup presetRow;
     private LinearLayout bandRow;
     private EqCurveView curve;
+    private EqBarsView bars;
     private final List<EqSliderView> sliders = new ArrayList<>();
     private final List<TextView> bandValues = new ArrayList<>();
     private final List<TextView> chips = new ArrayList<>();
@@ -92,6 +93,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
         presetRow = findViewById(R.id.eq_presets);
         bandRow = findViewById(R.id.eq_bands);
         curve = findViewById(R.id.eq_curve);
+        bars = findViewById(R.id.eq_bars);
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
     }
 
@@ -107,6 +109,29 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
     protected void onStop() {
         if (fx != null) fx.commit();
         super.onStop();
+    }
+
+    @Override
+    protected void onPlaybackUpdated() {
+        if (service != null) bars.setPlaying(service.isPlaying());
+    }
+
+    /**
+     * The moving bars may reach as high as the sliders say: a flat equalizer keeps them a little
+     * below the top, a boosted band lets its bars reach it, a cut band keeps them low. An equalizer
+     * that is off changes nothing, so its bars are flat.
+     */
+    private void updateBars() {
+        if (bars == null || fx == null) return;
+        if (!fx.hasEq()) {
+            bars.setEnvelope(null);
+            return;
+        }
+        final int[] levels = new int[fx.bandCount()];
+        if (fx.isEnabled()) {
+            for (int b = 0; b < levels.length; b++) levels[b] = fx.level(b);
+        }
+        bars.setEnvelope(EqBarsView.envelopeFromLevels(levels, fx.minLevel(), fx.maxLevel()));
     }
 
     private void build() {
@@ -320,6 +345,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
         curve.setActive(on);
         bandRow.setAlpha(on ? 1f : 0.5f);
         curve.setAlpha(on ? 1f : 0.7f);
+        updateBars();
     }
 
     // ---- EqSliderView.Listener ------------------------------------------------------------------------
@@ -333,6 +359,7 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
         for (int b = 0; b < levels.length; b++) levels[b] = fx.level(b);
         curve.setData(levels, fx.minLevel(), fx.maxLevel());
         for (int i = 0; i < chips.size(); i++) chips.get(i).setSelected(i == EqPresets.COUNT);
+        updateBars();
     }
 
     @Override
