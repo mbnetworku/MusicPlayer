@@ -247,6 +247,57 @@ public class RealTouchTest {
     }
 
     @Test
+    public void tappingASongInsideAFolderPlaysIt() throws Exception {
+        ActivityController<LibraryActivity> c = openLibrary();
+        LibraryActivity a = c.get();
+        tap(a, a.findViewById(R.id.tab_folders));
+        measure(a);
+        ListView list = a.findViewById(R.id.list);
+        for (int depth = 0; depth < 6; depth++) {
+            RowAdapter.Row r = null;
+            int at = -1;
+            for (int i = 0; i < list.getAdapter().getCount(); i++) {
+                RowAdapter.Row x = (RowAdapter.Row) list.getAdapter().getItem(i);
+                if (x.type == RowAdapter.TRACK) { r = x; at = i; break; }
+            }
+            if (r != null) {
+                tap(a, list.getChildAt(at));
+                assertNotNull("the tap on a song in a folder started it", service.currentTrack());
+                assertEquals(r.track.title, service.currentTrack().title);
+                c.pause().stop().destroy();
+                return;
+            }
+            int f = -1;
+            for (int i = 0; i < list.getAdapter().getCount(); i++) {
+                RowAdapter.Row x = (RowAdapter.Row) list.getAdapter().getItem(i);
+                if (x.type == RowAdapter.FOLDER && x.tag != null) { f = i; break; }
+            }
+            assertTrue("a folder to open", f >= 0);
+            tap(a, list.getChildAt(f));
+            measure(a);
+        }
+        throw new AssertionError("no song found in any folder");
+    }
+
+    @Test
+    public void thePlayAllButtonOfAFolderAnswersAFinger() throws Exception {
+        ActivityController<LibraryActivity> c = openLibrary();
+        LibraryActivity a = c.get();
+        tap(a, a.findViewById(R.id.tab_folders));
+        measure(a);
+        ListView list = a.findViewById(R.id.list);
+        tap(a, list.getChildAt(0).findViewById(R.id.hdr_play));
+        assertNotNull("Play all at the top of the folders started music", service.currentTrack());
+        int all = service.queue().size();
+        assertEquals(5, all);
+        tap(a, list.getChildAt(1));
+        measure(a);
+        tap(a, list.getChildAt(0).findViewById(R.id.hdr_play));
+        assertTrue("Play all inside a folder started it", service.queue().size() < all);
+        c.pause().stop().destroy();
+    }
+
+    @Test
     public void tappingAFolderOpensIt() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
         LibraryActivity a = c.get();
