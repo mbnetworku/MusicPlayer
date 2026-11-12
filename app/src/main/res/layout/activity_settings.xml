@@ -104,6 +104,10 @@
                     android:id="@+id/row_bars"
                     layout="@layout/row_setting" />
 
+                <include
+                    android:id="@+id/row_cover_tap"
+                    layout="@layout/row_setting" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

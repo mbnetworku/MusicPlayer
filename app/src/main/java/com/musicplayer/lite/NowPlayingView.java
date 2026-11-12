@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -88,6 +89,19 @@ public class NowPlayingView extends LinearLayout {
         });
         prev.setOnClickListener(v -> {
             if (service != null) service.previous();
+        });
+        final View cover = (View) art.getParent();
+        cover.setOnTouchListener((v, e) -> {
+            if (!Prefs.get(getContext()).coverTapSkip() || service == null) return false;
+            if (e.getActionMasked() == MotionEvent.ACTION_DOWN) return true;   // keep the touch to see it lift
+            if (e.getActionMasked() == MotionEvent.ACTION_UP && v.getWidth() > 0) {
+                final float x = e.getX() / v.getWidth();
+                if (x < 1f / 3f) service.previous();
+                else if (x > 2f / 3f) service.next(true);
+                else service.togglePlayPause();
+                return true;
+            }
+            return false;
         });
         shuffle.setOnClickListener(v -> {
             if (service != null) service.setShuffle(!service.queue().isShuffle());

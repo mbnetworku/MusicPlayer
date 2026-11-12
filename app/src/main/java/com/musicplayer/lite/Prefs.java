@@ -64,6 +64,15 @@ final class Prefs {
         sp.edit().putBoolean("bars_follow", on).apply();
     }
 
+    /** Tapping the left or right of the big cover goes to the previous or next song. */
+    boolean coverTapSkip() {
+        return sp.getBoolean("cover_tap_skip", false);
+    }
+
+    void setCoverTapSkip(boolean on) {
+        sp.edit().putBoolean("cover_tap_skip", on).apply();
+    }
+
     /** How song lists are sorted: see {@link SortOrder}. */
     int sortKey() {
         int v = sp.getInt("sort_key", 0);

@@ -389,6 +389,43 @@ public class RealTouchTest {
     }
 
     @Test
+    public void tappingTheCoverEdgesSkipsWhenTheOptionIsOn() throws Exception {
+        loadLibrary();
+        service.playQueue(Library.get(app).tracks(), 1, false);
+        TestMedia.idle();
+        Prefs.get(app).setCoverTapSkip(true);
+        ActivityController<PlayerActivity> c =
+                Robolectric.buildActivity(PlayerActivity.class).create().start().resume().visible();
+        c.windowFocusChanged(true);
+        TestMedia.idle();
+        PlayerActivity a = c.get();
+        measure(a);
+        View art = (View) a.findViewById(R.id.np_art).getParent();   // the cover frame the finger lands on
+        int[] at = new int[2];
+        art.getLocationInWindow(at);
+        long before = service.currentTrack().id;
+        tapAt(a, at[0] + art.getWidth() * 0.85f, at[1] + art.getHeight() / 2f);
+        long afterNext = service.currentTrack().id;
+        assertTrue("right side went to the next song", afterNext != before);
+        tapAt(a, at[0] + art.getWidth() * 0.12f, at[1] + art.getHeight() / 2f);
+        assertEquals("left side went back", before, service.currentTrack().id);
+        Prefs.get(app).setCoverTapSkip(false);
+        tapAt(a, at[0] + art.getWidth() * 0.85f, at[1] + art.getHeight() / 2f);
+        assertEquals("nothing happens when the option is off", before, service.currentTrack().id);
+        c.pause().stop().destroy();
+    }
+
+    private static void tapAt(Activity a, float x, float y) {
+        long t = SystemClock.uptimeMillis();
+        View decor = a.getWindow().getDecorView();
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, x, y, 0));
+        ShadowLooper.idleMainLooper(60, TimeUnit.MILLISECONDS);
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t + 60, MotionEvent.ACTION_UP, x, y, 0));
+        ShadowLooper.idleMainLooper(300, TimeUnit.MILLISECONDS);
+        TestMedia.idle();
+    }
+
+    @Test
     public void tappingAFolderOpensIt() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
         LibraryActivity a = c.get();

@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.6.0] - 2026-11-12
+
+- New: tap the cover to skip. Turn it on in Settings under "Tap the cover to skip". On the Now Playing picture, tap the left side for the previous song, the right side for the next song, and the middle to play or pause. It is off until you turn it on.
+
 ## [1.5.0] - 2026-11-12
 
 - New: you can sort your songs. Tap the menu (three dots) and choose "Sort songs". You can order by title, artist, album, recently added or longest first, and reverse the order. The choice is kept, and it is used in Songs, in search and inside folders.

@@ -107,6 +107,9 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             recreate();
         });
 
+        Switch tapSkip = setupRow(R.id.row_cover_tap, R.string.set_cover_tap, R.string.set_cover_tap_sub, true);
+        tapSkip.setChecked(prefs.coverTapSkip());
+        tapSkip.setOnCheckedChangeListener((b, on) -> prefs.setCoverTapSkip(on));
         bindBarStyle();
         barsSwitch = setupRow(R.id.row_bars, R.string.set_bars, R.string.set_bars_sub, true);
         syncBarsSwitch();

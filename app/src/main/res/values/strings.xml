@@ -140,6 +140,8 @@
     <string name="bar_style_dots">Dots</string>
     <string name="bar_style_mirror">Mirror</string>
     <string name="bar_style_wave">Wave</string>
+    <string name="set_cover_tap">Tap the cover to skip</string>
+    <string name="set_cover_tap_sub">On the Now Playing picture, tap the left side for the previous song, the right side for the next song, and the middle to play or pause.</string>
     <string name="set_bars">Bars follow the music</string>
     <string name="set_bars_sub">The moving bars rise and fall with the sound of your music. Android calls the permission for this microphone access; the app only reads its own music.</string>
     <string name="set_glass">Liquid glass</string>
