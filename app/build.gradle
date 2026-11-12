@@ -12,7 +12,7 @@ def appVersionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionPa
 // Signing. Android only installs an update over an app signed with the same key, so releases
 // need one stable key of your own: create keystore.properties (git-ignored) with storeFile,
 // storePassword, keyAlias and keyPassword. The release workflow builds that file from
-// repository secrets (see README: Signing and updates). Without it the build is signed with
+// repository secrets (see docs/DEVELOPING.md: Signing and updates). Without it the build is signed with
 // the local debug key, which is enough to install and try the app but differs from machine to
 // machine, so such builds cannot update each other.
 def keystoreProps = new Properties()

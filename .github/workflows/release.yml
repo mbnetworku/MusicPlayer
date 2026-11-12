@@ -6,7 +6,7 @@ name: Publish release
 #      (for example 1.2.0).
 # The workflow builds, tests and signs the app, then creates the GitHub release that the app's
 # Settings > Updates screen looks at. Installed copies of the app offer it from then on.
-# It needs your signing key in four repository secrets first (see README: Signing and updates).
+# It needs your signing key in four repository secrets first (see docs/DEVELOPING.md: Signing and updates).
 
 on:
   workflow_dispatch:
@@ -95,7 +95,7 @@ jobs:
             if [ -z "${!v}" ]; then missing="$missing $v"; fi
           done
           if [ -n "$missing" ]; then
-            echo "::error::The signing key is not set up. Add these repository secrets (Settings > Secrets and variables > Actions): RELEASE_KEYSTORE_BASE64, RELEASE_KEYSTORE_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_KEY_PASSWORD. The README explains how. Without one stable key, installed apps could not install the update."
+            echo "::error::The signing key is not set up. Add these repository secrets (Settings > Secrets and variables > Actions): RELEASE_KEYSTORE_BASE64, RELEASE_KEYSTORE_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_KEY_PASSWORD. docs/DEVELOPING.md explains how. Without one stable key, installed apps could not install the update."
             exit 1
           fi
           printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
@@ -139,6 +139,7 @@ jobs:
           set -euo pipefail
           mkdir dist
           cp app/build/outputs/apk/release/app-release.apk "dist/MusicPlayer-$VERSION.apk"
+          cp "dist/MusicPlayer-$VERSION.apk" dist/MusicPlayer.apk
           (cd dist && sha256sum "MusicPlayer-$VERSION.apk" > "MusicPlayer-$VERSION.apk.sha256")
           cat "dist/MusicPlayer-$VERSION.apk.sha256"
 
@@ -151,6 +152,10 @@ jobs:
             --title "Music Player $VERSION" \
             --notes-file notes.md \
             --latest
+          # A copy with a fixed name, added afterwards so that it is listed last (the app's updater
+          # uses the first APK of a release). releases/latest/download/MusicPlayer.apk then always
+          # gives the newest release.
+          gh release upload "v$VERSION" dist/MusicPlayer.apk
 
       - name: Upload reports when something failed
         if: failure()

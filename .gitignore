@@ -11,7 +11,11 @@ captures/
 # Local copies of release files kept for sharing
 dist/
 
-# Signing keys and their settings. Never commit these (see README: Signing and updates).
+# ...but the APKs people download from GitHub live in download/ and are committed on purpose.
+!download/
+!download/*.apk
+
+# Signing keys and their settings. Never commit these (see docs/DEVELOPING.md: Signing and updates).
 keystore.properties
 *.jks
 *.keystore

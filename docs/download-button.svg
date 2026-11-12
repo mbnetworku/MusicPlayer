@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="84" viewBox="0 0 360 84" role="img" aria-labelledby="t d">
+  <title id="t">Download the APK</title>
+  <desc id="d">Download Music Player for Android, about 170 KB, Android 8.0 or newer</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F23A44"/>
+      <stop offset="1" stop-color="#C8101B"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#8A0A12" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="4" y="2" width="352" height="72" rx="22" fill="url(#bg)"/>
+    <rect x="4" y="2" width="352" height="36" rx="22" fill="url(#shine)"/>
+  </g>
+  <!-- download arrow in a round white badge -->
+  <circle cx="46" cy="38" r="24" fill="#FFFFFF" fill-opacity=".96"/>
+  <path d="M46 24v17m0 0l-8-8m8 8l8-8M35 50h22" fill="none" stroke="#D3121D" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="86" y="37" fill="#FFFFFF" font-family="-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" font-size="27" font-weight="700" letter-spacing=".2">Download APK</text>
+  <text x="87" y="57" fill="#FFFFFF" fill-opacity=".88" font-family="-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" font-size="14.5" font-weight="500">Android 8.0+ &#183; about 170 KB &#183; free</text>
+</svg>
