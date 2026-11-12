@@ -2,19 +2,20 @@
 <resources>
     <dimen name="gutter">16dp</dimen>
     <dimen name="topbar_height">56dp</dimen>
-    <dimen name="tab_height">44dp</dimen>
+    <dimen name="tabbar_height">56dp</dimen>
     <dimen name="icon_btn">48dp</dimen>
     <dimen name="row_height">64dp</dimen>
     <dimen name="row_art">48dp</dimen>
-    <dimen name="mini_height">64dp</dimen>
-    <dimen name="mini_art">44dp</dimen>
+    <dimen name="mini_height">60dp</dimen>
+    <dimen name="mini_art">40dp</dimen>
     <dimen name="pill_height">44dp</dimen>
 
     <dimen name="text_top_title">20sp</dimen>
     <dimen name="text_top_subtitle">12sp</dimen>
-    <dimen name="text_tab">14sp</dimen>
+    <dimen name="text_tab">11sp</dimen>
+    <dimen name="text_large_title">32sp</dimen>
     <dimen name="text_row_title">16sp</dimen>
-    <dimen name="text_row_sub">13sp</dimen>
+    <dimen name="text_row_sub">14sp</dimen>
     <dimen name="text_np_title">22sp</dimen>
     <dimen name="text_np_artist">15sp</dimen>
 
@@ -22,11 +23,11 @@
     <dimen name="np_side_pad">24dp</dimen>
     <dimen name="ctl_small">56dp</dimen>
     <dimen name="ctl_mid">64dp</dimen>
-    <dimen name="ctl_big">84dp</dimen>
+    <dimen name="ctl_big">88dp</dimen>
     <dimen name="ctl_vpad">8dp</dimen>
     <dimen name="ctl_small_pad">16dp</dimen>
     <dimen name="ctl_mid_pad">14dp</dimen>
-    <dimen name="ctl_big_pad">24dp</dimen>
+    <dimen name="ctl_big_pad">14dp</dimen>
 
     <dimen name="eq_curve_height">120dp</dimen>
     <dimen name="eq_band_height">210dp</dimen>

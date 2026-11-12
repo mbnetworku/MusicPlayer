@@ -17,6 +17,9 @@ final class EffectsController {
     static final int LOUDNESS_MAX = 1200;
 
     private final Prefs prefs;
+    private final DeviceEq.Opener deviceOpener;
+    /** The equalizer of the whole device, held open only while we control it. */
+    private DeviceEq device;
     private Equalizer eq;
     private BassBoost bassBoost;
     private Virtualizer virtualizer;
@@ -34,6 +37,11 @@ final class EffectsController {
     private int loud;
 
     EffectsController(Context ctx, int audioSession) {
+        this(ctx, audioSession, DeviceEq.PLATFORM);
+    }
+
+    EffectsController(Context ctx, int audioSession, DeviceEq.Opener deviceOpener) {
+        this.deviceOpener = deviceOpener;
         prefs = Prefs.get(ctx);
         enabled = prefs.eqEnabled();
         preset = prefs.eqPreset();
@@ -42,7 +50,19 @@ final class EffectsController {
         loud = prefs.loudness();
         if (audioSession > 0) create(audioSession);
         initLevels();
+        if (prefs.eqDevice()) device = openDevice();
         applyAll();
+    }
+
+    /** The device equalizer, if it can be changed and has the same bands as this player's. */
+    private DeviceEq openDevice() {
+        DeviceEq d = DeviceEq.open(deviceOpener);
+        if (d == null) return null;
+        if (!d.hasControl() || (bands > 0 && d.bandCount() != bands)) {
+            d.release();
+            return null;
+        }
+        return d;
     }
 
     private void create(int session) {
@@ -155,6 +175,61 @@ final class EffectsController {
         return loud;
     }
 
+    // ---- the equalizer of the whole device --------------------------------------
+
+    /** True while the sliders change the whole device's equalizer instead of this player's. */
+    boolean isDeviceMode() {
+        return device != null;
+    }
+
+    /**
+     * What the device's own equalizer says right now (on or off, which preset, the band levels),
+     * or null when the device does not let this app look. Does not change anything.
+     */
+    DeviceEq.State deviceState() {
+        if (device != null) return device.read();
+        DeviceEq probe = DeviceEq.open(deviceOpener);
+        if (probe == null) return null;
+        try {
+            return probe.read();
+        } finally {
+            probe.release();
+        }
+    }
+
+    /**
+     * Starts or stops controlling the whole device's equalizer. Returns false if the device does
+     * not allow it, in which case nothing changes.
+     */
+    boolean setDeviceMode(boolean on) {
+        if (on == (device != null)) return true;
+        if (on) {
+            DeviceEq d = openDevice();
+            if (d == null) return false;
+            device = d;
+            prefs.setEqDevice(true);
+        } else {
+            device.release();
+            device = null;
+            prefs.setEqDevice(false);
+        }
+        applyEq();
+        return true;
+    }
+
+    /** Copies the device equalizer's on/off state and curve into this player's equalizer. */
+    boolean adoptDevice() {
+        DeviceEq.State s = deviceState();
+        if (s == null || s.levels.length != bands || bands == 0) return false;
+        for (int i = 0; i < bands; i++) levels[i] = Fmt.clamp(s.levels[i], minLevel, maxLevel);
+        preset = -1;
+        enabled = s.enabled;
+        prefs.setEqEnabled(enabled);
+        applyEq();
+        commit();
+        return true;
+    }
+
     // ---- changes -----------------------------------------------------------------
 
     void setEnabled(boolean on) {
@@ -168,7 +243,9 @@ final class EffectsController {
         if (band < 0 || band >= bands) return;
         levels[band] = Fmt.clamp(level, minLevel, maxLevel);
         preset = -1;
-        if (eq != null) {
+        if (device != null) {
+            device.setLevel(band, levels[band]);
+        } else if (eq != null) {
             try {
                 eq.setBandLevel((short) band, (short) levels[band]);
             } catch (RuntimeException ignored) {
@@ -219,6 +296,8 @@ final class EffectsController {
 
     void release() {
         commit();
+        if (device != null) device.release();
+        device = null;
         if (eq != null) eq.release();
         if (bassBoost != null) bassBoost.release();
         if (virtualizer != null) virtualizer.release();
@@ -239,6 +318,19 @@ final class EffectsController {
     }
 
     private void applyEq() {
+        if (device != null) {
+            // The whole device's equalizer is in charge; this player's own one stays out of the way
+            // so the sound is not shaped twice.
+            device.write(enabled, levels);
+            if (eq != null) {
+                try {
+                    eq.setEnabled(false);
+                } catch (RuntimeException ignored) {
+                    // Effect engine unavailable right now.
+                }
+            }
+            return;
+        }
         if (eq == null) return;
         try {
             for (int i = 0; i < bands; i++) eq.setBandLevel((short) i, (short) levels[i]);

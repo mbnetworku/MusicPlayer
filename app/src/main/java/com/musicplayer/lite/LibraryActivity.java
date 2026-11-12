@@ -1,7 +1,6 @@
 package com.musicplayer.lite;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +34,7 @@ public class LibraryActivity extends BoundActivity
     private static final int TAB_ARTISTS = 3;
     private static final int REQ_PERMISSIONS = 1;
     private static final String SEP = " · ";
+    private static final int[] TAB_TITLES = {R.string.tab_songs, R.string.tab_folders, R.string.tab_albums, R.string.tab_artists};
     private static final String STATE_TAB = "tab";
     private static final String STATE_FOLDER = "folder";
     private static final String STATE_GROUP = "group";
@@ -56,7 +55,8 @@ public class LibraryActivity extends BoundActivity
     private TextView subtitle;
     private View searchBar;
     private EditText searchInput;
-    private final TextView[] tabViews = new TextView[4];
+    private final View[] tabViews = new View[4];
+    private TextView titleView;
     private MiniPlayerView mini;
     private NowPlayingView panel;
     private View updateBanner;
@@ -92,10 +92,14 @@ public class LibraryActivity extends BoundActivity
         emptyBody = findViewById(R.id.empty_body);
         emptyAction = findViewById(R.id.empty_action);
         subtitle = findViewById(R.id.subtitle);
+        titleView = findViewById(R.id.title);
         searchBar = findViewById(R.id.search_bar);
         searchInput = findViewById(R.id.search_input);
         mini = findViewById(R.id.mini);
         panel = findViewById(R.id.np);
+        if (panel != null) {
+            panel.setMoreListener(t -> showSongMenu(t.title, Collections.singletonList(t), true, true));
+        }
         updater = Updater.get(this);
         updateBanner = findViewById(R.id.update_banner);
         updateBannerText = findViewById(R.id.update_banner_text);
@@ -112,6 +116,7 @@ public class LibraryActivity extends BoundActivity
         tabViews[TAB_ARTISTS] = findViewById(R.id.tab_artists);
 
         adapter = new RowAdapter(this, this);
+        adapter.setMoreListener((row, anchor) -> onRowLongClick(row));
         list.setAdapter(adapter);
         list.setOnItemClickListener((p, v, position, id) -> onRowClick(adapter.getItem(position)));
         list.setOnItemLongClickListener((p, v, position, id) -> onRowLongClick(adapter.getItem(position)));
@@ -273,17 +278,13 @@ public class LibraryActivity extends BoundActivity
     // ---- permissions -------------------------------------------------------------------------
 
     private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            requestPermissions(new String[]{Library.audioPermission(), Manifest.permission.POST_NOTIFICATIONS},
-                    REQ_PERMISSIONS);
-        } else {
-            requestPermissions(new String[]{Library.audioPermission()}, REQ_PERMISSIONS);
-        }
+        Permissions.askForMusic(this, REQ_PERMISSIONS, this::rebuild);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode != REQ_PERMISSIONS) return;
         if (Library.hasPermission(this)) {
             permissionDenied = false;
             library.refresh();
@@ -294,8 +295,8 @@ public class LibraryActivity extends BoundActivity
     }
 
     private void openAppSettings() {
-        startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", getPackageName(), null)));
+        Permissions.askForSettings(this, R.drawable.ic_music_note, R.string.perm_music_off_title,
+                R.string.perm_music_off_body, null);
     }
 
     // ---- building the list ----------------------------------------------------------------------
@@ -350,6 +351,7 @@ public class LibraryActivity extends BoundActivity
         adapter.setRows(rows, indexed);
         list.setFastScrollEnabled(rows.size() > 40);
         for (int i = 0; i < tabViews.length; i++) tabViews[i].setSelected(i == shown);
+        titleView.setText(searching ? R.string.search_title : TAB_TITLES[shown]);
         updateSubtitle();
         updateEmpty(searching, rows.isEmpty());
         if (service != null) adapter.setCurrentTrack(currentId());
@@ -530,33 +532,7 @@ public class LibraryActivity extends BoundActivity
     private boolean onRowLongClick(final RowAdapter.Row r) {
         final List<Track> tracks = tracksOf(r);
         if (tracks == null || tracks.isEmpty()) return false;
-        final boolean single = r.type == RowAdapter.TRACK;
-        final String[] items = single
-                ? new String[]{getString(R.string.action_play_next), getString(R.string.action_add_queue)}
-                : new String[]{getString(R.string.action_play), getString(R.string.action_shuffle),
-                getString(R.string.action_play_next), getString(R.string.action_add_queue)};
-        new AlertDialog.Builder(this)
-                .setTitle(r.title)
-                .setItems(items, (d, which) -> {
-                    int choice = single ? which + 2 : which;
-                    switch (choice) {
-                        case 0:
-                            play(tracks, 0, false);
-                            break;
-                        case 1:
-                            play(tracks, 0, true);
-                            break;
-                        case 2:
-                            withService(s -> s.playNext(tracks));
-                            toast(R.string.toast_play_next);
-                            break;
-                        default:
-                            withService(s -> s.enqueue(tracks));
-                            toast(R.string.toast_added);
-                            break;
-                    }
-                })
-                .show();
+        showSongMenu(r.title, tracks, r.type == RowAdapter.TRACK, false);
         return true;
     }
 
@@ -571,25 +547,14 @@ public class LibraryActivity extends BoundActivity
         else pending = a;
     }
 
-    private void toast(int res) {
-        Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
-    }
-
     // ---- overflow menu and scan ------------------------------------------------------------------
 
     private void showMenu(View anchor) {
-        PopupMenu menu = new PopupMenu(this, anchor);
-        menu.inflate(R.menu.library);
-        menu.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.menu_settings) {
-                startActivity(new Intent(this, SettingsActivity.class));
-            } else if (id == R.id.menu_scan) {
-                startScan();
-            }
-            return true;
-        });
-        menu.show();
+        GlassDialog.sheet(this)
+                .item(R.drawable.ic_settings, R.string.menu_settings,
+                        () -> startActivity(new Intent(this, SettingsActivity.class)))
+                .item(R.drawable.ic_refresh, R.string.menu_scan, this::startScan)
+                .show();
     }
 
     private void startScan() {

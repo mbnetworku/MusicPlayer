@@ -44,31 +44,80 @@ final class GlassDrawable extends Drawable {
     private final RectF rect = new RectF();
     private int alpha = 255;
 
+    /** Glass over a cover or a picture: mostly see-through. */
+    private static final int STYLE_GLASS = 0;
+    /** Glass over a plain white or black page: needs a fill of its own to be seen. */
+    private static final int STYLE_PLAIN = 1;
+    /** The card of a dialog, over dimmed content: nearly opaque. */
+    private static final int STYLE_DIALOG = 2;
+
+    private final int style;
+
     /**
-     * @param accent amber-tinted glass for the main action
+     * @param accent red-tinted glass for the main action
      * @param strong brighter glass, used for the selected segment of a control
      */
     static GlassDrawable create(Context c, int shape, boolean accent, boolean strong) {
         return new GlassDrawable(c.getResources().getDisplayMetrics().density,
-                Appearance.isNight(c), shape, accent, strong);
+                Appearance.isNight(c), shape, accent, strong,
+                Appearance.glassPlain(c) ? STYLE_PLAIN : STYLE_GLASS);
     }
 
-    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong) {
+    /** The card of a glass dialog or action sheet. */
+    static GlassDrawable dialog(Context c) {
+        return new GlassDrawable(c.getResources().getDisplayMetrics().density,
+                Appearance.isNight(c), CARD, false, false, STYLE_DIALOG);
+    }
+
+    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong, int style) {
         this.density = density;
         this.night = night;
         this.shape = shape;
         this.accent = accent;
         this.strong = strong;
-        cardRadius = 24 * density;
+        this.style = style;
+        cardRadius = (style == STYLE_DIALOG ? 28 : 24) * density;
         stroke = 1.2f * density;
 
         if (accent) {
-            fillColor = 0xE6FFB020;
-            highlight = 0x59FFFFFF;
-            shade = 0x1A000000;
-            rimBright = 0x99FFFFFF;
-            rimFaint = 0x26FFFFFF;
+            fillColor = 0xF2E5202B;
+            highlight = 0x4DFFFFFF;
+            shade = 0x26000000;
+            rimBright = 0xA6FFFFFF;
+            rimFaint = 0x33FFFFFF;
             hairline = 0;
+        } else if (style == STYLE_DIALOG) {
+            if (night) {
+                fillColor = 0xF51C1C1E;
+                highlight = 0x1AFFFFFF;
+                shade = 0x33000000;
+                rimBright = 0x4DFFFFFF;
+                rimFaint = 0x0FFFFFFF;
+                hairline = 0;
+            } else {
+                fillColor = 0xF5FFFFFF;
+                highlight = 0xCCFFFFFF;
+                shade = 0x14000000;
+                rimBright = 0xFFFFFFFF;
+                rimFaint = 0x80FFFFFF;
+                hairline = 0x1F000000;
+            }
+        } else if (style == STYLE_PLAIN) {
+            if (night) {
+                fillColor = strong ? 0xFF3A3A3C : 0xE61C1C1E;
+                highlight = 0x14FFFFFF;
+                shade = 0x33000000;
+                rimBright = 0x40FFFFFF;
+                rimFaint = 0x0DFFFFFF;
+                hairline = 0;
+            } else {
+                fillColor = strong ? 0xFFFFFFFF : 0xE6F2F2F7;
+                highlight = 0x99FFFFFF;
+                shade = 0x0F000000;
+                rimBright = 0xFFFFFFFF;
+                rimFaint = 0x66FFFFFF;
+                hairline = strong ? 0x24000000 : 0x14000000;
+            }
         } else if (night) {
             fillColor = strong ? 0x33FFFFFF : 0x0FFFFFFF;
             highlight = strong ? 0x2EFFFFFF : 0x1AFFFFFF;
@@ -159,10 +208,11 @@ final class GlassDrawable extends Drawable {
         final int s = shape;
         final boolean a = accent;
         final boolean st = strong;
+        final int sty = style;
         return new ConstantState() {
             @Override
             public Drawable newDrawable() {
-                return new GlassDrawable(d, n, s, a, st);
+                return new GlassDrawable(d, n, s, a, st, sty);
             }
 
             @Override

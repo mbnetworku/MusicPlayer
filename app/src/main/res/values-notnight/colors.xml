@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light palette: cool pale greys with the same amber accent. -->
-    <color name="bg">#F3F5F7</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="surface_raised">#E8ECF0</color>
-    <color name="divider">#DCE1E6</color>
-    <color name="text_primary">#12161A</color>
-    <color name="text_secondary">#4F5A65</color>
-    <color name="text_tertiary">#66717C</color>
-    <color name="accent">#FFB020</color>
-    <color name="accent_text">#A35F00</color>
-    <color name="on_accent">#1B1300</color>
-    <color name="outline">#C5CCD4</color>
-    <color name="icon">#2B323A</color>
-    <color name="icon_dim">#7C8794</color>
-    <color name="ripple">#22000000</color>
-    <color name="eq_track">#D5DBE1</color>
+    <!-- Light palette: white, soft system greys and the same red accent. -->
+    <color name="bg">#FFFFFF</color>
+    <color name="surface">#F2F2F7</color>
+    <color name="surface_raised">#E5E5EA</color>
+    <color name="divider">#E5E5EA</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#6C6C70</color>
+    <color name="text_tertiary">#75757A</color>
+    <color name="accent">#E5202B</color>
+    <color name="accent_text">#D70015</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="outline">#C6C6C8</color>
+    <color name="icon">#1C1C1E</color>
+    <color name="icon_dim">#8E8E93</color>
+    <color name="ripple">#1F000000</color>
+    <color name="eq_track">#E5E5EA</color>
     <color name="playing_scrim">#B3000000</color>
-    <color name="ic_launcher_background">#161B20</color>
+    <color name="grouped_bg">#F2F2F7</color>
+    <color name="grouped_card">#FFFFFF</color>
 </resources>

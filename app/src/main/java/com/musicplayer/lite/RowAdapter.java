@@ -31,6 +31,11 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         void onHeaderAction(Row row, boolean shuffle);
     }
 
+    /** The "more" button at the end of a row (the same actions as a long press). */
+    interface MoreListener {
+        void onMore(Row row, View anchor);
+    }
+
     static final class Row {
         final int type;
         final String title;
@@ -78,23 +83,26 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         static Row header(String path, String title, String sub, boolean actions, Object tag) {
             return new Row(HEADER, title, sub, path, actions, null, 0, -1, 0, tag);
         }
+
+        /** Songs, albums, artists and folders have songs behind them, so they have a menu. */
+        boolean hasMenu() {
+            return type == TRACK || type == GROUP || (type == FOLDER && tag != null);
+        }
     }
 
     private static final class ItemHolder {
         final ImageView art;
         final ImageView playing;
-        final ImageView chevron;
+        final View more;
         final TextView title;
         final TextView sub;
-        final TextView extra;
 
         ItemHolder(View v) {
             art = v.findViewById(R.id.row_art);
             playing = v.findViewById(R.id.row_playing);
-            chevron = v.findViewById(R.id.row_chevron);
+            more = v.findViewById(R.id.row_more);
             title = v.findViewById(R.id.row_title);
             sub = v.findViewById(R.id.row_sub);
-            extra = v.findViewById(R.id.row_extra);
         }
     }
 
@@ -119,6 +127,7 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     private final Context context;
     private final LayoutInflater inflater;
     private final HeaderListener headerListener;
+    private MoreListener moreListener;
     private final int artPx;
     private final int accent;
     private final int primary;
@@ -143,6 +152,11 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         this.primary = context.getColor(R.color.text_primary);
         this.accentTint = ColorStateList.valueOf(accent);
         this.glass = Appearance.glass(context);
+    }
+
+    void setMoreListener(MoreListener l) {
+        moreListener = l;
+        notifyDataSetChanged();
     }
 
     void setRows(List<Row> newRows, boolean indexed) {
@@ -242,14 +256,9 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         final String sub = r.type == TRACK ? trackSubtitle(r) : r.sub;
         h.sub.setText(sub);
         h.sub.setVisibility(sub.isEmpty() ? View.GONE : View.VISIBLE);
-        if (r.type == TRACK) {
-            h.extra.setText(Fmt.time(r.track.durationMs));
-            h.extra.setVisibility(View.VISIBLE);
-            h.chevron.setVisibility(View.GONE);
-        } else {
-            h.extra.setVisibility(View.GONE);
-            h.chevron.setVisibility(View.VISIBLE);
-        }
+        final boolean menu = moreListener != null && r.hasMenu();
+        h.more.setVisibility(menu ? View.VISIBLE : View.GONE);
+        h.more.setOnClickListener(menu ? x -> moreListener.onMore(r, x) : null);
         h.playing.setVisibility(current ? View.VISIBLE : View.GONE);
 
         if (r.track != null) {
@@ -282,7 +291,7 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         setTextOrHide(h.sub, r.sub);
         h.actions.setVisibility(r.actions ? View.VISIBLE : View.GONE);
         if (glass && r.actions) {
-            h.play.setBackground(Glass.pill(context, true));
+            h.play.setBackground(Glass.pill(context, false));
             h.shuffle.setBackground(Glass.pill(context, false));
         }
         h.play.setOnClickListener(x -> {

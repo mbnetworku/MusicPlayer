@@ -77,6 +77,9 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
     private EffectRow bassRow;
     private EffectRow virtRow;
     private EffectRow loudRow;
+    private TextView deviceStatus;
+    private Switch deviceControl;
+    private View deviceRead;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -178,7 +181,70 @@ public class EqualizerActivity extends BoundActivity implements EqSliderView.Lis
         } else {
             system.setVisibility(View.GONE);
         }
+        bindDevice();
         syncFromFx();
+    }
+
+    // ---- the equalizer of the whole device ----------------------------------------------------------
+
+    private void bindDevice() {
+        deviceStatus = findViewById(R.id.eq_dev_status);
+        deviceRead = findViewById(R.id.eq_dev_read);
+        deviceControl = SettingsActivity.setupRow(findViewById(R.id.eq_device), R.id.row_eq_device,
+                R.string.eq_dev_control, R.string.eq_dev_control_sub, true);
+        deviceControl.setOnCheckedChangeListener((b, on) -> {
+            if (syncing) return;
+            if (!fx.setDeviceMode(on)) {
+                syncing = true;
+                b.setChecked(!on);
+                syncing = false;
+                toast(R.string.eq_dev_refused);
+            }
+            syncFromFx();
+            refreshDevice();
+        });
+        deviceRead.setOnClickListener(v -> {
+            if (fx.adoptDevice()) {
+                toast(R.string.eq_dev_copied);
+                syncFromFx();
+            } else {
+                toast(R.string.eq_dev_read_failed);
+            }
+            refreshDevice();
+        });
+        refreshDevice();
+    }
+
+    /** Shows what the device's own equalizer says and what can be done about it. */
+    private void refreshDevice() {
+        if (fx == null || deviceStatus == null) return;
+        final DeviceEq.State s = fx.deviceState();
+        final String text;
+        if (fx.isDeviceMode()) {
+            text = getString(R.string.eq_dev_controlling);
+        } else if (s == null) {
+            text = getString(R.string.eq_dev_unavailable);
+        } else {
+            final boolean named = !s.presetName.isEmpty();
+            String base = s.enabled
+                    ? (named ? getString(R.string.eq_dev_on_preset, s.presetName) : getString(R.string.eq_dev_on))
+                    : (named ? getString(R.string.eq_dev_off_preset, s.presetName) : getString(R.string.eq_dev_off));
+            text = s.control ? base : base + " " + getString(R.string.eq_dev_read_only);
+        }
+        deviceStatus.setText(text);
+        syncing = true;
+        deviceControl.setChecked(fx.isDeviceMode());
+        syncing = false;
+        deviceControl.setEnabled(fx.isDeviceMode() || (s != null && s.control));
+        deviceRead.setEnabled(s != null && fx.hasEq());
+        deviceRead.setAlpha(deviceRead.isEnabled() ? 1f : 0.5f);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Back from the system's own sound settings: the device equalizer may have changed.
+        refreshDevice();
     }
 
     private TextView addChip(String text, View.OnClickListener onClick) {

@@ -55,6 +55,8 @@
             android:paddingEnd="@dimen/gutter"
             android:paddingBottom="24dp">
 
+            <include layout="@layout/part_eq_device" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

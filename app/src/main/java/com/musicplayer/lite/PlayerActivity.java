@@ -18,6 +18,7 @@ public class PlayerActivity extends BoundActivity {
         setContentView(R.layout.activity_player);
         prepareWindow();
         player = findViewById(R.id.np);
+        player.setMoreListener(t -> showSongMenu(t.title, java.util.Collections.singletonList(t), true, true));
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         findViewById(R.id.btn_queue).setOnClickListener(v -> startActivity(new Intent(this, QueueActivity.class)));
         findViewById(R.id.btn_eq).setOnClickListener(v -> startActivity(new Intent(this, EqualizerActivity.class)));

@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/gutter"
-    android:paddingEnd="@dimen/gutter">
+    android:paddingEnd="4dp">
 
     <FrameLayout
         android:layout_width="@dimen/row_art"
@@ -50,22 +50,11 @@
             android:layout_marginTop="2dp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/row_extra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:fontFeatureSettings="tnum"
-        android:textColor="@color/text_tertiary"
-        android:textSize="@dimen/text_row_sub" />
-
-    <ImageView
-        android:id="@+id/row_chevron"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="4dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_chevron_right"
-        android:tint="@color/icon_dim"
-        android:visibility="gone" />
+    <ImageButton
+        android:id="@+id/row_more"
+        style="@style/IconButton"
+        android:layout_width="44dp"
+        android:contentDescription="@string/cd_more"
+        android:src="@drawable/ic_more_horiz"
+        android:tint="@color/icon_dim" />
 </LinearLayout>

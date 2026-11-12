@@ -13,8 +13,17 @@
 
     <com.musicplayer.lite.MiniPlayerView
         android:id="@+id/mini"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="4dp"
         android:tag="glass:margin"
-        tools:ignore="InconsistentLayout"
+        tools:ignore="InconsistentLayout" />
+
+    <include
+        layout="@layout/part_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

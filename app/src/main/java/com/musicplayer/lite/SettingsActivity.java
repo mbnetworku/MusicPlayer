@@ -1,11 +1,14 @@
 package com.musicplayer.lite;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -22,6 +25,9 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     private Updater updater;
     private boolean scanning;
 
+    private static final int REQ_PICK = 9100;
+    private static final int REQ_WALLPAPER = 9101;
+
     private TextView action;
     private TextView secondary;
 
@@ -35,6 +41,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         updater = Updater.get(this);
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         bindAppearance();
+        bindBackground();
         bindLibrary();
         bindUpdates();
         ((TextView) findViewById(R.id.about_text)).setText(R.string.about_body);
@@ -96,6 +103,136 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             prefs.setGlass(on);
             recreate();
         });
+    }
+
+    // ---- glass background --------------------------------------------------------------------------
+
+    private static int backgroundForId(int id) {
+        if (id == R.id.bg_cover) return Appearance.BG_COVER;
+        if (id == R.id.bg_picture) return Appearance.BG_PICTURE;
+        if (id == R.id.bg_wallpaper) return Appearance.BG_WALLPAPER;
+        return Appearance.BG_PLAIN;
+    }
+
+    private static int idForBackground(int background) {
+        switch (background) {
+            case Appearance.BG_COVER:
+                return R.id.bg_cover;
+            case Appearance.BG_PICTURE:
+                return R.id.bg_picture;
+            case Appearance.BG_WALLPAPER:
+                return R.id.bg_wallpaper;
+            default:
+                return R.id.bg_plain;
+        }
+    }
+
+    private void bindBackground() {
+        final RadioGroup group = findViewById(R.id.bg_group);
+        group.check(idForBackground(prefs.glassBackground()));
+        refreshBackgroundTexts();
+        group.setOnCheckedChangeListener((g, id) -> {
+            final int chosen = backgroundForId(id);
+            if (chosen == prefs.glassBackground()) return;
+            if (chosen == Appearance.BG_PICTURE && !BackgroundStore.has(this, BackgroundStore.KIND_PICTURE)) {
+                group.check(idForBackground(prefs.glassBackground()));   // applied once a picture is picked
+                pickPicture();
+            } else if (chosen == Appearance.BG_WALLPAPER && !BackgroundStore.has(this, BackgroundStore.KIND_WALLPAPER)) {
+                group.check(idForBackground(prefs.glassBackground()));   // applied once the wallpaper is read
+                useWallpaper();
+            } else {
+                applyBackground(chosen);
+            }
+        });
+        findViewById(R.id.bg_pick).setOnClickListener(v -> pickPicture());
+        findViewById(R.id.bg_wallpaper_update).setOnClickListener(v -> useWallpaper());
+    }
+
+    private void refreshBackgroundTexts() {
+        final boolean hasPicture = BackgroundStore.has(this, BackgroundStore.KIND_PICTURE);
+        final boolean hasWallpaper = BackgroundStore.has(this, BackgroundStore.KIND_WALLPAPER);
+        ((TextView) findViewById(R.id.bg_picture_sub)).setText(
+                hasPicture ? R.string.set_bg_picture_set : R.string.set_bg_picture_none);
+        ((TextView) findViewById(R.id.bg_pick)).setText(hasPicture ? R.string.set_bg_change : R.string.set_bg_choose);
+        ((TextView) findViewById(R.id.bg_wallpaper_sub)).setText(!hasWallpaper ? R.string.set_bg_wallpaper_none
+                : prefs.wallpaperIsColors() ? R.string.set_bg_wallpaper_colors : R.string.set_bg_wallpaper_picture);
+        findViewById(R.id.bg_wallpaper_update).setVisibility(hasWallpaper ? View.VISIBLE : View.GONE);
+    }
+
+    private void applyBackground(int background) {
+        // Show the new choice as selected before the screen is rebuilt. Android saves that state and puts
+        // it back in the new screen; if it still showed the old choice, restoring it would undo this one.
+        RadioGroup group = findViewById(R.id.bg_group);
+        group.setOnCheckedChangeListener(null);
+        group.check(idForBackground(background));
+        prefs.setGlassBackground(background);
+        recreate();
+    }
+
+    private void pickPicture() {
+        Intent pick = new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("image/*");
+        try {
+            startActivityForResult(pick, REQ_PICK);
+        } catch (ActivityNotFoundException e) {
+            toast(R.string.bg_pick_failed);
+        }
+    }
+
+    private void useWallpaper() {
+        Permissions.askForWallpaper(this, this::readWallpaper, null);
+    }
+
+    private void readWallpaper() {
+        // Up to Android 12 the wallpaper picture needs the storage permission; later versions give
+        // apps only its colours, which readWallpaper falls back to.
+        if (Build.VERSION.SDK_INT <= 32
+                && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_WALLPAPER);
+            return;
+        }
+        readWallpaperNow();
+    }
+
+    private void readWallpaperNow() {
+        final Context app = getApplicationContext();
+        new Thread(() -> {
+            final int result = BackgroundStore.saveWallpaper(app);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                if (result == BackgroundStore.FAILED) {
+                    toast(R.string.bg_wallpaper_failed);
+                    return;
+                }
+                prefs.setWallpaperIsColors(result == BackgroundStore.COLORS);
+                applyBackground(Appearance.BG_WALLPAPER);
+            });
+        }).start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQ_PICK || resultCode != RESULT_OK || data == null || data.getData() == null) return;
+        final Uri uri = data.getData();
+        final Context app = getApplicationContext();
+        new Thread(() -> {
+            final boolean ok = BackgroundStore.savePicture(app, uri);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                if (ok) applyBackground(Appearance.BG_PICTURE);
+                else toast(R.string.bg_pick_failed);
+            });
+        }).start();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode != REQ_WALLPAPER) return;
+        // Granted: read the picture. Refused: the wallpaper's colours are still available.
+        readWallpaperNow();
     }
 
     // ---- library ------------------------------------------------------------------------------------
@@ -166,7 +303,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
                 updater.install(this);
                 break;
             case NEEDS_PERMISSION:
-                Updater.openInstallPermissionSettings(this);
+                Permissions.askForInstall(this, () -> Updater.openInstallPermissionSettings(this));
                 break;
             case ERROR:
                 if (updater.newerRelease() != null) updater.download();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fixed colours for the widget's Light and Dark styles. "Follow my device" uses the normal tokens. -->
+    <color name="w_light_bg">#F7FFFFFF</color>
+    <color name="w_light_text">#000000</color>
+    <color name="w_light_sub">#6C6C70</color>
+    <color name="w_light_icon">#1C1C1E</color>
+    <color name="w_light_art">#E5E5EA</color>
+    <color name="w_dark_bg">#F71C1C1E</color>
+    <color name="w_dark_text">#FFFFFF</color>
+    <color name="w_dark_sub">#A1A1A6</color>
+    <color name="w_dark_icon">#FFFFFF</color>
+    <color name="w_dark_art">#3A3A3C</color>
+</resources>

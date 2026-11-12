@@ -57,6 +57,59 @@ final class Prefs {
         return sp.getBoolean("glass", false);
     }
 
+    /** What the glass look shows behind its panels: one of the Appearance.BG_* values. */
+    int glassBackground() {
+        return sp.getInt("glass_bg", Appearance.BG_PLAIN);
+    }
+
+    void setGlassBackground(int background) {
+        sp.edit().putInt("glass_bg", background).apply();
+    }
+
+    /** True when the saved wallpaper background is only a gradient of the wallpaper's colours. */
+    boolean wallpaperIsColors() {
+        return sp.getBoolean("wallpaper_colors", false);
+    }
+
+    void setWallpaperIsColors(boolean colors) {
+        sp.edit().putBoolean("wallpaper_colors", colors).apply();
+    }
+
+    /** Whether the equalizer screen controls the whole device's equalizer instead of this player's. */
+    boolean eqDevice() {
+        return sp.getBoolean("eq_device", false);
+    }
+
+    void setEqDevice(boolean on) {
+        sp.edit().putBoolean("eq_device", on).apply();
+    }
+
+    /** The look of one home-screen widget: Appearance.FOLLOW_DEVICE, LIGHT or DARK. */
+    int widgetStyle(int widgetId) {
+        return sp.getInt("widget_style_" + widgetId, Appearance.FOLLOW_DEVICE);
+    }
+
+    void setWidgetStyle(int widgetId, int style) {
+        sp.edit().putInt("widget_style_" + widgetId, style).apply();
+    }
+
+    /** The last song title and artist the widgets showed, so they are not blank after a restart. */
+    String nowPlayingTitle() {
+        return sp.getString("np_title", "");
+    }
+
+    String nowPlayingArtist() {
+        return sp.getString("np_artist", "");
+    }
+
+    void setNowPlayingText(String title, String artist) {
+        sp.edit().putString("np_title", title).putString("np_artist", artist).apply();
+    }
+
+    void removeWidget(int widgetId) {
+        sp.edit().remove("widget_style_" + widgetId).apply();
+    }
+
     void setGlass(boolean on) {
         sp.edit().putBoolean("glass", on).apply();
     }

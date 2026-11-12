@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What the Android device's own equalizer says, and the choice to control it from here. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/eq_device"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical"
+    android:tag="glass:card,padded">
+
+    <TextView
+        style="@style/SettingTitle"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/eq_dev_title" />
+
+    <TextView
+        android:id="@+id/eq_dev_status"
+        style="@style/SettingSub"
+        android:layout_marginTop="4dp" />
+
+    <include
+        android:id="@+id/row_eq_device"
+        layout="@layout/row_setting" />
+
+    <TextView
+        android:id="@+id/eq_dev_read"
+        style="@style/PillSmall"
+        android:layout_marginTop="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/eq_dev_read" />
+</LinearLayout>

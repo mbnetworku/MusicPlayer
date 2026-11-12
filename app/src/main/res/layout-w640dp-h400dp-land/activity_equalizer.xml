@@ -89,6 +89,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <include layout="@layout/part_eq_device" />
+
                 <com.musicplayer.lite.FlowLayout
                     android:id="@+id/eq_presets"
                     android:layout_width="match_parent"

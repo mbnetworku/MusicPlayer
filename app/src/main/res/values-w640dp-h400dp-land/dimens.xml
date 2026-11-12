@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="topbar_height">64dp</dimen>
-    <dimen name="tab_height">56dp</dimen>
+    <dimen name="tabbar_height">64dp</dimen>
+    <dimen name="text_large_title">30sp</dimen>
     <dimen name="icon_btn">56dp</dimen>
     <dimen name="row_height">72dp</dimen>
     <dimen name="row_art">52dp</dimen>
@@ -9,7 +10,7 @@
 
     <dimen name="text_top_title">24sp</dimen>
     <dimen name="text_top_subtitle">13sp</dimen>
-    <dimen name="text_tab">16sp</dimen>
+    <dimen name="text_tab">13sp</dimen>
     <dimen name="text_row_title">18sp</dimen>
     <dimen name="text_row_sub">14sp</dimen>
     <dimen name="text_np_title">26sp</dimen>
@@ -21,7 +22,7 @@
     <dimen name="ctl_big">96dp</dimen>
     <dimen name="ctl_small_pad">18dp</dimen>
     <dimen name="ctl_mid_pad">16dp</dimen>
-    <dimen name="ctl_big_pad">28dp</dimen>
+    <dimen name="ctl_big_pad">16dp</dimen>
 
     <dimen name="eq_curve_height">90dp</dimen>
     <dimen name="eq_band_height">180dp</dimen>

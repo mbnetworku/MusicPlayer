@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Overdraw"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grouped_bg"
+    android:orientation="vertical"
+    android:tag="glass:clear">
+
+    <LinearLayout
+        style="@style/TopBar"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_back"
+            android:src="@drawable/ic_arrow_back" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/LargeTitle"
+        android:layout_marginStart="@dimen/gutter"
+        android:text="@string/widget_title" />
+
+    <LinearLayout
+        style="@style/SettingsCard"
+        android:layout_marginStart="@dimen/gutter"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/gutter"
+        android:tag="glass:card">
+
+        <TextView
+            style="@style/SettingTitle"
+            android:paddingTop="8dp"
+            android:text="@string/widget_style" />
+
+        <RadioGroup
+            android:id="@+id/widget_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/widget_follow"
+                style="@style/SettingRadio"
+                android:text="@string/theme_system" />
+
+            <RadioButton
+                android:id="@+id/widget_light"
+                style="@style/SettingRadio"
+                android:text="@string/theme_light" />
+
+            <RadioButton
+                android:id="@+id/widget_dark"
+                style="@style/SettingRadio"
+                android:text="@string/theme_dark" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_save"
+        style="@style/PillAccent"
+        android:layout_width="match_parent"
+        android:layout_marginStart="@dimen/gutter"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/gutter"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/widget_save" />
+</LinearLayout>

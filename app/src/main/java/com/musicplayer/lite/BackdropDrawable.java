@@ -18,12 +18,20 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
 /**
- * The window background of the liquid-glass look: the current cover art, shrunk to a few
- * pixels (which blurs it), blown back up and tinted for legibility. With nothing playing it
- * draws a soft aurora gradient. When the song changes the new backdrop fades in.
+ * The window background of the liquid-glass look. It can show:
+ * <ul>
+ *   <li>the current cover art, shrunk to a few pixels (which blurs it), blown back up and
+ *       toned for legibility; with nothing playing, a soft aurora;</li>
+ *   <li>a picture the user chose, or the device wallpaper, softened the same way but cropped
+ *       to the screen instead of stretched;</li>
+ *   <li>a plain white or black page.</li>
+ * </ul>
+ * When what it shows changes, the new backdrop fades in.
  */
 final class BackdropDrawable extends Drawable {
     private static final int SIZE = 24;
+    /** The short side of a softened picture, in pixels. */
+    private static final int PICTURE_SIDE = 72;
     private static final int FADE_MS = 500;
 
     /** The brightest the backdrop gets at night, so light text stays readable on top of it. */
@@ -31,22 +39,30 @@ final class BackdropDrawable extends Drawable {
     /** The darkest the backdrop gets by day, so dark text stays readable on top of it. */
     static final float DAY_MIN_LUMA = 0.80f;
 
-    /** One thing the backdrop can show. A null bitmap means the aurora. */
+    /** One thing the backdrop can show. */
     private static final class Layer {
+        /** Null for the aurora and for the plain page. */
         final Bitmap bitmap;
+        /** Pictures are cropped to the window; covers are stretched. */
+        final boolean crop;
+        final boolean plain;
 
-        Layer(Bitmap bitmap) {
+        Layer(Bitmap bitmap, boolean crop, boolean plain) {
             this.bitmap = bitmap;
+            this.crop = crop;
+            this.plain = plain;
         }
     }
 
     private final boolean night;
+    private final int plainColor;
     private final Paint bitmapPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
     private final Paint fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint scrimPaint = new Paint();
     private final RectF dst = new RectF();
+    private final Rect src = new Rect();
 
-    private Layer base = new Layer(null);
+    private Layer base = new Layer(null, false, false);
     private Layer incoming;
     private float fade;
     private ValueAnimator animator;
@@ -57,6 +73,7 @@ final class BackdropDrawable extends Drawable {
 
     BackdropDrawable(Context c) {
         night = Appearance.isNight(c);
+        plainColor = c.getColor(R.color.bg);
         ColorMatrix vivid = new ColorMatrix();
         vivid.setSaturation(1.5f);
         bitmapPaint.setColorFilter(new ColorMatrixColorFilter(vivid));
@@ -75,7 +92,21 @@ final class BackdropDrawable extends Drawable {
         } else {
             next = null;
         }
-        show(new Layer(next), animate);
+        show(new Layer(next, false, false), animate);
+    }
+
+    /** Shows a picture (the user's own, or the wallpaper), softened and cropped to the window. */
+    void setPicture(Bitmap picture, boolean animate) {
+        if (picture == null) {
+            setPlain(animate);
+            return;
+        }
+        show(new Layer(tone(soften(picture), night), true, false), animate);
+    }
+
+    /** A plain page in the theme's background colour: white, or black at night. */
+    void setPlain(boolean animate) {
+        show(new Layer(null, false, true), animate);
     }
 
     private void show(Layer layer, boolean animate) {
@@ -103,7 +134,7 @@ final class BackdropDrawable extends Drawable {
         animator.start();
     }
 
-    /** The blurred, toned art on show, or null while the aurora is. */
+    /** The blurred, toned art on show, or null while the aurora or a plain page is. */
     Bitmap shown() {
         return (incoming != null ? incoming : base).bitmap;
     }
@@ -141,6 +172,13 @@ final class BackdropDrawable extends Drawable {
 
     private void drawLayer(Canvas canvas, Rect b, Layer layer, int alpha) {
         if (alpha <= 0) return;
+        if (layer.plain) {
+            fillPaint.setShader(null);
+            fillPaint.setColor(plainColor);
+            fillPaint.setAlpha(alpha);
+            canvas.drawRect(b, fillPaint);
+            return;
+        }
         if (layer.bitmap == null) {
             fillPaint.setAlpha(alpha);
             fillPaint.setShader(auroraBase);
@@ -156,9 +194,24 @@ final class BackdropDrawable extends Drawable {
         float growY = b.height() * 0.08f;
         dst.set(b.left - growX, b.top - growY, b.right + growX, b.bottom + growY);
         bitmapPaint.setAlpha(alpha);
-        canvas.drawBitmap(layer.bitmap, null, dst, bitmapPaint);
+        if (layer.crop) {
+            cropTo(layer.bitmap.getWidth(), layer.bitmap.getHeight(), dst.width(), dst.height(), src);
+            canvas.drawBitmap(layer.bitmap, src, dst, bitmapPaint);
+        } else {
+            canvas.drawBitmap(layer.bitmap, null, dst, bitmapPaint);
+        }
         scrimPaint.setAlpha(alpha);
         canvas.drawRect(b, scrimPaint);
+    }
+
+    /** The part of a {@code bw} x {@code bh} bitmap that fills a {@code dw} x {@code dh} area without stretching. */
+    static void cropTo(int bw, int bh, float dw, float dh, Rect out) {
+        final float scale = Math.max(dw / bw, dh / bh);
+        final int w = Math.min(bw, Math.round(dw / scale));
+        final int h = Math.min(bh, Math.round(dh / scale));
+        final int left = (bw - w) / 2;
+        final int top = (bh - h) / 2;
+        out.set(left, top, left + w, top + h);
     }
 
     @Override
@@ -195,14 +248,26 @@ final class BackdropDrawable extends Drawable {
 
     /** Shrinks to SIZE x SIZE and softens with a few box-blur passes. Cheap enough for the UI thread. */
     static Bitmap blur(Bitmap src) {
-        Bitmap small = Bitmap.createScaledBitmap(src, SIZE, SIZE, true);
-        int[] px = new int[SIZE * SIZE];
-        small.getPixels(px, 0, SIZE, 0, 0, SIZE, SIZE);
+        return blur(src, SIZE, SIZE);
+    }
+
+    /** A picture softened to a few dozen pixels on its short side, keeping its proportions. */
+    static Bitmap soften(Bitmap src) {
+        final int sw = src.getWidth();
+        final int sh = src.getHeight();
+        final float scale = PICTURE_SIDE / (float) Math.min(sw, sh);
+        return blur(src, Math.max(1, Math.round(sw * scale)), Math.max(1, Math.round(sh * scale)));
+    }
+
+    private static Bitmap blur(Bitmap src, int w, int h) {
+        Bitmap small = Bitmap.createScaledBitmap(src, w, h, true);
+        int[] px = new int[w * h];
+        small.getPixels(px, 0, w, 0, 0, w, h);
         for (int pass = 0; pass < 3; pass++) {
-            boxBlur(px, true);
-            boxBlur(px, false);
+            boxBlur(px, w, h, true);
+            boxBlur(px, w, h, false);
         }
-        return Bitmap.createBitmap(px, SIZE, SIZE, Bitmap.Config.ARGB_8888);
+        return Bitmap.createBitmap(px, w, h, Bitmap.Config.ARGB_8888);
     }
 
     /**
@@ -238,24 +303,26 @@ final class BackdropDrawable extends Drawable {
         return Color.rgb(Math.round(r * 255f), Math.round(g * 255f), Math.round(b * 255f));
     }
 
-    private static void boxBlur(int[] px, boolean horizontal) {
+    private static void boxBlur(int[] px, int w, int h, boolean horizontal) {
         final int radius = 2;
         final int window = radius * 2 + 1;
-        int[] line = new int[SIZE];
-        for (int row = 0; row < SIZE; row++) {
-            for (int i = 0; i < SIZE; i++) {
-                line[i] = px[horizontal ? row * SIZE + i : i * SIZE + row];
+        final int lines = horizontal ? h : w;
+        final int length = horizontal ? w : h;
+        int[] line = new int[length];
+        for (int row = 0; row < lines; row++) {
+            for (int i = 0; i < length; i++) {
+                line[i] = px[horizontal ? row * w + i : i * w + row];
             }
-            for (int i = 0; i < SIZE; i++) {
+            for (int i = 0; i < length; i++) {
                 int a = 0, r = 0, g = 0, b = 0;
                 for (int k = -radius; k <= radius; k++) {
-                    int c = line[Math.min(SIZE - 1, Math.max(0, i + k))];
+                    int c = line[Math.min(length - 1, Math.max(0, i + k))];
                     a += c >>> 24;
                     r += (c >> 16) & 0xFF;
                     g += (c >> 8) & 0xFF;
                     b += c & 0xFF;
                 }
-                px[horizontal ? row * SIZE + i : i * SIZE + row] =
+                px[horizontal ? row * w + i : i * w + row] =
                         ((a / window) << 24) | ((r / window) << 16) | ((g / window) << 8) | (b / window);
             }
         }

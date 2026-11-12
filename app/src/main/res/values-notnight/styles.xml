@@ -16,6 +16,7 @@
         <item name="android:colorControlHighlight">@color/ripple</item>
         <item name="android:alertDialogTheme">@style/AppDialog</item>
         <item name="android:popupMenuStyle">@style/AppPopup</item>
+        <item name="android:switchStyle">@style/AppSwitch</item>
     </style>
 
     <style name="AppDialog" parent="android:Theme.Material.Light.Dialog.Alert">

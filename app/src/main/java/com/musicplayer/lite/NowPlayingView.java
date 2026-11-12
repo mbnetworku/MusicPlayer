@@ -25,10 +25,17 @@ public class NowPlayingView extends LinearLayout {
     private final ImageButton play;
     private final ImageButton next;
     private final ImageButton repeat;
+    private final ImageButton more;
     private final ColorStateList accent;
     private final ColorStateList dim;
 
+    /** The "more" button next to the title. */
+    interface MoreListener {
+        void onMore(Track track);
+    }
+
     private PlaybackService service;
+    private MoreListener moreListener;
     private boolean dragging;
     private String shownArt = "";
 
@@ -47,9 +54,14 @@ public class NowPlayingView extends LinearLayout {
         play = findViewById(R.id.np_play);
         next = findViewById(R.id.np_next);
         repeat = findViewById(R.id.np_repeat);
+        more = findViewById(R.id.np_more);
         accent = ColorStateList.valueOf(context.getColor(R.color.accent_text));
         dim = ColorStateList.valueOf(context.getColor(R.color.icon_dim));
 
+        more.setOnClickListener(v -> {
+            Track t = service == null ? null : service.currentTrack();
+            if (t != null && moreListener != null) moreListener.onMore(t);
+        });
         play.setOnClickListener(v -> {
             if (service != null) service.togglePlayPause();
         });
@@ -83,6 +95,10 @@ public class NowPlayingView extends LinearLayout {
             }
         });
         render(null, false, 0, 0, false, PlayQueue.REPEAT_OFF);
+    }
+
+    void setMoreListener(MoreListener l) {
+        moreListener = l;
     }
 
     void bind(PlaybackService s) {
@@ -127,6 +143,7 @@ public class NowPlayingView extends LinearLayout {
         shuffle.setImageTintList(shuffleOn ? accent : dim);
         repeat.setImageResource(repeatMode == PlayQueue.REPEAT_ONE ? R.drawable.ic_repeat_one : R.drawable.ic_repeat);
         repeat.setImageTintList(repeatMode == PlayQueue.REPEAT_OFF ? dim : accent);
+        more.setVisibility(has ? VISIBLE : INVISIBLE);
         final float alpha = has ? 1f : 0.4f;
         play.setAlpha(alpha);
         prev.setAlpha(alpha);

@@ -4,7 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout style="@style/TopBar">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/topbar_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/gutter"
+        android:paddingTop="6dp"
+        android:paddingEnd="4dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -14,8 +22,8 @@
 
             <TextView
                 android:id="@+id/title"
-                style="@style/TopTitle"
-                android:text="@string/app_name" />
+                style="@style/LargeTitle"
+                android:text="@string/tab_songs" />
 
             <TextView
                 android:id="@+id/subtitle"
@@ -90,7 +98,7 @@
         android:id="@+id/search_bar"
         android:tag="glass:pill"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="44dp"
         android:layout_marginStart="@dimen/gutter"
         android:layout_marginEnd="@dimen/gutter"
         android:layout_marginBottom="8dp"
@@ -131,40 +139,6 @@
             android:src="@drawable/ic_close" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/tabs"
-        android:tag="glass:tabs,margin"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_height"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tab_songs"
-            style="@style/Tab"
-            android:text="@string/tab_songs" />
-
-        <TextView
-            android:id="@+id/tab_folders"
-            style="@style/Tab"
-            android:text="@string/tab_folders" />
-
-        <TextView
-            android:id="@+id/tab_albums"
-            style="@style/Tab"
-            android:text="@string/tab_albums" />
-
-        <TextView
-            android:id="@+id/tab_artists"
-            style="@style/Tab"
-            android:text="@string/tab_artists" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"
-        android:tag="glass:hide" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -176,9 +150,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="@drawable/divider_inset"
+            android:dividerHeight="0.5dp"
             android:drawSelectorOnTop="true"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
             android:fastScrollEnabled="true"
             android:listSelector="@android:color/transparent"
             android:paddingBottom="8dp"

@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark palette (the default). values-notnight/colors.xml holds the light palette. -->
-    <!-- Graphite surfaces with a dashboard-amber accent. -->
-    <color name="bg">#0E1114</color>
-    <color name="surface">#161B20</color>
-    <color name="surface_raised">#1F262D</color>
-    <color name="divider">#252C34</color>
-    <color name="text_primary">#F1F3F5</color>
-    <color name="text_secondary">#9AA5B1</color>
-    <color name="text_tertiary">#7A8591</color>
-    <color name="accent">#FFB020</color>
-    <!-- Amber for text and thin icons: bright on dark, darker on light so it stays readable. -->
-    <color name="accent_text">#FFB020</color>
-    <color name="on_accent">#1B1300</color>
-    <color name="outline">#3A444F</color>
-    <color name="icon">#E6E9ED</color>
-    <color name="icon_dim">#7C8794</color>
+    <!-- Dark palette (the default): true black with Apple Music style greys and a red accent.
+         values-notnight/colors.xml holds the light palette: white with the same red. -->
+    <color name="bg">#000000</color>
+    <color name="surface">#1C1C1E</color>
+    <color name="surface_raised">#2C2C2E</color>
+    <color name="divider">#38383A</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A1A1A6</color>
+    <color name="text_tertiary">#8E8E93</color>
+    <color name="accent">#E5202B</color>
+    <!-- Red for text and thin icons: lighter on black, darker on white so it stays readable. -->
+    <color name="accent_text">#FF453A</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="outline">#48484A</color>
+    <color name="icon">#FFFFFF</color>
+    <color name="icon_dim">#8E8E93</color>
     <color name="ripple">#33FFFFFF</color>
-    <color name="eq_track">#2A323B</color>
+    <color name="eq_track">#3A3A3C</color>
     <color name="playing_scrim">#B3000000</color>
-    <color name="ic_launcher_background">#161B20</color>
+    <!-- Settings and other grouped lists: a page colour and the colour of the cards on it. -->
+    <color name="grouped_bg">#000000</color>
+    <color name="grouped_card">#1C1C1E</color>
 </resources>

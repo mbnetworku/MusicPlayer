@@ -47,7 +47,7 @@
     <string name="menu_settings">Settings</string>
 
     <string name="empty_permission_title">Allow access to your music</string>
-    <string name="empty_permission_body">Music Player needs permission to read the audio files on this device. It never connects to the internet.</string>
+    <string name="empty_permission_body">Music Player needs permission to read the audio files on this device. Your music is never uploaded.</string>
     <string name="empty_permission_action">Allow access</string>
     <string name="empty_permission_settings">Open settings</string>
     <string name="empty_none_title">No music found</string>
@@ -125,7 +125,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="set_glass">Liquid glass</string>
-    <string name="set_glass_sub">Frosted panels over a blurred copy of the cover art</string>
+    <string name="set_glass_sub">Frosted glass panels. Choose what is behind them below.</string>
 
     <string name="set_library">Library</string>
     <string name="set_show_all">Show all audio files</string>
@@ -176,4 +176,85 @@
 
     <string name="set_about">About</string>
     <string name="set_source">Source code and releases on GitHub</string>
+
+    <!-- Glass pop-ups, the song menu and deleting -->
+    <string name="perm_allow">Allow</string>
+    <string name="perm_deny">Not allowed</string>
+    <string name="perm_not_now">Not now</string>
+    <string name="perm_open_settings">Open settings</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_close">Close</string>
+    <string name="perm_music_title">Allow access to your music?</string>
+    <string name="perm_music_body">Music Player needs to read the audio files on this device to show your songs, folders and albums. Your music is never uploaded.</string>
+    <string name="perm_music_body_33">Music Player needs to read the audio files on this device to show your songs, folders and albums. Your music is never uploaded. Android will also ask to show the playback controls in the notification area.</string>
+    <string name="perm_music_off_title">Music access is off</string>
+    <string name="perm_music_off_body">Android will not ask again. Open this app\'s settings, choose Permissions, and allow access to music and audio.</string>
+    <string name="perm_write_title">Allow deleting songs?</string>
+    <string name="perm_write_body">On this version of Android the app needs your permission once to delete files from your device.</string>
+    <string name="perm_write_settings">Android will not ask again. Open this app\'s settings, choose Permissions, and allow access to files and media.</string>
+    <string name="perm_install_title">Allow installing updates?</string>
+    <string name="perm_install_body">Android asks you once to let Music Player install apps. The app only installs files that come from this project\'s releases and carry its signature.</string>
+    <string name="perm_wallpaper_title">Use your wallpaper?</string>
+    <string name="perm_wallpaper_body">Music Player asks Android for your wallpaper picture. It stays on this device. If Android refuses, the wallpaper\'s colours are used instead.</string>
+    <string name="action_info">Song info</string>
+    <string name="action_delete">Delete…</string>
+    <string name="action_delete_many">Delete all these songs…</string>
+    <string name="info_body">Artist: %1$s\nAlbum: %2$s\nLength: %3$s\nFile: %4$s</string>
+    <string name="delete_title_one">Delete “%1$s”?</string>
+    <string name="delete_body">The files are deleted from this device for good, right away. This cannot be undone.</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_failed">Some songs could not be deleted.</string>
+    <string name="search_title">Search</string>
+    <plurals name="delete_title_many">
+        <item quantity="one">Delete %d song?</item>
+        <item quantity="other">Delete %d songs?</item>
+    </plurals>
+    <plurals name="deleted_count">
+        <item quantity="one">Deleted %d song</item>
+        <item quantity="other">Deleted %d songs</item>
+    </plurals>
+
+    <!-- Liquid glass background -->
+    <string name="set_background">Liquid glass background</string>
+    <string name="set_bg_note">What shows behind the glass panels when Liquid glass is on.</string>
+    <string name="set_bg_plain">White or black</string>
+    <string name="set_bg_plain_sub">A clean page that follows your theme.</string>
+    <string name="set_bg_cover">Cover art</string>
+    <string name="set_bg_cover_sub">A soft blur of the song that is playing.</string>
+    <string name="set_bg_picture">My picture</string>
+    <string name="set_bg_picture_none">Pick a picture from your gallery.</string>
+    <string name="set_bg_picture_set">Your picture is set.</string>
+    <string name="set_bg_wallpaper">Device wallpaper</string>
+    <string name="set_bg_wallpaper_none">Take the picture from your device wallpaper.</string>
+    <string name="set_bg_wallpaper_picture">Your wallpaper picture is in use.</string>
+    <string name="set_bg_wallpaper_colors">Using the colours of your wallpaper. Android does not let apps read the wallpaper picture on this device.</string>
+    <string name="set_bg_choose">Choose a picture\u2026</string>
+    <string name="set_bg_change">Change picture\u2026</string>
+    <string name="set_bg_update">Update from wallpaper</string>
+    <string name="bg_pick_failed">That picture could not be read.</string>
+    <string name="bg_wallpaper_failed">Your wallpaper could not be read.</string>
+
+    <!-- Device equalizer -->
+    <string name="eq_dev_title">Device equalizer</string>
+    <string name="eq_dev_unavailable">Android does not let this app see or change the device equalizer. The equalizer below applies to this player only.</string>
+    <string name="eq_dev_off">The device equalizer is off.</string>
+    <string name="eq_dev_on">The device equalizer is on.</string>
+    <string name="eq_dev_off_preset">The device equalizer is off (preset %1$s).</string>
+    <string name="eq_dev_on_preset">The device equalizer is on (preset %1$s).</string>
+    <string name="eq_dev_read_only">Another app controls it, so it can only be read.</string>
+    <string name="eq_dev_controlling">Controlling the device equalizer. Every app is affected, and it stays on while Music Player runs.</string>
+    <string name="eq_dev_control">Control the whole device</string>
+    <string name="eq_dev_control_sub">The equalizer below then shapes the sound of every app, and this player\'s own equalizer steps aside.</string>
+    <string name="eq_dev_read">Read from device</string>
+    <string name="eq_dev_copied">Copied the device equalizer settings.</string>
+    <string name="eq_dev_read_failed">Could not read the device equalizer.</string>
+    <string name="eq_dev_refused">This device does not let Music Player control its equalizer.</string>
+
+    <!-- Widget -->
+    <string name="widget_label">Music Player</string>
+    <string name="widget_description">Cover, title and playback buttons on your home screen.</string>
+    <string name="widget_title">Widget</string>
+    <string name="widget_style">Style</string>
+    <string name="widget_save">Save</string>
+    <string name="widget_tap_to_open">Tap to open Music Player</string>
 </resources>

@@ -4,14 +4,37 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- radio dial ring -->
+    <!-- A soft shadow under the note. Every part is its own path, so overlaps stay solid. -->
+    <group android:translateY="2.2">
+        <path
+            android:fillColor="#40000000"
+            android:pathData="M30.82,74.31a10.6,8.2 -24 1,0 19.37,-8.62a10.6,8.2 -24 1,0 -19.37,8.62z" />
+        <path
+            android:fillColor="#40000000"
+            android:pathData="M59.82,67.31a10.6,8.2 -24 1,0 19.37,-8.62a10.6,8.2 -24 1,0 -19.37,8.62z" />
+        <path
+            android:fillColor="#40000000"
+            android:pathData="M45.6,70.8V35.2h4.3V70.8z" />
+        <path
+            android:fillColor="#40000000"
+            android:pathData="M74.6,63.8V28.2h4.3V63.8z" />
+        <path
+            android:fillColor="#40000000"
+            android:pathData="M45.6,36.4L78.9,29V40.8L45.6,48.2z" />
+    </group>
     <path
-        android:fillColor="#00000000"
-        android:pathData="M54,54m-26,0a26,26 0 1,1 52,0a26,26 0 1,1 -52,0"
-        android:strokeColor="#FFB020"
-        android:strokeWidth="5" />
-    <!-- play mark -->
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M30.82,74.31a10.6,8.2 -24 1,0 19.37,-8.62a10.6,8.2 -24 1,0 -19.37,8.62z" />
     <path
-        android:fillColor="#FFB020"
-        android:pathData="M46.5,41L46.5,67L69,54Z" />
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M59.82,67.31a10.6,8.2 -24 1,0 19.37,-8.62a10.6,8.2 -24 1,0 -19.37,8.62z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M45.6,70.8V35.2h4.3V70.8z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M74.6,63.8V28.2h4.3V63.8z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M45.6,36.4L78.9,29V40.8L45.6,48.2z" />
 </vector>

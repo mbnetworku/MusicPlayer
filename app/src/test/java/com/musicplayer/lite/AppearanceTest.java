@@ -35,9 +35,9 @@ public class AppearanceTest {
         prefs.setThemeMode(Appearance.DARK);
         Context c = Appearance.wrap(app);
         assertTrue(Appearance.isNight(c));
-        assertEquals(0xFF0E1114, c.getColor(R.color.bg));
-        assertEquals(0xFFF1F3F5, c.getColor(R.color.text_primary));
-        assertEquals("amber text stays bright on dark", 0xFFFFB020, c.getColor(R.color.accent_text));
+        assertEquals(0xFF000000, c.getColor(R.color.bg));
+        assertEquals(0xFFFFFFFF, c.getColor(R.color.text_primary));
+        assertEquals("red text stays bright on black", 0xFFFF453A, c.getColor(R.color.accent_text));
     }
 
     @Test
@@ -45,10 +45,10 @@ public class AppearanceTest {
         prefs.setThemeMode(Appearance.LIGHT);
         Context c = Appearance.wrap(app);
         assertFalse(Appearance.isNight(c));
-        assertEquals(0xFFF3F5F7, c.getColor(R.color.bg));
-        assertEquals(0xFF12161A, c.getColor(R.color.text_primary));
-        assertEquals("amber text turns darker on light so it stays readable", 0xFFA35F00, c.getColor(R.color.accent_text));
-        assertEquals("button and progress fills keep the bright amber", 0xFFFFB020, c.getColor(R.color.accent));
+        assertEquals(0xFFFFFFFF, c.getColor(R.color.bg));
+        assertEquals(0xFF000000, c.getColor(R.color.text_primary));
+        assertEquals("red text turns darker on white so it stays readable", 0xFFD70015, c.getColor(R.color.accent_text));
+        assertEquals("button and progress fills keep the brighter red", 0xFFE5202B, c.getColor(R.color.accent));
     }
 
     @Test

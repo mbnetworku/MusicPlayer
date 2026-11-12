@@ -39,9 +39,22 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <include
-        layout="@layout/part_library_main"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:orientation="vertical"
+        tools:ignore="NestedWeights">
+
+        <include
+            layout="@layout/part_library_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            layout="@layout/part_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Overdraw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/grouped_bg"
+    android:orientation="vertical"
+    android:tag="glass:clear">
 
     <LinearLayout
         style="@style/TopBar"
@@ -14,14 +18,13 @@
             style="@style/IconButton"
             android:contentDescription="@string/cd_back"
             android:src="@drawable/ic_arrow_back" />
-
-        <TextView
-            style="@style/TopTitle"
-            android:layout_width="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="@string/settings_title" />
     </LinearLayout>
+
+    <TextView
+        style="@style/LargeTitle"
+        android:layout_marginStart="@dimen/gutter"
+        android:layout_marginBottom="4dp"
+        android:text="@string/settings_title" />
 
     <ScrollView
         android:id="@+id/settings_scroll"
@@ -91,6 +94,101 @@
                 <include
                     android:id="@+id/row_glass"
                     layout="@layout/row_setting" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/set_background" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingTop="8dp"
+                    android:text="@string/set_bg_note" />
+
+                <RadioGroup
+                    android:id="@+id/bg_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/bg_plain"
+                        style="@style/SettingRadio"
+                        android:text="@string/set_bg_plain" />
+
+                    <TextView
+                        style="@style/SettingSub"
+                        android:layout_marginTop="-6dp"
+                        android:paddingStart="40dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/set_bg_plain_sub" />
+
+                    <RadioButton
+                        android:id="@+id/bg_cover"
+                        style="@style/SettingRadio"
+                        android:text="@string/set_bg_cover" />
+
+                    <TextView
+                        style="@style/SettingSub"
+                        android:layout_marginTop="-6dp"
+                        android:paddingStart="40dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/set_bg_cover_sub" />
+
+                    <RadioButton
+                        android:id="@+id/bg_picture"
+                        style="@style/SettingRadio"
+                        android:text="@string/set_bg_picture" />
+
+                    <TextView
+                        android:id="@+id/bg_picture_sub"
+                        style="@style/SettingSub"
+                        android:layout_marginTop="-6dp"
+                        android:paddingStart="40dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="6dp" />
+
+                    <RadioButton
+                        android:id="@+id/bg_wallpaper"
+                        style="@style/SettingRadio"
+                        android:text="@string/set_bg_wallpaper" />
+
+                    <TextView
+                        android:id="@+id/bg_wallpaper_sub"
+                        style="@style/SettingSub"
+                        android:layout_marginTop="-6dp"
+                        android:paddingStart="40dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="6dp" />
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/bg_pick"
+                        style="@style/PillSmall"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/bg_wallpaper_update"
+                        style="@style/PillSmall"
+                        android:layout_marginStart="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/set_bg_update" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView

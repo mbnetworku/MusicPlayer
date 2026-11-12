@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The bottom tab bar of the library: an icon above a short label. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabs"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_tabbar"
+    android:orientation="horizontal"
+    android:tag="glass:tabs,margin">
+
+    <TextView
+        android:id="@+id/tab_songs"
+        style="@style/Tab"
+        android:drawableTop="@drawable/ic_music_note"
+        android:text="@string/tab_songs" />
+
+    <TextView
+        android:id="@+id/tab_folders"
+        style="@style/Tab"
+        android:drawableTop="@drawable/ic_folder"
+        android:text="@string/tab_folders" />
+
+    <TextView
+        android:id="@+id/tab_albums"
+        style="@style/Tab"
+        android:drawableTop="@drawable/ic_album"
+        android:text="@string/tab_albums" />
+
+    <TextView
+        android:id="@+id/tab_artists"
+        style="@style/Tab"
+        android:drawableTop="@drawable/ic_person"
+        android:text="@string/tab_artists" />
+</LinearLayout>

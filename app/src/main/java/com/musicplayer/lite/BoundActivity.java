@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +14,18 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.view.DisplayCutout;
 import android.view.View;
+import android.widget.Toast;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /** An activity that is bound to the playback service while it is on screen. */
 abstract class BoundActivity extends Activity implements PlaybackService.Listener {
     private static final int TICK_MS = 500;
     private static final int BACKDROP_ART_PX = 96;
+    private static final int REQ_DELETE = 9001;
+    private static final int REQ_WRITE = 9002;
 
     /** Non-null between {@link #onServiceReady()} and onStop. */
     protected PlaybackService service;
@@ -26,7 +35,11 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     private int look;
     /** The glass look's window background; null in the flat looks. */
     private BackdropDrawable backdrop;
+    /** The glass look follows the cover that is playing (instead of a fixed picture or a plain page). */
+    private boolean coverBackdrop;
     private String backdropKey = "";
+    /** Songs waiting for the user's answer to a permission or system question before they are deleted. */
+    private List<Track> pendingDelete = Collections.emptyList();
     private final Handler ticker = new Handler(Looper.getMainLooper());
     private final Runnable tick = new Runnable() {
         @Override
@@ -105,7 +118,7 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
 
     @Override
     public final void onPlaybackChanged() {
-        if (backdrop != null) updateBackdrop();
+        if (backdrop != null && coverBackdrop) updateBackdrop();
         onPlaybackUpdated();
     }
 
@@ -152,10 +165,147 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
         final boolean glass = Appearance.glass(this);
         Appearance.styleSystemBars(this, glass);
         if (glass) {
-            backdrop = new BackdropDrawable(this);
-            backdrop.setArt(null, "", false);
-            getWindow().setBackgroundDrawable(backdrop);
+            final int background = Appearance.glassBackground(this);
+            if (background == Appearance.BG_COVER) {
+                coverBackdrop = true;
+                backdrop = new BackdropDrawable(this);
+                backdrop.setArt(null, "", false);
+                getWindow().setBackgroundDrawable(backdrop);
+            } else if (background == Appearance.BG_PICTURE || background == Appearance.BG_WALLPAPER) {
+                final int kind = BackgroundStore.kindFor(background);
+                if (BackgroundStore.has(this, kind)) {
+                    // The page is plain until the saved picture has been read.
+                    backdrop = new BackdropDrawable(this);
+                    backdrop.setPlain(false);
+                    getWindow().setBackgroundDrawable(backdrop);
+                    BackgroundStore.load(this, kind, bitmap -> {
+                        if (backdrop != null && bitmap != null) backdrop.setPicture(bitmap, true);
+                    });
+                }
+            }
             Glass.decorate(content);
         }
+    }
+
+    // ---- the "more" menu of songs, and deleting them ---------------------------------------------
+
+    /**
+     * The glass action sheet for one song, or for the songs of an album, artist or folder.
+     * {@code current} is true for the song that is playing now (it cannot be queued after itself).
+     */
+    protected final void showSongMenu(final CharSequence title, final List<Track> tracks, final boolean single,
+                                      boolean current) {
+        if (tracks.isEmpty()) return;
+        GlassDialog sheet = GlassDialog.sheet(this).title(title);
+        if (!single) {
+            sheet.item(R.drawable.ic_play, R.string.action_play, () -> playTracks(tracks, false));
+            sheet.item(R.drawable.ic_shuffle, R.string.action_shuffle, () -> playTracks(tracks, true));
+        }
+        if (!current) {
+            sheet.item(R.drawable.ic_playlist_play, R.string.action_play_next, () -> {
+                if (service != null) service.playNext(tracks);
+                toast(R.string.toast_play_next);
+            });
+            sheet.item(R.drawable.ic_playlist_add, R.string.action_add_queue, () -> {
+                if (service != null) service.enqueue(tracks);
+                toast(R.string.toast_added);
+            });
+        }
+        if (single) {
+            sheet.item(R.drawable.ic_info, R.string.action_info, () -> showSongInfo(tracks.get(0)));
+        }
+        sheet.destructiveItem(R.drawable.ic_delete, single ? R.string.action_delete : R.string.action_delete_many,
+                () -> confirmDelete(tracks, title));
+        sheet.show();
+    }
+
+    /** Plays {@code tracks} from the top, in order or shuffled. */
+    protected void playTracks(List<Track> tracks, boolean shuffle) {
+        if (service == null || tracks.isEmpty()) return;
+        service.playQueue(tracks, shuffle ? new java.util.Random().nextInt(tracks.size()) : 0, shuffle);
+    }
+
+    private void showSongInfo(Track t) {
+        String text = getString(R.string.info_body, t.artist, t.album, Fmt.time(t.durationMs), t.path());
+        GlassDialog.alert(this).icon(R.drawable.ic_info).title(t.title).message(text)
+                .negative(R.string.dialog_close, null).show();
+    }
+
+    /** Asks "delete for good?" in a glass pop-up. Nothing is deleted until the user agrees. */
+    protected final void confirmDelete(final List<Track> tracks, CharSequence name) {
+        if (tracks.isEmpty()) return;
+        final int n = tracks.size();
+        GlassDialog.alert(this)
+                .icon(R.drawable.ic_delete)
+                .title(n == 1 ? getString(R.string.delete_title_one, name)
+                        : getResources().getQuantityString(R.plurals.delete_title_many, n, n))
+                .message(R.string.delete_body)
+                .positive(R.string.delete_confirm, () -> startDelete(tracks))
+                .negative(R.string.dialog_cancel, null)
+                .show();
+    }
+
+    private void startDelete(List<Track> tracks) {
+        switch (MediaDeleter.planFor(Build.VERSION.SDK_INT, Permissions.hasWrite(this))) {
+            case MediaDeleter.SYSTEM:
+                try {
+                    IntentSender sender = MediaDeleter.systemRequest(getContentResolver(), tracks);
+                    pendingDelete = tracks;
+                    startIntentSenderForResult(sender, REQ_DELETE, null, 0, 0, 0);
+                } catch (IntentSender.SendIntentException | RuntimeException e) {
+                    pendingDelete = Collections.emptyList();
+                    toast(R.string.delete_failed);
+                }
+                break;
+            case MediaDeleter.NEEDS_PERMISSION:
+                pendingDelete = tracks;
+                Permissions.askForWrite(this, REQ_WRITE, () -> pendingDelete = Collections.emptyList());
+                break;
+            default:
+                finishDelete(MediaDeleter.deleteDirect(this, tracks), tracks.size());
+                break;
+        }
+    }
+
+    private void finishDelete(Set<Long> gone, int asked) {
+        pendingDelete = Collections.emptyList();
+        if (!gone.isEmpty()) {
+            if (service != null) service.removeTracks(gone);
+            Library.get(this).refresh();
+        }
+        if (gone.size() == asked) {
+            Toast.makeText(getApplicationContext(),
+                    getResources().getQuantityString(R.plurals.deleted_count, gone.size(), gone.size()),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            toast(R.string.delete_failed);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQ_DELETE) return;
+        List<Track> asked = pendingDelete;
+        pendingDelete = Collections.emptyList();
+        if (resultCode == RESULT_OK && !asked.isEmpty()) finishDelete(MediaDeleter.ids(asked), asked.size());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode != REQ_WRITE) return;
+        List<Track> asked = pendingDelete;
+        pendingDelete = Collections.emptyList();
+        if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED && !asked.isEmpty()) {
+            finishDelete(MediaDeleter.deleteDirect(this, asked), asked.size());
+        } else if (!asked.isEmpty() && !shouldShowRequestPermissionRationale(permissions.length > 0 ? permissions[0] : "")) {
+            Permissions.askForSettings(this, R.drawable.ic_delete, R.string.perm_write_title,
+                    R.string.perm_write_settings, null);
+        }
+    }
+
+    protected final void toast(int res) {
+        Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
     }
 }

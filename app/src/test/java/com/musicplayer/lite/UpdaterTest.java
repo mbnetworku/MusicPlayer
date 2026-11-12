@@ -122,8 +122,12 @@ public class UpdaterTest {
 
     @Test
     public void unreachableServerGivesANetworkMessage() throws Exception {
-        Updater u = updater("1.1.0", true, 0);
-        server.close();
+        // Port 1 is reserved and nothing listens there, so the connection is refused. (A port that was
+        // only just closed could be handed to another program in between.)
+        Updater.Config config = new Updater.Config("http://127.0.0.1:1", REPO, true, dir, "1.1.0",
+                (c, f, v) -> 0, (c, f) -> commits.incrementAndGet());
+        Updater u = new Updater(app, config);
+        Updater.replaceForTests(u);
         u.check(false);
         waitFor(u, Updater.State.ERROR);
         assertEquals(R.string.upd_err_network, u.errorRes());

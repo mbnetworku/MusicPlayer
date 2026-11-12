@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="topbar_height">48dp</dimen>
-    <dimen name="tab_height">40dp</dimen>
+    <dimen name="tabbar_height">48dp</dimen>
+    <dimen name="text_large_title">26sp</dimen>
     <dimen name="row_height">56dp</dimen>
     <dimen name="row_art">44dp</dimen>
-    <dimen name="mini_height">56dp</dimen>
+    <dimen name="mini_height">52dp</dimen>
 
     <dimen name="text_np_title">18sp</dimen>
     <dimen name="text_np_artist">13sp</dimen>
@@ -15,7 +16,7 @@
     <dimen name="ctl_big">64dp</dimen>
     <dimen name="ctl_small_pad">10dp</dimen>
     <dimen name="ctl_mid_pad">10dp</dimen>
-    <dimen name="ctl_big_pad">18dp</dimen>
+    <dimen name="ctl_big_pad">10dp</dimen>
 
     <dimen name="eq_curve_height">72dp</dimen>
     <dimen name="eq_band_height">150dp</dimen>

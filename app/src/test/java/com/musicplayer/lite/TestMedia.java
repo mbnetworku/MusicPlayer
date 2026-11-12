@@ -28,6 +28,9 @@ final class TestMedia {
             {5L, "Ember", "Okoro", "Fieldwork", 13L, 361000, 1, "/storage/1234-ABCD/Songs/Ember.mp3"},
     };
 
+    /** The ids of the songs the fake MediaStore was asked to delete. */
+    static final java.util.List<Long> DELETED = new java.util.ArrayList<>();
+
     public static final class Provider extends ContentProvider {
         @Override
         public boolean onCreate() {
@@ -85,6 +88,18 @@ final class TestMedia {
 
         @Override
         public int delete(Uri uri, String selection, String[] selectionArgs) {
+            // Deleting a known song succeeds and is recorded; anything else deletes nothing.
+            try {
+                long id = Long.parseLong(uri.getLastPathSegment());
+                for (Object[] song : SONGS) {
+                    if ((Long) song[0] == id) {
+                        DELETED.add(id);
+                        return 1;
+                    }
+                }
+            } catch (NumberFormatException ignored) {
+                // Not a song URI.
+            }
             return 0;
         }
 
@@ -96,6 +111,7 @@ final class TestMedia {
 
     /** The app keeps one Library, Prefs and ArtLoader per process; tests need fresh ones. */
     static void resetSingletons() {
+        DELETED.clear();
         for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class}) {
             try {
                 java.lang.reflect.Field f = c.getDeclaredField("instance");

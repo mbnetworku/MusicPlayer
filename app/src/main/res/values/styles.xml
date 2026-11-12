@@ -15,6 +15,17 @@
         <item name="android:colorControlHighlight">@color/ripple</item>
         <item name="android:alertDialogTheme">@style/AppDialog</item>
         <item name="android:popupMenuStyle">@style/AppPopup</item>
+        <item name="android:switchStyle">@style/AppSwitch</item>
+    </style>
+
+    <!-- The window of a glass dialog: see-through, dimmed behind, no title. The card draws the glass. -->
+    <style name="GlassDialogTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
     </style>
 
     <style name="AppDialog" parent="android:Theme.Material.Dialog.Alert">
@@ -26,6 +37,15 @@
 
     <style name="AppPopup" parent="android:Widget.Material.PopupMenu">
         <item name="android:popupBackground">@color/surface_raised</item>
+    </style>
+
+    <!-- Switches look like iOS ones: a red track and a round white thumb. -->
+    <style name="AppSwitch" parent="android:Widget.Material.CompoundButton.Switch">
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <item name="android:track">@drawable/switch_track</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:showText">false</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="TopBar">
@@ -47,6 +67,19 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <!-- The big bold title of a main screen, like the Library in Apple Music. -->
+    <style name="LargeTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_large_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="TopSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -64,15 +97,22 @@
         <item name="android:tint">@color/icon</item>
     </style>
 
+    <!-- One item of the bottom tab bar: an icon above a short label (set drawableTop in the layout). -->
     <style name="Tab">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">@dimen/tabbar_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_tab</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:drawableTint">@color/tab_text</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:textSize">@dimen/text_tab</item>
         <item name="android:textColor">@color/tab_text</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:background">@drawable/bg_tab</item>
         <item name="android:maxLines">1</item>
     </style>
 
@@ -112,6 +152,25 @@
         <item name="android:drawableTint">@color/on_accent</item>
     </style>
 
+    <!-- Play and Shuffle: soft grey with red content, as in Apple Music. -->
+    <style name="PillTint" parent="Pill">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_pill_tint</item>
+        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:drawableTint">@color/accent_text</item>
+    </style>
+
+    <!-- A small action button inside a settings card. -->
+    <style name="PillSmall" parent="Pill">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:background">@drawable/bg_pill_tint</item>
+        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="PillOutline" parent="Pill">
         <item name="android:background">@drawable/bg_pill_outline</item>
         <item name="android:textColor">@color/text_primary</item>
@@ -148,15 +207,14 @@
         <item name="android:textColor">@color/accent_text</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="SettingsCard">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
         <item name="android:background">@drawable/bg_card</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingStart">16dp</item>

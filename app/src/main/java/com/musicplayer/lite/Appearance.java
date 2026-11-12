@@ -21,6 +21,12 @@ final class Appearance {
     static final int LIGHT = 1;
     static final int DARK = 2;
 
+    /** What the glass look draws behind its panels. */
+    static final int BG_PLAIN = 0;
+    static final int BG_COVER = 1;
+    static final int BG_PICTURE = 2;
+    static final int BG_WALLPAPER = 3;
+
     private Appearance() {}
 
     /** Returns a context whose resources use the chosen light or dark mode. */
@@ -42,10 +48,19 @@ final class Appearance {
         return Prefs.get(c).glass();
     }
 
+    static int glassBackground(Context c) {
+        return Prefs.get(c).glassBackground();
+    }
+
+    /** Glass panels over a plain white or black page, where they need a visible fill of their own. */
+    static boolean glassPlain(Context c) {
+        return glass(c) && glassBackground(c) == BG_PLAIN;
+    }
+
     /** Changes whenever the chosen look changes, so an open screen can notice and rebuild itself. */
     static int signature(Context c) {
         Prefs p = Prefs.get(c);
-        return p.themeMode() * 2 + (p.glass() ? 1 : 0);
+        return (p.themeMode() * 8 + p.glassBackground()) * 2 + (p.glass() ? 1 : 0);
     }
 
     /** Dark icons on light backgrounds and light icons on dark ones; clear bars for glass. */

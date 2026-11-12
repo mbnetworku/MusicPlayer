@@ -354,6 +354,14 @@ public final class PlaybackService extends Service {
         }
     }
 
+    /** Drops deleted songs from the queue. Playback moves on if the current song was one of them. */
+    void removeTracks(java.util.Set<Long> ids) {
+        List<Track> list = queue.tracks();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (ids.contains(list.get(i).id)) removeFromQueue(i);
+        }
+    }
+
     void setShuffle(boolean on) {
         queue.setShuffle(on);
         queueChanged();
@@ -748,6 +756,7 @@ public final class PlaybackService extends Service {
             art = bitmap;
             updateMetadata();
             if (queue.current() != null) postNotification();
+            PlayerWidget.publish(PlaybackService.this, queue.current(), playing, art);
         });
     }
 
@@ -905,5 +914,6 @@ public final class PlaybackService extends Service {
 
     private void notifyChanged() {
         for (Listener l : new ArrayList<>(listeners)) l.onPlaybackChanged();
+        PlayerWidget.publish(this, queue.current(), playing, art);
     }
 }
