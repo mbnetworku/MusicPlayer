@@ -1,13 +1,16 @@
 # Music Player
 
-A small, fast music player for Android 8.0 and newer. It is made for phones and for **car head units** (Android car stereos): it finds every song and every folder on the device, including USB drives and SD cards, it has a real equalizer, and it looks the way you want: **light, dark or automatic**, flat or **liquid glass**. It can also **update itself** from this repository's releases.
+A small, fast music player for Android 8.0 and newer, with a clean look inspired by Apple Music: white pages (black in dark mode), a red accent, large titles and a tab bar at the bottom. It is made for phones and for **car head units** (Android car stereos): it finds every song in every folder, including USB drives and SD cards, it has a real equalizer that can also read and control the device's own, and it can **update itself** from this repository's releases.
 
-* **Tiny:** the installable APK is about 120 KB. No libraries, no ads, no tracking.
+* **Tiny:** the installable APK is about 160 KB. No libraries, no ads, no tracking.
 * **Private:** your music never touches the network. The only thing the app ever asks the internet is "is there a newer release on GitHub?", at most once a day, and you can turn even that off.
 * **Every folder, every song:** Songs, Folders, Albums and Artists tabs, search, and a folder browser that shows each storage volume.
-* **Equalizer:** presets, a band slider per frequency, bass boost, surround and volume boost.
 * **Light, dark or automatic:** by default the app **follows your device** and switches when it does. You can also force Light or Dark.
-* **Liquid glass:** an optional look with frosted glass panels over a blurred copy of the cover art that is playing.
+* **Liquid glass:** an optional look with frosted glass panels. Behind them you choose a plain white or black page, the blurred cover art, **your own picture**, or **your device wallpaper**.
+* **Glass pop-ups:** every permission question starts with a liquid-glass message that says why, with **Allow** and **Not allowed**.
+* **Delete songs for good:** from a song's more button, or a whole album, artist or folder. You confirm first; the files are then gone at once.
+* **Equalizer:** presets, a slider per band, bass boost, surround and volume boost. The screen also shows what the **device's own equalizer** says, and can copy it or control it where Android allows.
+* **Widget and icon:** a home-screen widget with cover and playback buttons (Follow my device, Light or Dark), and a new app icon.
 * **Updates in Settings:** check for, download, verify and install a new version without leaving the app.
 * **Built for the car:** in landscape on a wide screen the player and the library share one screen, with large touch targets. Steering-wheel, Bluetooth and headset media keys are handled, and can start your last queue when the app is closed.
 
@@ -15,19 +18,27 @@ A small, fast music player for Android 8.0 and newer. It is made for phones and 
 
 These are renders of the app's real layouts and real code with sample (fictional) songs and generated cover art. They are not photos of a device.
 
-The four looks. **Follow my device** picks Dark or Light for you; **Liquid glass** can be switched on in either:
+The looks. **Follow my device** picks Dark or Light for you. **Liquid glass** can be switched on in either, over a plain page, the cover art, or your own picture:
 
-<img src="docs/screenshots/looks.png" alt="Songs and Now playing in four looks: dark, light, liquid glass on dark, and liquid glass on light">
+<img src="docs/screenshots/looks.png" alt="Songs and Now playing in six looks: dark, light, liquid glass on dark and on light, glass over cover art, and glass over a picture">
+
+Pop-ups and menus are liquid glass too, in every look:
+
+<img src="docs/screenshots/popups.png" alt="The permission question, the delete confirmation and the more menu, in glass, on dark and light">
 
 Settings, with the update card in four of its states:
 
 <img src="docs/screenshots/settings.png" alt="The Settings screen, and its Updates card showing an update available, a download in progress, the one-time install permission, and up to date">
 
+The home-screen widget in its three styles, and the app icon:
+
+<img src="docs/screenshots/widget.png" alt="The widget with the cover, title and buttons in follow-device, light and dark styles, and the app icon as a square, a circle and as a themed icon">
+
 Phone and car head unit (1280 × 720, landscape):
 
-<img src="docs/screenshots/overview.png" alt="Songs, Now playing, Folders and Equalizer on a phone; the player with the library, and the equalizer, on a car head unit">
+<img src="docs/screenshots/overview.png" alt="Songs, Now playing, Equalizer and Settings on a phone; the player with the library, and the equalizer, on a car head unit">
 
-Single screens: [Songs](docs/screenshots/phone-songs.png), [Songs in liquid glass](docs/screenshots/phone-songs-glass-dark.png), [Folders](docs/screenshots/phone-folders.png), [Albums](docs/screenshots/phone-albums.png), [Now playing](docs/screenshots/phone-now-playing.png) ([light](docs/screenshots/phone-now-playing-light.png), [glass dark](docs/screenshots/phone-now-playing-glass-dark.png), [glass light](docs/screenshots/phone-now-playing-glass-light.png)), [Equalizer](docs/screenshots/phone-equalizer.png), [Up next](docs/screenshots/phone-queue.png), [Settings](docs/screenshots/phone-settings.png), [Car library](docs/screenshots/car-library.png), [Car library in glass](docs/screenshots/car-library-glass-dark.png), [Car equalizer](docs/screenshots/car-equalizer.png).
+Single screens: [Songs](docs/screenshots/phone-songs.png) ([light](docs/screenshots/phone-songs-light.png)), [Folders](docs/screenshots/phone-folders.png), [Albums](docs/screenshots/phone-albums.png), [Now playing](docs/screenshots/phone-now-playing.png) ([light](docs/screenshots/phone-now-playing-light.png)), [Equalizer](docs/screenshots/phone-equalizer.png), [Up next](docs/screenshots/phone-queue.png), [Settings](docs/screenshots/phone-settings.png), [Car library](docs/screenshots/car-library.png) ([in glass](docs/screenshots/car-library-glass.png)), [Car equalizer](docs/screenshots/car-equalizer.png).
 
 ## Install
 
@@ -51,13 +62,27 @@ Open the menu (⋮) → **Settings** → **Appearance**.
 |---|---|
 | **Follow my device** (default) | Uses your phone's or head unit's own dark or light setting, and changes by itself when that changes (at sunset, or when you flip the quick setting). Settings shows which mode the device is using right now. |
 | **Light** / **Dark** | Always light or always dark, whatever the device says. |
-| **Liquid glass** (switch) | Rounded, frosted glass panels over a blurred, colourful copy of the cover that is playing. The background changes with every song, and fades from one to the next. Works with light, dark and "Follow my device". |
+| **Liquid glass** (switch) | Rounded, frosted glass panels, a floating glass tab bar and mini player. Works with light, dark and "Follow my device". |
+
+The flat look is the Apple Music-inspired one: white pages in light mode and true black in dark mode, a red accent, large titles, artwork rows with a more (⋯) button, a mini player above a tab bar, and Settings in grouped cards.
+
+### What is behind the glass
+
+Under **Liquid glass background** in Settings:
+
+| Background | What it shows |
+|---|---|
+| **White or black** (default) | A clean page that follows your theme. |
+| **Cover art** | A soft blur of the song that is playing, fading from one song to the next. |
+| **My picture** | A picture you pick from your gallery. It is copied into the app, scaled down, so the app never needs access to your gallery again. |
+| **Device wallpaper** | Your wallpaper. Android lets an app read the wallpaper *picture* only with some permissions (up to Android 12 the storage permission, none at all on the newest versions). Where it does not, the wallpaper's three main **colours**, which Android always shares, are used as a soft gradient, and Settings says so. |
+
+Pictures and covers are softened and kept inside a brightness range, so text stays readable on top of any of them: bright ones are darkened at night and dark ones lightened by day.
 
 How it is built, in case you want to change it:
 
-* Colours are Android resources. The dark palette is the default in `values/`, and the light palette is in `values-notnight/`. "Follow my device" simply leaves Android's own dark/light choice alone, so it works on Android 8 as well, where apps have no dark-mode switch of their own. Light and Dark override that choice for this app only.
-* The glass look is plain graphics code, no blur library. Layouts opt in with a tag such as `android:tag="glass:card"`; `Glass` reads the tags and gives those views glass backgrounds, so there is one set of layouts for every look. The cover is shrunk to 24 × 24 pixels and softened once per song, then drawn stretched behind the screen.
-* A busy or very bright cover can make text hard to read, so the backdrop is kept inside a brightness range: bright covers are darkened at night and dark covers are lightened by day. The colour still comes from the cover.
+* Colours are Android resources. The dark palette is the default in `values/`, and the light palette is in `values-notnight/`. "Follow my device" simply leaves Android's own dark/light choice alone, so it works on Android 8 as well, where apps have no dark-mode switch of their own. Light and Dark override that choice for this app only. The red accent is one colour, `accent`.
+* The glass look is plain graphics code, no blur library. Layouts opt in with a tag such as `android:tag="glass:card"`; `Glass` reads the tags and gives those views glass backgrounds, so there is one set of layouts for every look. Over a plain page the panels get a fill of their own so they can be seen; over a cover or picture they are mostly see-through. Pop-ups blur what is behind them on Android 12 and newer.
 
 ## Settings
 
@@ -65,11 +90,45 @@ How it is built, in case you want to change it:
 |---|---|---|
 | Appearance | Theme | Follow my device, Light or Dark. |
 | Appearance | Liquid glass | The glass look above. |
+| Liquid glass background | White or black, Cover art, My picture, Device wallpaper | What shows behind the glass panels. |
 | Library | Show all audio files | Include ringtones, voice notes and other short sounds. |
 | Library | Scan storage for music | Index new files on internal storage, SD cards and USB drives. |
 | Updates | Version, **Check for updates** | See [Updates](#updates). |
 | Updates | Check automatically | Look for a new version once a day when the app opens. On by default. |
 | About | Source code and releases | Opens this repository on GitHub. |
+
+## Pop-ups before permissions
+
+Android versions differ in what they need, so the app asks in one place, and always starts with a glass pop-up that says why: **Allow** shows Android's own question, **Not allowed** leaves the feature off and the screen explains what is missing.
+
+| When | What is asked | On which Android |
+|---|---|---|
+| First start | Read your music: `READ_MEDIA_AUDIO` (13 and newer) or `READ_EXTERNAL_STORAGE` (12 and older). Android 13 and newer also ask to show the playback controls (`POST_NOTIFICATIONS`). | all |
+| Deleting a song | Write access to delete files, once. | 10 and older only. Android 11 and newer show their own "allow deleting?" screen for each delete instead. |
+| Installing an update | "Install unknown apps" for Music Player, once. | all |
+| Using your wallpaper | Reading the wallpaper picture. If Android says no, its colours are used. | storage permission on 12 and older; not available on 13 and newer |
+| After Android stops asking | A pop-up with **Open settings** for this app's page. | all |
+
+## Deleting songs
+
+Tap a song's **⋯** (or long-press anything in a list): **Delete…**. For an album, artist or folder it says **Delete all these songs…**. The same menu is on the Now Playing screen. A glass pop-up asks once ("The files are deleted from this device for good, right away. This cannot be undone."). There is no recycle bin.
+
+* **Android 11 and newer:** apps may not delete other apps' media silently, so after your confirmation Android shows its own "Allow Music Player to delete this audio file?" screen. After you allow it, the files are deleted at once.
+* **Android 10 and older:** the app asks for write access once, then deletes directly.
+* Deleted songs are removed from the play queue. If the song that was playing is deleted, playback moves on.
+
+## Equalizer and the device equalizer
+
+The equalizer works on this player's own audio, so other apps keep their own sound. At the top of the screen a **Device equalizer** card says what Android's own equalizer is doing: on or off, and which preset is selected.
+
+* **Read from device** copies the device's on/off state and curve into this player's equalizer.
+* **Control the whole device** makes the sliders change the equalizer of the whole device instead (every app is affected, and this player's own equalizer steps aside so the sound is not shaped twice). It stays on only while Music Player runs.
+
+How much of this works depends on the device. Android lets an app reach the device equalizer (the "output mix") only where the manufacturer allows it, and only one app can control it at a time. When it is not allowed, the card says so, and the equalizer applies to this player only. This has not been tried on real devices yet.
+
+## Widget and icon
+
+Long-press the home screen → **Widgets** → **Music Player**. The widget shows the cover, the title and artist, and **previous / play or pause / next**; tapping it opens the app. When you add it, you choose its style: **Follow my device**, **Light** or **Dark**. The widget follows playback while Music Player runs, and shows the last song after a restart. The app icon is a red glass tile with a white note, and it also has a single-colour version for Android 13's themed icons.
 
 ## Updates
 
@@ -92,11 +151,11 @@ A **banner** on the library screen shows when a newer version is known: **Update
 |---|---|
 | Play a song | Tap it. The list it came from (all songs, a folder, an album) becomes the queue. |
 | Play a whole folder, album or artist | Open it and tap **Play all** or **Shuffle**. |
-| Add to the queue | Long-press a song, folder, album or artist: **Play next** or **Add to queue**. |
+| Add to the queue, delete, see details | Tap the **⋯** at the end of a song, album, artist or folder (or long-press it): **Play next**, **Add to queue**, **Song info**, **Delete…**. |
 | See or edit the queue | Open the player, then the queue icon. Tap to jump, long-press to remove. |
 | Search | Tap the magnifier. It searches title, artist, album and file name. |
 | Use the equalizer | Tap the equalizer icon. Picking a preset or moving a slider turns it on. |
-| Change the look or check for updates | Menu (⋮) → **Settings**. |
+| Change the look, the glass background, or check for updates | Menu (⋮) → **Settings**. |
 | Find music that is not listed | Menu (⋮) → **Scan storage for music** (also in Settings → Library). |
 | See ringtones and voice notes too | Menu (⋮) → **Settings** → **Show all audio files**. |
 
@@ -133,7 +192,7 @@ The version comes from one place. `app/build.gradle` has a default, and `-PappVe
 ```
 
 * Plain JVM tests for the play queue (shuffle, repeat, editing), the folder tree and volume naming, equalizer presets, text formatting and version comparison.
-* Robolectric tests that open every screen against a fake MediaStore, play through a fake `MediaPlayer`, and check each look (dark, light, glass) including how the glass backdrop keeps text readable on any cover. They also exercise the updater against a local test server (finding a release, being rate-limited or offline, downloading, a wrong checksum, a file the verifier rejects, refusing plain HTTP, cancelling, remembering a release while offline, the once-a-day limit, the install permission), the file checks (another app, an old version, a different signing key), and every state of the update card.
+* Robolectric tests that open every screen against a fake MediaStore, play through a fake `MediaPlayer`, and check each look (dark, light, and glass over each kind of background) including how the glass backdrop keeps text readable on any cover. They also go through the "more" menu and the delete confirmation for each Android version's way of deleting, the glass pop-ups and the permission questions, choosing a picture or the wallpaper for the glass, the widget and its style screen, and what the equalizer screen says about the device equalizer (with a pretend device equalizer, since a test runtime has none). The updater tests exercise it against a local test server (finding a release, being rate-limited or offline, downloading, a wrong checksum, a file the verifier rejects, refusing plain HTTP, cancelling, remembering a release while offline, the once-a-day limit, the install permission), the file checks (another app, an old version, a different signing key), and every state of the update card.
 * Robolectric downloads an Android SDK jar from Maven Central on first run.
 
 The GitHub Actions workflow in `.github/workflows/build.yml` builds the APK on every push (and uploads it first), then runs the tests and lint.
@@ -188,6 +247,11 @@ Use the same password for the store and the key: the default PKCS #12 key store 
 | `Appearance` | Light, dark and follow-device: wraps each screen's context with the chosen night mode and keeps the system bars readable. Screens rebuild themselves when the look changes. |
 | `Glass`, `GlassDrawable`, `BackdropDrawable` | The liquid-glass look: tag-driven decoration of the layouts, translucent panels with a highlight and rim, and the blurred cover-art window background. |
 | `SettingsActivity`, `Prefs` | Settings screen and saved choices. |
+| `BackgroundStore`, `BackdropDrawable` | The picture behind the glass: copies, scales and loads your picture or the wallpaper, and draws plain, cover, or picture backgrounds cropped and kept readable. |
+| `GlassDialog`, `Permissions` | The liquid-glass alert and action sheet, and every permission question, decided per Android version. |
+| `MediaDeleter` | Deleting songs: the system request on Android 11 and newer, direct deletion before. |
+| `DeviceEq` | The device equalizer (output mix) as far as Android allows, behind a small interface so it can be tested. |
+| `PlayerWidget`, `WidgetConfigActivity` | The home-screen widget and the screen where its style is chosen. |
 | `Updater`, `Release`, `ReleaseApi` | The update state machine (check, download, verify, install), GitHub release parsing, and the HTTPS download with a checksum. |
 | `ApkVerifier`, `UpdateInstaller`, `InstallReceiver` | Checks the downloaded file (package, version, signing key) and hands it to Android's `PackageInstaller`. |
 
@@ -202,19 +266,22 @@ Only Android framework APIs are used, and the app is written in Java. That is wh
 | `POST_NOTIFICATIONS` | Show the playback controls in the notification shade (Android 13+). Playback works if you decline. |
 | `WAKE_LOCK` | Stop the CPU sleeping in the middle of a song. |
 | `MODIFY_AUDIO_SETTINGS` | Standard permission for apps that use audio effects. |
+| `WRITE_EXTERNAL_STORAGE` (Android 10 and older only) | Delete songs. Android 11 and newer never grant it and ask per delete instead. The app also sets `requestLegacyExternalStorage` so Android 10 lets it delete files directly. |
 | `INTERNET` | Only to look for updates and download them from GitHub. |
 | `REQUEST_INSTALL_PACKAGES` | Only so Android lets the app hand a downloaded update to the installer. Android still asks you to confirm every install. |
 
 ## Status and limits
 
-* **Checked:** 139 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all four looks.
-* **Not yet run on real hardware or an emulator.** Actual sound output, the hardware equalizer effects, notifications, head-unit specifics (USB mounting, key mapping), how the glass look performs on slow head units, and the real Android installer dialog during an update all need hands-on testing. If something misbehaves, please open an issue with the device model and Android version.
+* **Checked:** 195 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all eight looks (dark and light, flat and over each glass background).
+* **Not yet run on real hardware or an emulator.** Actual sound output, the hardware equalizer effects, notifications, head-unit specifics (USB mounting, key mapping), how the glass look performs on slow head units, the real Android installer dialog during an update, Android's own delete confirmation on Android 11 and newer, the wallpaper on different versions, and the widget on different launchers all need hands-on testing. If something misbehaves, please open an issue with the device model and Android version.
+* The device equalizer is best effort: many devices do not let an app see or change it, and the card then says so. Controlling it affects every app and lasts only while Music Player runs.
+* Reading the wallpaper *picture* is not possible on the newest Android versions; the wallpaper's colours are used instead.
 * Updating needs a published GitHub release, signed with a stable key. Until the first one exists, "Check for updates" says no update has been published yet.
 * Gapless playback is not implemented; there is a short gap between songs.
 * Android Auto and Android Automotive OS are not supported. The app targets Android devices that run the full Android UI, which covers most aftermarket head units.
 * Opening a single audio file from a file manager ("Open with") is not supported yet. Songs must be in MediaStore.
 
-Ideas for later: playlists, sleep timer, gapless playback, Android Auto browsing, delta updates.
+Ideas for later: playlists, sleep timer, gapless playback, Android Auto browsing, delta updates, a resizable widget with a progress bar.
 
 ## Credits
 
