@@ -336,6 +336,58 @@ public class RealTouchTest {
         }
     }
 
+    private static void clickRowOf(View label) {
+        View v = label;
+        while (v != null && !v.hasOnClickListeners()) {
+            v = v.getParent() instanceof View ? (View) v.getParent() : null;
+        }
+        assertNotNull("the label sits in a tappable row", v);
+        v.performClick();
+    }
+
+    private static View findText(View v, String text) {
+        if (v instanceof android.widget.TextView
+                && ((android.widget.TextView) v).getText().toString().contains(text)) return v;
+        if (v instanceof android.view.ViewGroup) {
+            android.view.ViewGroup g = (android.view.ViewGroup) v;
+            for (int i = 0; i < g.getChildCount(); i++) {
+                View f = findText(g.getChildAt(i), text);
+                if (f != null) return f;
+            }
+        }
+        return null;
+    }
+
+    @Test
+    public void sortingFromTheMenuReordersTheSongs() throws Exception {
+        Prefs.get(app).setSort(SortOrder.TITLE, false);
+        ActivityController<LibraryActivity> c = openLibrary();
+        LibraryActivity a = c.get();
+        ListView list = a.findViewById(R.id.list);
+        long before = ((RowAdapter.Row) list.getAdapter().getItem(0)).track.id;
+        tap(a, a.findViewById(R.id.btn_more));
+        Dialog d = openDialog();
+        assertNotNull("the menu opened", d);
+        View sort = findText(d.getWindow().getDecorView(), "Sort songs");
+        assertNotNull("the menu has Sort songs", sort);
+        d.getWindow().getDecorView().measure(View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(1920, View.MeasureSpec.EXACTLY));
+        d.getWindow().getDecorView().layout(0, 0, 1080, 1920);
+        clickRowOf(sort);
+        ShadowLooper.idleMainLooper(600, TimeUnit.MILLISECONDS);
+        TestMedia.idle();
+        d = ShadowDialog.getLatestDialog();
+        assertNotNull("the sort choices opened", d);
+        View recent = findText(d.getWindow().getDecorView(), "Artist");
+        assertNotNull(recent);
+        clickRowOf(recent);
+        TestMedia.idle();
+        long after = ((RowAdapter.Row) list.getAdapter().getItem(0)).track.id;
+        assertEquals(SortOrder.ARTIST, Prefs.get(app).sortKey());
+        assertTrue("the first song changed", before != after);
+        c.pause().stop().destroy();
+    }
+
     @Test
     public void tappingAFolderOpensIt() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();

@@ -64,6 +64,20 @@ final class Prefs {
         sp.edit().putBoolean("bars_follow", on).apply();
     }
 
+    /** How song lists are sorted: see {@link SortOrder}. */
+    int sortKey() {
+        int v = sp.getInt("sort_key", 0);
+        return v < 0 || v >= SortOrder.COUNT ? 0 : v;
+    }
+
+    boolean sortReverse() {
+        return sp.getBoolean("sort_reverse", false);
+    }
+
+    void setSort(int key, boolean reverse) {
+        sp.edit().putInt("sort_key", key).putBoolean("sort_reverse", reverse).apply();
+    }
+
     /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave. */
     int barStyle() {
         int v = sp.getInt("bar_style", 0);

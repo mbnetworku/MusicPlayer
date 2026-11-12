@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.5.0] - 2026-11-12
+
+- New: you can sort your songs. Tap the menu (three dots) and choose "Sort songs". You can order by title, artist, album, recently added or longest first, and reverse the order. The choice is kept, and it is used in Songs, in search and inside folders.
+
 ## [1.4.0] - 2026-11-12
 
 - New: you can choose how the moving equalizer looks. Open Settings and pick Bars, Dots, Mirror or Wave under "Equalizer design". It changes the bars on the player, the lists and the equalizer screen.

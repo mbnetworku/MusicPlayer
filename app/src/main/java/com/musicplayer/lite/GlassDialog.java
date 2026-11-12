@@ -110,6 +110,12 @@ final class GlassDialog {
         return this;
     }
 
+    /** A row with a ready-made label. */
+    GlassDialog item(int iconRes, String label, Runnable action) {
+        items.add(new Item(iconRes, label, false, action));
+        return this;
+    }
+
     /** A row of a sheet for something that cannot be undone: shown in red. */
     GlassDialog destructiveItem(int iconRes, int labelRes, Runnable action) {
         items.add(new Item(iconRes, context.getString(labelRes), true, action));

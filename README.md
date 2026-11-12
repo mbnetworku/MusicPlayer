@@ -28,9 +28,9 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 
 | | |
 |---|---|
-| **Latest version** | **1.4.0**, 12 November 2026 · [what's new](#whats-new) |
+| **Latest version** | **1.5.0**, 12 November 2026 · [what's new](#whats-new) |
 | **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer.apk) · 172 KB · Android 8.0 or newer |
-| **This exact file** | [MusicPlayer-1.4.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk) · SHA-256 [`10218229752a…`](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk.sha256) |
+| **This exact file** | [MusicPlayer-1.5.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.5.0.apk) · SHA-256 [`48ccf351d2eb…`](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.5.0.apk.sha256) |
 | **All versions** | [the `download` folder](https://github.com/mbnetworku/MusicPlayer/tree/main/download) · [version history](#versions) |
 
 **Install it in three steps**
@@ -42,10 +42,12 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 Good to know:
 
 * Every APK on this page is signed with the same test key, so a newer one installs **over** an older one and keeps your settings. If Android says *App not installed*, uninstall the old copy first (the very first test builds used another key).
-* It is a test build: signed with a test key and checked by 353 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
+* It is a test build: signed with a test key and checked by 357 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.5.0**: sort your songs (menu, Sort songs)
 
 **1.4.0**: pick the equalizer design in Settings (Bars, Dots, Mirror or Wave)
 
@@ -299,7 +301,7 @@ A **banner** on the library screen shows when a newer version is known: **Update
 
 ## Status and limits
 
-* **Checked:** 353 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all eight looks (dark and light, flat and over each glass background).
+* **Checked:** 357 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all eight looks (dark and light, flat and over each glass background).
 * **Not yet run on real hardware or an emulator.** Actual sound output, the hardware equalizer effects, notifications, head-unit specifics (USB mounting, key mapping), how the glass look performs on slow head units, the real Android installer dialog during an update, Android's own delete confirmation on Android 11 and newer, the wallpaper on different versions, and the widget on different launchers all need hands-on testing. If something misbehaves, please open an issue with the device model and Android version.
 * **Following the real sound is untested on real devices.** Android's Visualizer behaves differently from device to device and many head units do not support it; the app then keeps the bars' own motion. The sound analysis itself is tested with made-up sound only, and whether Android shows its microphone indicator has not been checked.
 * The device equalizer is best effort: many devices do not let an app see or change it, and the card then says so. Controlling it affects every app and lasts only while Music Player runs.

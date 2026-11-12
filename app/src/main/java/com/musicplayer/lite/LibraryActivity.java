@@ -367,12 +367,12 @@ public class LibraryActivity extends BoundActivity
                 addFavoriteRows(rows);
                 break;
             default: {
-                List<Track> src = searching ? library.search(query) : library.tracks();
+                List<Track> src = sorted(searching ? library.search(query) : library.tracks());
                 context = src;
                 for (int i = 0; i < src.size(); i++) {
                     rows.add(RowAdapter.Row.track(src.get(i), RowAdapter.SUB_ARTIST_ALBUM, i));
                 }
-                indexed = !searching;
+                indexed = !searching && prefs.sortKey() == SortOrder.TITLE && !prefs.sortReverse();
                 break;
             }
         }
@@ -393,7 +393,8 @@ public class LibraryActivity extends BoundActivity
     private void addFolderRows(List<RowAdapter.Row> rows) {
         final FolderTree.Node vroot = visibleRoot();
         final FolderTree.Node node = currentFolder();
-        context = node.tracks;
+        final List<Track> tracks = sorted(node.tracks);
+        context = tracks;
         if (node.total > 0) {
             String sub = plural(R.plurals.songs_count, node.total);
             if (!node.children.isEmpty()) sub += SEP + plural(R.plurals.folders_count, node.children.size());
@@ -411,9 +412,35 @@ public class LibraryActivity extends BoundActivity
             rows.add(RowAdapter.Row.folder(e.label, plural(R.plurals.songs_count, e.node.total),
                     R.drawable.ic_folder, e));
         }
-        for (int i = 0; i < node.tracks.size(); i++) {
-            rows.add(RowAdapter.Row.track(node.tracks.get(i), RowAdapter.SUB_ARTIST_ALBUM, i));
+        for (int i = 0; i < tracks.size(); i++) {
+            rows.add(RowAdapter.Row.track(tracks.get(i), RowAdapter.SUB_ARTIST_ALBUM, i));
         }
+    }
+
+    private List<Track> sorted(List<Track> tracks) {
+        return SortOrder.apply(tracks, prefs.sortKey(), prefs.sortReverse());
+    }
+
+    /** Pick how the songs are ordered; the same choice is used in Songs, search and folders. */
+    private void showSortMenu() {
+        final int[] names = {R.string.sort_title, R.string.sort_artist, R.string.sort_album,
+                R.string.sort_recent, R.string.sort_length};
+        final GlassDialog d = GlassDialog.sheet(this);
+        for (int k = 0; k < names.length; k++) {
+            final int key = k;
+            final boolean on = key == prefs.sortKey();
+            d.item(R.drawable.ic_sort, (on ? "✓ " : "") + getString(names[k]),
+                    () -> {
+                        prefs.setSort(key, prefs.sortReverse());
+                        rebuild();
+                    });
+        }
+        d.item(R.drawable.ic_sort, (prefs.sortReverse() ? "✓ " : "") + getString(R.string.sort_reverse),
+                () -> {
+                    prefs.setSort(prefs.sortKey(), !prefs.sortReverse());
+                    rebuild();
+                });
+        d.show();
     }
 
     private void addGroupRows(List<RowAdapter.Row> rows, boolean albums) {
@@ -604,6 +631,7 @@ public class LibraryActivity extends BoundActivity
         GlassDialog.sheet(this)
                 .item(R.drawable.ic_settings, R.string.menu_settings,
                         () -> startActivity(new Intent(this, SettingsActivity.class)))
+                .item(R.drawable.ic_sort, R.string.menu_sort, this::showSortMenu)
                 .item(R.drawable.ic_refresh, R.string.menu_scan, this::startScan)
                 .show();
     }
