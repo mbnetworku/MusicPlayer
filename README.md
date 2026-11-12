@@ -67,7 +67,9 @@ The full list is in the [changelog](CHANGELOG.md).
 
 | Version | Date | Download | What changed |
 |---|---|---|---|
-| **1.3.1** (latest) | 2026-11-12 | [MusicPlayer-1.4.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk) | Taps on songs, folders, albums and artists work again. Plays on car stereos that refuse the sound. |
+| **1.5.0** (latest) | 2026-11-12 | [MusicPlayer-1.5.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.5.0.apk) | Sort your songs by title, artist, album, recently added or length, and reverse the order. |
+| 1.4.0 | 2026-11-12 | [MusicPlayer-1.4.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk) | Choose the equalizer design: Bars, Dots, Mirror or Wave. |
+| 1.3.1 | 2026-11-12 | [MusicPlayer-1.3.1.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.3.1.apk) | Taps on songs, folders, albums and artists work again. Plays on car stereos that refuse the sound. |
 | 1.3.0 | 2026-11-12 | withdrawn | Favorites and moving bars. Taps on rows did not work: use 1.3.1. |
 | 1.2.0 | 2026-11-12 | withdrawn | The Apple Music look, glass pop-ups, delete, device equalizer, widget. Taps on rows did not work: use 1.3.1. |
 | 1.1.0 | 2026-11-11 | replaced | Light and dark themes, liquid glass, in-app updates. |
