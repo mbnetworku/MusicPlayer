@@ -4,6 +4,14 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.3.0] - 2026-11-12
+
+- Favorites. Tap the heart on the Now Playing screen, or choose Add to Favorites in the more (...) menu of a song. For an album, an artist or a folder the same menu adds all its songs at once. The new Favorites tab lists them, newest first, with Play and Shuffle, and a small heart marks a favorite song in every list. A song you delete is taken off the list.
+- Moving equalizer bars. Big, thin bars rise over the cover on the Now Playing screen, tall for the bass and short for the treble. Small ones show on the song that is playing in every list, in the mini player, and as the Equalizer button at the top, which opens the equalizer. On the Equalizer screen a row of bars follows your sliders.
+- The bars can follow the real sound. The first time music plays on the Now Playing screen, a glass pop-up asks if they may. Android calls this the microphone permission, but the app only reads the sound of its own music and never uses the microphone. If you say Not allowed, the bars still move on their own. Settings has a switch: Bars follow the music.
+- The bars stand still if you turned animations off in Android, and they stop whenever the screen is not showing, so they do not use battery in the background.
+- Good to know: this version adds the microphone permission, only for the bars and asked once. Many head units do not let apps read the sound; there the bars keep their own motion. Favorites are remembered by file, so they stay even if the library is scanned again.
+
 ## [1.2.0] - 2026-11-12
 
 - A new look, like Apple Music: white pages (black in dark mode), a red accent, large titles, a tab bar at the bottom, round artwork and a clean Now Playing screen. Every earlier feature is still there.
