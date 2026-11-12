@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.3.1] - 2026-11-12
+
+- Fixed: tapping a song, a folder, an album or an artist did nothing on Android 8 and newer, so no song could be started by touch. This began in version 1.2.0. Taps now work on the whole row, in portrait, in landscape and on the car screen. If you installed 1.2.0 or 1.3.0, please update.
+- Fixed: a song stayed silent when Android refused the sound to the app, as some car stereos do. It now plays. If a phone call has the sound, the song waits and starts when the call ends.
+
 ## [1.3.0] - 2026-11-12
 
 - Favorites. Tap the heart on the Now Playing screen, or choose Add to Favorites in the more (...) menu of a song. For an album, an artist or a folder the same menu adds all its songs at once. The new Favorites tab lists them, newest first, with Play and Shuffle, and a small heart marks a favorite song in every list. A song you delete is taken off the list.

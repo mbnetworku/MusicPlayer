@@ -6,7 +6,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import static org.robolectric.Shadows.shadowOf;
+
 import android.app.Application;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -128,5 +132,44 @@ public class PlaybackServiceTest {
         service.next(true);
         service.previous();
         assertNull(service.currentTrack());
+    }
+
+    // ---- the sound being refused or delayed ---------------------------------------------------------
+
+    private AudioManager audio() {
+        return RuntimeEnvironment.getApplication().getSystemService(AudioManager.class);
+    }
+
+    @Test
+    public void playsEvenWhenAndroidRefusesTheSound() {
+        // Some car stereos refuse every request for the sound, even when nothing else is playing.
+        shadowOf(audio()).setNextFocusRequestResponse(AudioManager.AUDIOFOCUS_REQUEST_FAILED);
+        service.playQueue(tracks, 0, false);
+        TestMedia.idle();
+        assertTrue("the user pressed play, so the song plays", service.isPlaying());
+    }
+
+    @Test
+    public void whenAPhoneCallHasTheSoundItWaitsAndPlaysWhenAndroidGivesItBack() throws Exception {
+        shadowOf(audio()).setNextFocusRequestResponse(AudioManager.AUDIOFOCUS_REQUEST_DELAYED);
+        service.playQueue(tracks, 0, false);
+        TestMedia.idle();
+        assertFalse("not while the call has the sound", service.isPlaying());
+        assertNotNull("but the song is chosen and waiting", service.currentTrack());
+
+        java.lang.reflect.Field f = PlaybackService.class.getDeclaredField("focusListener");
+        f.setAccessible(true);
+        ((AudioManager.OnAudioFocusChangeListener) f.get(service)).onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
+        TestMedia.idle();
+        assertTrue("the call ended: the song starts by itself", service.isPlaying());
+    }
+
+    @Test
+    public void theRequestForTheSoundAcceptsToWait() {
+        service.playQueue(tracks, 0, false);
+        TestMedia.idle();
+        AudioFocusRequest request = shadowOf(audio()).getLastAudioFocusRequest().audioFocusRequest;
+        assertNotNull(request);
+        assertTrue(request.acceptsDelayedFocusGain());
     }
 }

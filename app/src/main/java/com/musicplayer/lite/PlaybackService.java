@@ -442,14 +442,20 @@ public final class PlaybackService extends Service {
             wantPlay = true;
             return;
         }
-        if (!requestFocus()) {
-            wantPlay = false;
+        final int focus = requestFocus();
+        if (focus == AudioManager.AUDIOFOCUS_REQUEST_DELAYED) {
+            // Something else (a phone call) has the sound for now. Android tells us when it is free,
+            // and playback then starts by itself (see the GAIN case of the focus listener).
+            wantPlay = true;
+            pausedByFocus = true;
             playing = false;
             updateSession();
             postNotification();
             notifyChanged();
             return;
         }
+        // Granted, or refused outright. Some car stereos refuse every request, even when nothing else
+        // is playing. The user pressed play, so the song plays; Android still tells us if we lose the sound.
         try {
             player.start();
         } catch (IllegalStateException e) {
@@ -621,16 +627,19 @@ public final class PlaybackService extends Service {
         }
     };
 
-    private boolean requestFocus() {
-        if (hasFocus) return true;
+    /** What Android said to our request for the sound: granted, delayed until it is free, or refused. */
+    private int requestFocus() {
+        if (hasFocus) return AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
         if (focusRequest == null) {
             focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                     .setAudioAttributes(attrs)
+                    .setAcceptsDelayedFocusGain(true)
                     .setOnAudioFocusChangeListener(focusListener, main)
                     .build();
         }
-        hasFocus = audio.requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-        return hasFocus;
+        final int result = audio.requestAudioFocus(focusRequest);
+        hasFocus = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        return result;
     }
 
     private void abandonFocus() {
