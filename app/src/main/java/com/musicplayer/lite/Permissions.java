@@ -18,23 +18,16 @@ import android.provider.Settings;
 final class Permissions {
     private Permissions() {}
 
-    /** Reading music, and showing the playback controls in the notification shade on Android 13+. */
+    /** Reading music. Nothing else is asked at the start. */
     @SuppressLint("InlinedApi")   // the newer permissions are only listed on the versions that have them
     static String[] musicPermissions(int sdk) {
-        if (sdk >= 33) return new String[]{Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.POST_NOTIFICATIONS};
+        if (sdk >= 33) return new String[]{Manifest.permission.READ_MEDIA_AUDIO};
         return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
     }
 
-    /** Asks in a glass pop-up, then Android. {@code denied} runs when the user picks "Not allowed". */
-    static void askForMusic(final Activity a, final int requestCode, Runnable denied) {
-        GlassDialog.alert(a)
-                .icon(R.drawable.ic_music_note)
-                .title(R.string.perm_music_title)
-                .message(Build.VERSION.SDK_INT >= 33 ? R.string.perm_music_body_33 : R.string.perm_music_body)
-                .positive(R.string.perm_allow,
-                        () -> a.requestPermissions(musicPermissions(Build.VERSION.SDK_INT), requestCode))
-                .negative(R.string.perm_deny, denied)
-                .show();
+    /** Asks Android for the music permission straight away: no pop-up of our own comes first. */
+    static void askForMusic(final Activity a, final int requestCode) {
+        a.requestPermissions(musicPermissions(Build.VERSION.SDK_INT), requestCode);
     }
 
     /** Android 10 and older need write access to delete a file the app did not create. */

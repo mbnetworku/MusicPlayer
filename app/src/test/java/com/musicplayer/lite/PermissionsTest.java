@@ -34,8 +34,8 @@ public class PermissionsTest {
         assertArrayEquals("Android 8 to 12: storage", new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                 Permissions.musicPermissions(26));
         assertArrayEquals(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Permissions.musicPermissions(32));
-        assertArrayEquals("Android 13+: audio files and notifications",
-                new String[]{Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.POST_NOTIFICATIONS},
+        assertArrayEquals("Android 13+: audio files only, no notification question",
+                new String[]{Manifest.permission.READ_MEDIA_AUDIO},
                 Permissions.musicPermissions(33));
     }
 
@@ -54,30 +54,12 @@ public class PermissionsTest {
     }
 
     @Test
-    public void theGlassQuestionComesBeforeAndroidsOwn() {
+    public void musicAccessIsAskedForDirectlyWithoutAPopUpOfOurOwn() {
         Activity a = Robolectric.buildActivity(SettingsActivity.class).create().start().resume().visible().get();
-        final boolean[] asked = {false};
-        Permissions.askForMusic(a, 7, () -> asked[0] = true);
-        // Nothing has been requested yet: only the pop-up is on screen.
-        assertTrue(shadowOf(a).getLastRequestedPermission() == null);
-        View allow = org.robolectric.shadows.ShadowDialog.getLatestDialog().findViewById(R.id.gd_positive);
-        View deny = org.robolectric.shadows.ShadowDialog.getLatestDialog().findViewById(R.id.gd_negative);
-        assertEquals("Allow", ((android.widget.TextView) allow).getText().toString());
-        assertEquals("Not allowed", ((android.widget.TextView) deny).getText().toString());
-
-        allow.performClick();
-        assertEquals("Allow shows Android's own question", Manifest.permission.READ_MEDIA_AUDIO,
+        Permissions.askForMusic(a, 7);
+        assertEquals("Android's own question comes straight away", Manifest.permission.READ_MEDIA_AUDIO,
                 shadowOf(a).getLastRequestedPermission().requestedPermissions[0]);
-        assertFalse(asked[0]);
-    }
-
-    @Test
-    public void notAllowedLeavesTheFeatureOff() {
-        Activity a = Robolectric.buildActivity(SettingsActivity.class).create().start().resume().visible().get();
-        final boolean[] declined = {false};
-        Permissions.askForMusic(a, 7, () -> declined[0] = true);
-        org.robolectric.shadows.ShadowDialog.getLatestDialog().findViewById(R.id.gd_negative).performClick();
-        assertTrue(declined[0]);
-        assertTrue("Android was never asked", shadowOf(a).getLastRequestedPermission() == null);
+        org.robolectric.shadows.ShadowDialog d = null;
+        assertTrue("no pop-up of ours", org.robolectric.shadows.ShadowDialog.getLatestDialog() == null);
     }
 }

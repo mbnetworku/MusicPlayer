@@ -308,7 +308,7 @@ public class LibraryActivity extends BoundActivity
     // ---- permissions -------------------------------------------------------------------------
 
     private void requestPermission() {
-        Permissions.askForMusic(this, REQ_PERMISSIONS, this::rebuild);
+        Permissions.askForMusic(this, REQ_PERMISSIONS);
     }
 
     @Override
