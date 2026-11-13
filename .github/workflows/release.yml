@@ -98,7 +98,7 @@ jobs:
             echo "::error::The signing key is not set up. Add these repository secrets (Settings > Secrets and variables > Actions): RELEASE_KEYSTORE_BASE64, RELEASE_KEYSTORE_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_KEY_PASSWORD. docs/DEVELOPING.md explains how. Without one stable key, installed apps could not install the update."
             exit 1
           fi
-          printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          printf '%s' "$KEYSTORE_B64" | tr -d '\r\n ' | base64 -d > "$RUNNER_TEMP/release.jks"
           {
             echo "storeFile=$RUNNER_TEMP/release.jks"
             echo "storePassword=$KEYSTORE_PASSWORD"
