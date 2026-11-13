@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.22.0] - 2026-11-13
+
+- New: a round glass search button next to the mini player at the bottom, like in Apple Music. It opens the same search as the search button at the top.
+
 ## [1.21.0] - 2026-11-13
 
 - Changed: closer to the iPhone Music look. The back button on the player, the queue, Settings and the equalizer is a round glass button. Shuffle and repeat are white instead of red, dim when off and bright when on.

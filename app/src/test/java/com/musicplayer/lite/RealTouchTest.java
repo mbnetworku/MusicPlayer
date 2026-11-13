@@ -269,7 +269,9 @@ public class RealTouchTest {
                 if (x.type == RowAdapter.TRACK) { r = x; at = i; break; }
             }
             if (r != null) {
-                tap(a, list.getChildAt(at));
+                list.setSelection(at);   // bring the song onto the visible part of the list
+                measure(a);
+                tap(a, list.getChildAt(at - list.getFirstVisiblePosition()));
                 assertNotNull("the tap on a song in a folder started it", service.currentTrack());
                 assertEquals(r.track.title, service.currentTrack().title);
                 c.pause().stop().destroy();

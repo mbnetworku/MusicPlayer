@@ -210,4 +210,15 @@ public class LibraryActivityTest {
         assertEquals(View.VISIBLE, mini.getVisibility());
         c.pause().stop().destroy();
     }
+
+    @Test
+    public void theRoundSearchButtonNextToThePlayerOpensSearch() {
+        ActivityController<LibraryActivity> c = launch();
+        LibraryActivity a = c.get();
+        View bar = a.findViewById(R.id.search_bar);
+        assertEquals(View.GONE, bar.getVisibility());
+        a.findViewById(R.id.btn_search_round).performClick();
+        assertEquals(View.VISIBLE, bar.getVisibility());
+        c.pause().stop().destroy();
+    }
 }

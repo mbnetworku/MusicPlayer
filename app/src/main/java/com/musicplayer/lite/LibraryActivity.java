@@ -149,6 +149,13 @@ public class LibraryActivity extends BoundActivity
             });
         }
         findViewById(R.id.btn_search).setOnClickListener(v -> toggleSearch());
+        final View roundSearch = findViewById(R.id.btn_search_round);
+        if (roundSearch != null) {   // the car layout has no bottom bar
+            roundSearch.setOnClickListener(v -> {
+                Haptics.tap(v);
+                toggleSearch();
+            });
+        }
         findViewById(R.id.search_close).setOnClickListener(v -> closeSearch());
         findViewById(R.id.btn_eq).setOnClickListener(v -> startActivity(new Intent(this, EqualizerActivity.class)));
         findViewById(R.id.btn_more).setOnClickListener(this::showMenu);
