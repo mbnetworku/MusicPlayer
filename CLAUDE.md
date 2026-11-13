@@ -33,3 +33,7 @@ changes. Talk to them in short, plain sentences.
   Android 8 and newer the list then ignores taps on the row (this broke every tap in versions 1.2.0 and 1.3.0).
 - Everything outside the app's own code (screenshots, the live preview page) is made in scratch projects and is not
   part of this repository, except the pictures in `docs/screenshots/`.
+- The owner added their own signing key to GitHub (four `RELEASE_*` secrets) on 2026-11-13. Versions from 1.7.1 are
+  built and signed on GitHub by the "Publish release" workflow (owner runs `tools/Publish-Signed-Update.bat`).
+  The APKs in `download/` up to 1.7.0 are signed with the sandbox debug key and do not install over a 1.7.1 or newer
+  build: say so in the README. Do not put a sandbox-built APK in `download/` as the newest version any more.

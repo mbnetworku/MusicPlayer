@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.7.1] - 2026-11-13
+
+- This is the first version signed with your own private key, built by GitHub. Nothing in the app changed. Because the key is new, Android will not install it over an older version: uninstall the old app once, then install this one. From now on every update installs over it.
+
 ## [1.7.0] - 2026-11-13
 
 - Removed: the microphone permission. The app no longer asks for it and no longer has "Bars follow the music". The moving bars are an animation. The app reads no audio.
