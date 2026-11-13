@@ -48,9 +48,16 @@ if errorlevel 1 (
 
 rem --- 4. Publish the version --------------------------------------------
 echo.
+:ask
 set "VERSION="
-set /p "VERSION=Version to publish, like 1.7.0: "
-if "%VERSION%"=="" goto failed
+echo  Type the version NUMBER, for example 1.7.0 (not the word yes).
+set /p "VERSION=Version to publish: "
+echo %VERSION%| findstr /R /X "[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*" >nul
+if errorlevel 1 (
+  echo  "%VERSION%" is not a version number. Use three numbers like 1.7.0.
+  echo.
+  goto ask
+)
 echo  Publishing %VERSION% ...
 gh workflow run release-prebuilt.yml --repo %REPO% -f version=%VERSION%
 if errorlevel 1 goto failed
