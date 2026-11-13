@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.8.0] - 2026-11-13
+
+- Changed: the Settings screen has a tidier design. Each option has a small coloured icon, the rows are tighter and the text is a little smaller, so more fits on the screen.
+
 ## [1.7.2] - 2026-11-13
 
 - Changed: the app no longer shows its own pop-up before Android asks for permission to read your music. Android's own question still appears once, because Android requires it.

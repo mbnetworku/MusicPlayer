@@ -5,17 +5,29 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:minHeight="56dp"
+    android:minHeight="46dp"
     android:orientation="horizontal"
     tools:ignore="Overdraw">
+
+    <ImageView
+        android:id="@+id/set_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_set_icon"
+        android:importantForAccessibility="no"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:tint="#FFFFFF"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/set_title"

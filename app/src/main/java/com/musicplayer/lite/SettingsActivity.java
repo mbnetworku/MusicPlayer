@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -475,6 +476,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     /** Sets a settings row's texts and shows its switch when it has one. */
     static Switch setupRow(View root, int rowId, int title, int sub, boolean withSwitch) {
         View row = root.findViewById(rowId);
+        badge(row, rowId);
         TextView titleView = row.findViewById(R.id.set_title);
         if (title != 0) titleView.setText(title);
         TextView subView = row.findViewById(R.id.set_sub);
@@ -488,6 +490,44 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             row.setOnClickListener(v -> toggle.toggle());
         }
         return toggle;
+    }
+
+    /** A small coloured icon in front of a row, so each option is easy to find. */
+    private static void badge(View row, int rowId) {
+        final int icon;
+        final int color;
+        if (rowId == R.id.row_glass) {
+            icon = R.drawable.ic_image;
+            color = 0xFF5856D6;
+        } else if (rowId == R.id.row_vibrate) {
+            icon = R.drawable.ic_more_horiz;
+            color = 0xFFFF9500;
+        } else if (rowId == R.id.row_vibrate_playing) {
+            icon = R.drawable.ic_music_note;
+            color = 0xFFFF2D55;
+        } else if (rowId == R.id.row_cover_tap) {
+            icon = R.drawable.ic_skip_next;
+            color = 0xFF32ADE6;
+        } else if (rowId == R.id.row_show_all) {
+            icon = R.drawable.ic_queue_music;
+            color = 0xFF8E8E93;
+        } else if (rowId == R.id.row_scan) {
+            icon = R.drawable.ic_refresh;
+            color = 0xFF34C759;
+        } else if (rowId == R.id.row_auto) {
+            icon = R.drawable.ic_system_update;
+            color = 0xFFFF3B30;
+        } else if (rowId == R.id.row_version) {
+            icon = R.drawable.ic_info;
+            color = 0xFF8E8E93;
+        } else {
+            return;
+        }
+        final ImageView view = row.findViewById(R.id.set_icon);
+        if (view == null) return;
+        view.setImageResource(icon);
+        view.getBackground().mutate().setTint(color);
+        view.setVisibility(View.VISIBLE);
     }
 
     private String repoUrl() {
