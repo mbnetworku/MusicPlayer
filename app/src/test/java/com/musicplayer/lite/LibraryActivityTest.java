@@ -135,6 +135,35 @@ public class LibraryActivityTest {
     }
 
     @Test
+    public void aPopUpOffersTheUpdateOnceWhileTheAppIsInUse() throws Exception {
+        Application app = RuntimeEnvironment.getApplication();
+        TestMedia.resetSingletons();
+        String json = "{\"tag_name\":\"v9.9.9\",\"assets\":[{\"name\":\"a.apk\","
+                + "\"browser_download_url\":\"https://example.org/a.apk\",\"size\":10}]}";
+        Prefs.get(app).saveUpdateCheck(System.currentTimeMillis(), json);
+        Updater.replaceForTests(new Updater(app, new Updater.Config("http://127.0.0.1:1", "o/r", true,
+                java.nio.file.Files.createTempDirectory("popup").toFile(), "1.1.0", (c, f, v) -> 0, (c, f) -> { })));
+
+        ActivityController<LibraryActivity> c =
+                Robolectric.buildActivity(LibraryActivity.class).create().start().resume().visible();
+        android.app.Dialog d = org.robolectric.shadows.ShadowDialog.getLatestDialog();
+        assertTrue("a pop-up is showing", d != null && d.isShowing());
+        assertEquals("Update now", ((TextView) d.findViewById(R.id.gd_positive)).getText().toString());
+        assertTrue(((TextView) d.findViewById(R.id.gd_message)).getText().toString().contains("9.9.9"));
+        assertEquals("9.9.9", Prefs.get(app).promptedUpdate());
+        d.findViewById(R.id.gd_negative).performClick();
+        c.pause().stop().destroy();
+
+        // Opened again: the same version is not offered a second time.
+        org.robolectric.shadows.ShadowDialog.reset();
+        ActivityController<LibraryActivity> again =
+                Robolectric.buildActivity(LibraryActivity.class).create().start().resume().visible();
+        android.app.Dialog d2 = org.robolectric.shadows.ShadowDialog.getLatestDialog();
+        assertTrue("no second pop-up for the same version", d2 == null || !d2.isShowing());
+        again.pause().stop().destroy();
+    }
+
+    @Test
     public void noBannerWhenThereIsNothingNewer() throws Exception {
         Application app = RuntimeEnvironment.getApplication();
         TestMedia.resetSingletons();

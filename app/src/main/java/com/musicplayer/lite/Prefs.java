@@ -218,6 +218,15 @@ final class Prefs {
         return sp.getString("upd_dismissed", "");
     }
 
+    /** The version the automatic update pop-up was last shown for, so it appears once per version. */
+    String promptedUpdate() {
+        return sp.getString("upd_prompted", "");
+    }
+
+    void setPromptedUpdate(String version) {
+        sp.edit().putString("upd_prompted", version).apply();
+    }
+
     void dismissUpdate(String version) {
         sp.edit().putString("upd_dismissed", version).apply();
     }

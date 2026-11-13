@@ -50,105 +50,45 @@
                 style="@style/SettingsCard"
                 android:tag="glass:card">
 
-                <TextView
-                    style="@style/SettingTitle"
-                    android:paddingTop="8dp"
-                    android:text="@string/set_theme" />
-
                 <RadioGroup
                     android:id="@+id/theme_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_segment_track"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/theme_system"
-                        style="@style/SettingRadio"
+                        style="@style/SegmentRadio"
                         android:text="@string/theme_system" />
-
-                    <TextView
-                        android:id="@+id/theme_system_now"
-                        style="@style/SettingSub"
-                        android:layout_marginTop="-6dp"
-                        android:paddingStart="40dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="6dp" />
 
                     <RadioButton
                         android:id="@+id/theme_light"
-                        style="@style/SettingRadio"
+                        style="@style/SegmentRadio"
                         android:text="@string/theme_light" />
 
                     <RadioButton
                         android:id="@+id/theme_dark"
-                        style="@style/SettingRadio"
+                        style="@style/SegmentRadio"
                         android:text="@string/theme_dark" />
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/theme_system_now"
+                    style="@style/SettingSub"
+                    android:paddingStart="4dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="4dp"
                     android:background="@color/divider" />
 
                 <include
                     android:id="@+id/row_glass"
                     layout="@layout/row_setting" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider" />
-
-                <include
-                    android:id="@+id/row_vibrate"
-                    layout="@layout/row_setting" />
-
-                <include
-                    android:id="@+id/row_vibrate_playing"
-                    layout="@layout/row_setting" />
-
-                <include
-                    android:id="@+id/row_cover_tap"
-                    layout="@layout/row_setting" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@color/divider" />
-
-                <TextView
-                    style="@style/SettingTitle"
-                    android:paddingTop="8dp"
-                    android:text="@string/set_bar_style" />
-
-                <RadioGroup
-                    android:id="@+id/bar_style_group"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/bar_style_bars"
-                        style="@style/SettingRadio"
-                        android:text="@string/bar_style_bars" />
-
-                    <RadioButton
-                        android:id="@+id/bar_style_dots"
-                        style="@style/SettingRadio"
-                        android:text="@string/bar_style_dots" />
-
-                    <RadioButton
-                        android:id="@+id/bar_style_mirror"
-                        style="@style/SettingRadio"
-                        android:text="@string/bar_style_mirror" />
-
-                    <RadioButton
-                        android:id="@+id/bar_style_wave"
-                        style="@style/SettingRadio"
-                        android:text="@string/bar_style_wave" />
-                </RadioGroup>
             </LinearLayout>
 
             <TextView
@@ -161,73 +101,53 @@
 
                 <TextView
                     style="@style/SettingSub"
-                    android:paddingTop="8dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="8dp"
                     android:text="@string/set_bg_note" />
 
                 <RadioGroup
                     android:id="@+id/bg_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/bg_plain"
-                        style="@style/SettingRadio"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_plain"
                         android:text="@string/set_bg_plain" />
-
-                    <TextView
-                        style="@style/SettingSub"
-                        android:layout_marginTop="-6dp"
-                        android:paddingStart="40dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="6dp"
-                        android:text="@string/set_bg_plain_sub" />
-
                     <RadioButton
                         android:id="@+id/bg_cover"
-                        style="@style/SettingRadio"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_cover"
                         android:text="@string/set_bg_cover" />
-
-                    <TextView
-                        style="@style/SettingSub"
-                        android:layout_marginTop="-6dp"
-                        android:paddingStart="40dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="6dp"
-                        android:text="@string/set_bg_cover_sub" />
-
                     <RadioButton
                         android:id="@+id/bg_picture"
-                        style="@style/SettingRadio"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_picture"
                         android:text="@string/set_bg_picture" />
-
-                    <TextView
-                        android:id="@+id/bg_picture_sub"
-                        style="@style/SettingSub"
-                        android:layout_marginTop="-6dp"
-                        android:paddingStart="40dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="6dp" />
-
                     <RadioButton
                         android:id="@+id/bg_wallpaper"
-                        style="@style/SettingRadio"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_wallpaper"
                         android:text="@string/set_bg_wallpaper" />
-
-                    <TextView
-                        android:id="@+id/bg_wallpaper_sub"
-                        style="@style/SettingSub"
-                        android:layout_marginTop="-6dp"
-                        android:paddingStart="40dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="6dp" />
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/bg_picture_sub"
+                    style="@style/SettingSub"
+                    android:paddingTop="8dp" />
+
+                <TextView
+                    android:id="@+id/bg_wallpaper_sub"
+                    style="@style/SettingSub"
+                    android:paddingTop="2dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="4dp"
+                    android:paddingTop="8dp"
                     android:paddingBottom="8dp">
 
                     <TextView
@@ -244,6 +164,76 @@
                         android:focusable="true"
                         android:text="@string/set_bg_update" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/set_bar_style" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <RadioGroup
+                    android:id="@+id/bar_style_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/bar_style_bars"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_bars"
+                        android:text="@string/bar_style_bars" />
+                    <RadioButton
+                        android:id="@+id/bar_style_dots"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_dots"
+                        android:text="@string/bar_style_dots" />
+                    <RadioButton
+                        android:id="@+id/bar_style_mirror"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_mirror"
+                        android:text="@string/bar_style_mirror" />
+                    <RadioButton
+                        android:id="@+id/bar_style_wave"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_wave"
+                        android:text="@string/bar_style_wave" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/set_playing" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <include
+                    android:id="@+id/row_vibrate"
+                    layout="@layout/row_setting" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <include
+                    android:id="@+id/row_vibrate_playing"
+                    layout="@layout/row_setting" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <include
+                    android:id="@+id/row_cover_tap"
+                    layout="@layout/row_setting" />
             </LinearLayout>
 
             <TextView

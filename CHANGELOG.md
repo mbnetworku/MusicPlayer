@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.9.0] - 2026-11-13
+
+- Changed: Settings is fully redesigned. Small coloured icons, a slim switch for Device, Light or Dark, small picture tiles for the background and the equalizer design, and a new "Playing" group for vibration and tap-the-cover. Everything is tighter and smoother.
+- New: an update pop-up. When a new version is out, a small pop-up appears while you use the app, once for each version. "Update now" downloads it and opens Settings to install. "Later" closes it, and the Update banner stays.
+
 ## [1.8.0] - 2026-11-13
 
 - Changed: the Settings screen has a tidier design. Each option has a small coloured icon, the rows are tighter and the text is a little smaller, so more fits on the screen.

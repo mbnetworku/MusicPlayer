@@ -149,6 +149,7 @@
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels. Choose what is behind them below.</string>
 
+    <string name="set_playing">Playing</string>
     <string name="set_library">Library</string>
     <string name="set_show_all">Show all audio files</string>
     <string name="set_show_all_sub">Include ringtones, voice notes and other short sounds</string>
@@ -180,6 +181,10 @@
     <string name="upd_auto_sub">Once a day when you open the app. It only contacts GitHub, and sends nothing about you or your music.</string>
     <string name="upd_notes">What\'s new</string>
     <string name="upd_view">View on GitHub</string>
+    <string name="upd_popup_title">Update available</string>
+    <string name="upd_popup_body">Version %1$s is ready to download. Install it now?</string>
+    <string name="upd_popup_now">Update now</string>
+    <string name="upd_popup_later">Later</string>
     <string name="upd_banner_action">Update</string>
     <string name="upd_banner_text">Version %1$s is available</string>
 

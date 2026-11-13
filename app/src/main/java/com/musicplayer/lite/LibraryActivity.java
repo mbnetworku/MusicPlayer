@@ -230,6 +230,24 @@ public class LibraryActivity extends BoundActivity
         boolean show = newer != null && !newer.version.equals(prefs.dismissedUpdate());
         updateBanner.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) updateBannerText.setText(getString(R.string.upd_banner_text, newer.version));
+        offerUpdate(newer);
+    }
+
+    /** A pop-up while the app is in use, once for each new version. */
+    private void offerUpdate(final Release newer) {
+        if (newer == null || isFinishing() || isDestroyed()) return;
+        if (newer.version.equals(prefs.promptedUpdate())) return;
+        prefs.setPromptedUpdate(newer.version);
+        GlassDialog.alert(this)
+                .icon(R.drawable.ic_system_update)
+                .title(R.string.upd_popup_title)
+                .message(getString(R.string.upd_popup_body, newer.version))
+                .positive(R.string.upd_popup_now, () -> {
+                    updater.download();
+                    startActivity(new Intent(this, SettingsActivity.class));
+                })
+                .negative(R.string.upd_popup_later, null)
+                .show();
     }
 
     @Override
