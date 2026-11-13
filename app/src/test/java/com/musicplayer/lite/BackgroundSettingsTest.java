@@ -55,11 +55,11 @@ public class BackgroundSettingsTest {
     }
 
     @Test
-    public void theCoverBackdropIsTheDefault() {
+    public void aPureWhiteOrBlackPageIsTheDefault() {
         ActivityController<SettingsActivity> c = open(false);
         RadioGroup group = c.get().findViewById(R.id.bg_group);
-        assertEquals(R.id.bg_cover, group.getCheckedRadioButtonId());
-        assertEquals(Appearance.BG_COVER, prefs.glassBackground());
+        assertEquals(R.id.bg_plain, group.getCheckedRadioButtonId());
+        assertEquals(Appearance.BG_PLAIN, prefs.glassBackground());
         assertEquals("pick a picture from your gallery",
                 ((TextView) c.get().findViewById(R.id.bg_picture_sub)).getText().toString(),
                 app.getString(R.string.set_bg_picture_none));

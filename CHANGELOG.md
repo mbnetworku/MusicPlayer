@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.17.0] - 2026-11-13
+
+- Changed: the background is pure black in dark mode and pure white in light mode, with no colour. The colourful background from the song cover is no longer the default. You can still choose it, a picture or your wallpaper in Settings.
+
 ## [1.16.0] - 2026-11-13
 
 - Changed: closer to the iPhone Music look. The song list and the Now Playing controls no longer sit inside big glass boxes. The rows and the controls are now directly on the colour background, like on an iPhone.
