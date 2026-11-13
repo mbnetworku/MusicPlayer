@@ -43,6 +43,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         bindAppearance();
         bindBackground();
+        bindClarity();
         final Switch ambient = setupRow(R.id.row_ambient, R.string.set_ambient, R.string.set_ambient_sub, true);
         ambient.setSaveEnabled(false);   // the setting is read again below, never restored from an old state
         ambient.setChecked(prefs.glassBackground() == Appearance.BG_COVER);
@@ -127,6 +128,22 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         tapSkip.setChecked(prefs.coverSwipe());
         tapSkip.setOnCheckedChangeListener((b, on) -> prefs.setCoverSwipe(on));
         bindBarStyle();
+    }
+
+    /** How see-through the glass panels are: Clear, Soft or Frosted. */
+    private void bindClarity() {
+        final int[] ids = {R.id.clarity_clear, R.id.clarity_soft, R.id.clarity_frosted};
+        final RadioGroup g = findViewById(R.id.clarity_group);
+        g.check(ids[prefs.glassClarity()]);
+        g.setOnCheckedChangeListener((group, id) -> {
+            for (int i = 0; i < ids.length; i++) {
+                if (ids[i] == id && i != prefs.glassClarity()) {
+                    group.setOnCheckedChangeListener(null);
+                    prefs.setGlassClarity(i);
+                    recreate();   // every panel is drawn again with the new transparency
+                }
+            }
+        });
     }
 
     private void bindBarStyle() {

@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.23.0] - 2026-11-13
+
+- New: a "Glass transparency" setting with three levels: Clear, Soft and Frosted. It is in Settings under Appearance. The glass panels, the capsule at the top, the mini player and the tab bar change together.
+- Changed: the default is Clear. The panels are see-through with a thin bright edge, and much less glossy than before. Pop-ups stay solid so the text is easy to read.
+
 ## [1.22.0] - 2026-11-13
 
 - New: a round glass search button next to the mini player at the bottom, like in Apple Music. It opens the same search as the search button at the top.

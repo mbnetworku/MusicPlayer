@@ -60,7 +60,7 @@ final class Appearance {
     /** Changes whenever the chosen look changes, so an open screen can notice and rebuild itself. */
     static int signature(Context c) {
         Prefs p = Prefs.get(c);
-        return (p.themeMode() * 8 + p.glassBackground()) * 2 + (p.glass() ? 1 : 0);
+        return ((p.themeMode() * 8 + p.glassBackground()) * 2 + (p.glass() ? 1 : 0)) * 4 + p.glassClarity();
     }
 
     /** Dark icons on light backgrounds and light icons on dark ones; clear bars for glass. */

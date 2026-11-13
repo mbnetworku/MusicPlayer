@@ -97,6 +97,41 @@
                     android:layout_height="1dp"
                     android:background="@color/divider" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    style="@style/SettingTitle"
+                    android:paddingTop="10dp"
+                    android:text="@string/set_clarity" />
+
+                <RadioGroup
+                    android:id="@+id/clarity_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/clarity_clear"
+                        style="@style/SegmentRadio"
+                        android:text="@string/clarity_clear" />
+
+                    <RadioButton
+                        android:id="@+id/clarity_soft"
+                        style="@style/SegmentRadio"
+                        android:text="@string/clarity_soft" />
+
+                    <RadioButton
+                        android:id="@+id/clarity_frosted"
+                        style="@style/SegmentRadio"
+                        android:text="@string/clarity_frosted" />
+                </RadioGroup>
+
                 <include
                     android:id="@+id/row_ambient"
                     layout="@layout/row_setting" />

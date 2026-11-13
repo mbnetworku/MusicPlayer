@@ -121,6 +121,16 @@ final class Prefs {
         return sp.getBoolean("glass", true);
     }
 
+    /** How see-through the glass is: 0 clear, 1 soft, 2 frosted. */
+    int glassClarity() {
+        int v = sp.getInt("glass_clarity", 0);
+        return v < 0 || v > 2 ? 0 : v;
+    }
+
+    void setGlassClarity(int level) {
+        sp.edit().putInt("glass_clarity", level).apply();
+    }
+
     /** What the glass look shows behind its panels: one of the Appearance.BG_* values. */
     int glassBackground() {
         return sp.getInt("glass_bg", Appearance.BG_PLAIN);

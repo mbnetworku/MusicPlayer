@@ -150,6 +150,10 @@
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels.</string>
 
+    <string name="set_clarity">Glass transparency</string>
+    <string name="clarity_clear">Clear</string>
+    <string name="clarity_soft">Soft</string>
+    <string name="clarity_frosted">Frosted</string>
     <string name="set_ambient">Ambient background</string>
     <string name="set_ambient_sub">Colours from the song that is playing fill the background. Off is pure black or white.</string>
     <string name="set_playing">Playing</string>

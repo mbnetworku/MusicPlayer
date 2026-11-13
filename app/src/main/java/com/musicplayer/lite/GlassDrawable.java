@@ -63,16 +63,30 @@ final class GlassDrawable extends Drawable {
     static GlassDrawable create(Context c, int shape, boolean accent, boolean strong) {
         return new GlassDrawable(c.getResources().getDisplayMetrics().density,
                 Appearance.isNight(c), shape, accent, strong,
-                Appearance.glassPlain(c) ? STYLE_PLAIN : STYLE_GLASS);
+                Appearance.glassPlain(c) ? STYLE_PLAIN : STYLE_GLASS, scaleFor(Prefs.get(c).glassClarity()));
     }
 
     /** The card of a glass dialog or action sheet. */
     static GlassDrawable dialog(Context c) {
         return new GlassDrawable(c.getResources().getDisplayMetrics().density,
-                Appearance.isNight(c), CARD, false, false, STYLE_DIALOG);
+                Appearance.isNight(c), CARD, false, false, STYLE_DIALOG, 1f);
     }
 
-    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong, int style) {
+    /** How much of the glass fill shows: clear glass is mostly see-through, frosted glass is the full fill. */
+    static float scaleFor(int clarity) {
+        return clarity == 0 ? 0.3f : clarity == 1 ? 0.65f : 1f;
+    }
+
+    private static int fade(int color, float f) {
+        return (Math.round((color >>> 24) * f) << 24) | (color & 0x00FFFFFF);
+    }
+
+    private final float scale;
+    private final float k;
+
+    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong, int style, float scale) {
+        this.scale = scale;
+        this.k = (accent || style == STYLE_DIALOG) ? 1f : scale;
         this.density = density;
         this.night = night;
         this.shape = shape;
@@ -136,10 +150,10 @@ final class GlassDrawable extends Drawable {
             rimFaint = 0x59FFFFFF;
             hairline = 0x0F000000;
         }
-        glowColor = style == STYLE_GLASS ? (night ? 0x22FFFFFF : 0x66FFFFFF) : 0;
+        glowColor = style == STYLE_GLASS ? fade(night ? 0x22FFFFFF : 0x66FFFFFF, k) : 0;
         glow.setStyle(Paint.Style.STROKE);
         glow.setStrokeWidth(3.2f * density);
-        fill.setColor(fillColor);
+        fill.setColor(fade(fillColor, k));
         rim.setStyle(Paint.Style.STROKE);
         rim.setStrokeWidth(stroke);
         hair.setStyle(Paint.Style.STROKE);
@@ -154,10 +168,12 @@ final class GlassDrawable extends Drawable {
     @Override
     protected void onBoundsChange(Rect b) {
         if (b.isEmpty()) return;
+        final int hi = fade(highlight, k);
+        final int sh = fade(shade, (1f + k) / 2f);
         top.setShader(new LinearGradient(0, b.top, 0, b.top + b.height() * 0.55f,
-                highlight, transparent(highlight), Shader.TileMode.CLAMP));
+                hi, transparent(hi), Shader.TileMode.CLAMP));
         bottom.setShader(new LinearGradient(0, b.bottom, 0, b.bottom - b.height() * 0.35f,
-                shade, transparent(shade), Shader.TileMode.CLAMP));
+                sh, transparent(sh), Shader.TileMode.CLAMP));
         // Light catches two opposite edges, top left and bottom right, like a thick pane of glass.
         int rimEnd = (((rimBright >>> 24) * 3 / 4) << 24) | transparent(rimBright);
         rim.setShader(new LinearGradient(b.left, b.top, b.right, b.bottom,
@@ -226,10 +242,11 @@ final class GlassDrawable extends Drawable {
         final boolean a = accent;
         final boolean st = strong;
         final int sty = style;
+        final float sc = scale;
         return new ConstantState() {
             @Override
             public Drawable newDrawable() {
-                return new GlassDrawable(d, n, s, a, st, sty);
+                return new GlassDrawable(d, n, s, a, st, sty, sc);
             }
 
             @Override
