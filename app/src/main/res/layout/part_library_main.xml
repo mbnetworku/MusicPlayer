@@ -31,24 +31,36 @@
                 style="@style/TopSubtitle" />
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_search"
-            style="@style/IconButton"
-            android:contentDescription="@string/cd_search"
-            android:src="@drawable/ic_search" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_pill_tint"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:tag="glass:pill">
 
-        <com.musicplayer.lite.EqBarsView
-            android:id="@+id/btn_eq"
-            style="@style/EqBarsButton"
-            android:contentDescription="@string/cd_equalizer"
-            app:barColor="@color/icon"
-            app:bars="4" />
+            <ImageButton
+                android:id="@+id/btn_search"
+                style="@style/IconButton"
+                android:contentDescription="@string/cd_search"
+                android:src="@drawable/ic_search" />
 
-        <ImageButton
-            android:id="@+id/btn_more"
-            style="@style/IconButton"
-            android:contentDescription="@string/cd_more"
-            android:src="@drawable/ic_more_vert" />
+            <com.musicplayer.lite.EqBarsView
+                android:id="@+id/btn_eq"
+                style="@style/EqBarsButton"
+                android:contentDescription="@string/cd_equalizer"
+                app:barColor="@color/icon"
+                app:bars="4" />
+
+            <ImageButton
+                android:id="@+id/btn_more"
+                style="@style/IconButton"
+                android:contentDescription="@string/cd_more"
+                android:src="@drawable/ic_more_horiz" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

@@ -5,7 +5,7 @@
     <dimen name="tabbar_height">56dp</dimen>
     <dimen name="icon_btn">48dp</dimen>
     <dimen name="row_height">64dp</dimen>
-    <dimen name="row_art">48dp</dimen>
+    <dimen name="row_art">52dp</dimen>
     <dimen name="mini_height">60dp</dimen>
     <dimen name="mini_art">40dp</dimen>
     <dimen name="pill_height">44dp</dimen>
