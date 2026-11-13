@@ -9,32 +9,23 @@ This page is for whoever builds, tests and publishes the app. The user guide is 
 
 ## Releasing a new version
 
-Where people get the app, and where the version shows:
+Releases are **automatic**. Where people get the app, and where the version shows:
 
-| Place | What it holds |
-|---|---|
-| [`download/`](../download) | The APK files. `MusicPlayer.apk` is always the newest one: the Download button in the README points at it. `MusicPlayer-<version>.apk` and its `.sha256` are kept for every version that is published. |
-| [README](../README.md) | The Download button, the version badges and the Versions table. |
-| Git tag `v<version>` | The version on GitHub's Tags page and in the version badge. |
-| [CHANGELOG.md](../CHANGELOG.md) | What changed in each version, in plain sentences. |
+* **The Releases page**, `https://github.com/mbnetworku/MusicPlayer/releases/latest`, and the direct link `https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk`. The app's own **Settings → Updates** and the update pop-up read this page.
+* **The README**: the version in the Download table, What's new and the Versions table.
 
-**Each time the app changes and a new APK is published:**
+To publish a new version:
 
-1. Raise the default `appVersion` in `app/build.gradle` and add an entry at the top of `CHANGELOG.md`.
-2. Build and check it: `./gradlew testDebugUnitTest lintRelease assembleRelease`, then look at the APK with `aapt2 dump badging` (package, version) and `apksigner verify --print-certs` (signer).
-3. Copy the APK to `download/MusicPlayer-<version>.apk`, write `download/MusicPlayer-<version>.apk.sha256` (`sha256sum`), and replace `download/MusicPlayer.apk` with the same file.
-4. Update the version badge, the download table and the Versions table in the README.
-5. Commit, push, then tag: `git tag v<version> && git push origin v<version>`.
+1. Raise the default `appVersion` in `app/build.gradle` (patch for fixes, minor for features) and add a `## [<version>] - <date>` entry at the top of `CHANGELOG.md`, in plain sentences.
+2. Build and check locally: `./gradlew -PappVersion=<version> testDebugUnitTest lintRelease` (JDK 21).
+3. Commit and push to `main`. A push that changes `app/build.gradle` starts the workflow **Publish release**. It builds, tests, signs the APK with the private key from the repository secrets (`RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`) and creates the release `v<version>` with the APK, its checksum, a copy named `MusicPlayer.apk`, and the version's notes from the changelog. It does nothing if the version already has a release.
+4. Update the version in the README (the Download table, What's new and the Versions table).
 
-Only versions that work are published. A version with a serious bug is left out of `download/` and marked in the README's Versions table.
+To start a release by hand, use **Actions → Publish release → Run workflow** and type the version, or on Windows double-click `tools/Publish-Signed-Update.bat`. The workflow needs **Settings → Actions → General → Workflow permissions → Read and write permissions**.
 
-### The GitHub Releases page (one click, optional)
+`tools/Setup-Signing-Key.bat` makes the private signing key and adds the four secrets. Keep a copy of the key: without it, installed apps can no longer be updated.
 
-GitHub's **Releases** page, and the app's own **Settings → Updates**, look at *GitHub releases*, not at the `download/` folder. A release is not made automatically. When you want one, run the workflow **Actions → Publish release from the APK in download/ → Run workflow** and type the version (for example `1.3.1`). It takes the APK that is already in `download/`, checks that it is that version of this app and that its checksum is right, and creates the release `v<version>` with the APK, its checksum, a copy named `MusicPlayer.apk` and the version's notes from the changelog. It builds and signs nothing, so it needs no secrets.
-
-After that, `https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk` is a second direct download link, always to the newest release, and installed apps see the update in Settings.
-
-If you have your own signing key in repository secrets, use **Publish release** instead: it builds the app on GitHub, signs it with your key and creates the release itself (see [Signing and updates](#signing-and-updates)).
+The workflow **Publish release from the APK in download/** is an older, manual option that publishes an APK that is already committed in `download/`. Those files are test-key builds from before 1.7.1 and are not used any more.
 
 ## Build from source
 
