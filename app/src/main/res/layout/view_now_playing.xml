@@ -11,7 +11,7 @@
 
         <!-- The cover and the moving bars on it share one rounded, raised box. The frame around it
              gives the padding and the height; this one wraps the square cover. -->
-        <FrameLayout
+        <com.musicplayer.lite.SquareFrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -47,7 +47,7 @@
                 app:barRest="0.45"
                 app:bars="@integer/np_bars"
                 app:spectrum="true" />
-        </FrameLayout>
+        </com.musicplayer.lite.SquareFrameLayout>
     </FrameLayout>
 
     <LinearLayout

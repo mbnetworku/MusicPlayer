@@ -45,5 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:importantForAccessibility="no"
+        android:thumbTint="#FFFFFFFF"
+        android:trackTint="@color/switch_track"
+        android:trackTintMode="src_in"
         android:visibility="gone" />
 </LinearLayout>

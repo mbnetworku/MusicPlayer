@@ -4,6 +4,13 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.10.0] - 2026-11-13
+
+- Changed: the look is now Liquid Glass by default, like the newest iPhone look. You can still switch it off in Settings.
+- Changed: switches are green like on an iPhone, and the descriptions in Settings are shorter.
+- Fixed: on some screens the moving bars were wider than the cover on the Now Playing screen. They now match the cover exactly.
+- New: updates are published automatically. When the version changes on GitHub, GitHub builds, signs and publishes it by itself.
+
 ## [1.9.0] - 2026-11-13
 
 - Changed: Settings is fully redesigned. Small coloured icons, a slim switch for Device, Light or Dark, small picture tiles for the background and the equalizer design, and a new "Playing" group for vibration and tap-the-cover. Everything is tighter and smoother.

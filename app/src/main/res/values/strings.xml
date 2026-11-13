@@ -141,13 +141,13 @@
     <string name="bar_style_mirror">Mirror</string>
     <string name="bar_style_wave">Wave</string>
     <string name="set_vibrate">Vibration</string>
-    <string name="set_vibrate_sub">A short buzz when you tap a song, a button or a tab. It also follows Android\'s own touch feedback setting.</string>
+    <string name="set_vibrate_sub">A short buzz when you tap.</string>
     <string name="set_vibrate_playing">Vibrate while music plays</string>
-    <string name="set_vibrate_playing_sub">A soft pulse about twice a second while a song plays. It is a steady pulse, not matched to the beat of the song. Off until you turn it on.</string>
+    <string name="set_vibrate_playing_sub">A soft, steady pulse while a song plays.</string>
     <string name="set_cover_tap">Tap the cover to skip</string>
-    <string name="set_cover_tap_sub">On the Now Playing picture, tap the left side for the previous song, the right side for the next song, and the middle to play or pause.</string>
+    <string name="set_cover_tap_sub">Tap left for previous, right for next, middle to play or pause.</string>
     <string name="set_glass">Liquid glass</string>
-    <string name="set_glass_sub">Frosted glass panels. Choose what is behind them below.</string>
+    <string name="set_glass_sub">Frosted glass panels.</string>
 
     <string name="set_playing">Playing</string>
     <string name="set_library">Library</string>
@@ -259,7 +259,7 @@
 
     <!-- Liquid glass background -->
     <string name="set_background">Liquid glass background</string>
-    <string name="set_bg_note">What shows behind the glass panels when Liquid glass is on.</string>
+    <string name="set_bg_note">Shows behind the glass panels.</string>
     <string name="set_bg_plain">White or black</string>
     <string name="set_bg_plain_sub">A clean page that follows your theme.</string>
     <string name="set_bg_cover">Cover art</string>

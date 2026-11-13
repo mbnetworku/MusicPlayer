@@ -8,7 +8,14 @@ name: Publish release
 # Settings > Updates screen looks at. Installed copies of the app offer it from then on.
 # It needs your signing key in four repository secrets first (see docs/DEVELOPING.md: Signing and updates).
 
+# Automatic: when a commit that changes the version in app/build.gradle reaches the main branch,
+# that version is built, signed and published by itself, unless it already has a release.
+# (Needs "Read and write permissions" under Settings > Actions > General, and the four secrets.)
 on:
+  push:
+    branches: [main]
+    paths:
+      - "app/build.gradle"
   workflow_dispatch:
     inputs:
       version:
@@ -35,6 +42,7 @@ jobs:
     env:
       VERSION: ${{ inputs.version }}
       NOTES_INPUT: ${{ inputs.notes }}
+      EVENT: ${{ github.event_name }}
       GH_TOKEN: ${{ github.token }}
       # Your private signing key. Android only installs an update that is signed with the same key
       # as the installed app, so every release must use this one key. Keep a safe copy of it.
@@ -45,7 +53,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Find the version (automatic runs)
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "push" ]; then
+            v="$(sed -n "s/.*appVersion') ?: '\([0-9.]*\)'.*/\1/p" app/build.gradle | head -1)"
+            if [ -z "$v" ]; then echo "::error::Could not read the version from app/build.gradle."; exit 1; fi
+            echo "VERSION=$v" >> "$GITHUB_ENV"
+            if gh release view "v$v" >/dev/null 2>&1; then
+              echo "Release v$v already exists: nothing to do."
+              echo "SKIP=1" >> "$GITHUB_ENV"
+            fi
+          fi
+
+
       - name: Check the version
+        if: env.SKIP != '1'
         run: |
           set -euo pipefail
           # versionCode is major*10000 + minor*100 + patch, so minor and patch stop at 99.
@@ -69,6 +92,7 @@ jobs:
           fi
 
       - name: Prepare the release notes
+        if: env.SKIP != '1'
         run: |
           set -euo pipefail
           if [ -n "$NOTES_INPUT" ]; then
@@ -88,6 +112,7 @@ jobs:
           cat notes.md
 
       - name: Set up the signing key
+        if: env.SKIP != '1'
         run: |
           set -euo pipefail
           missing=""
@@ -109,16 +134,20 @@ jobs:
 
       # JDK 21 runs Gradle and the tests. The app itself is compiled for Java 17.
       - uses: actions/setup-java@v5
+        if: env.SKIP != '1'
         with:
           distribution: temurin
           java-version: 21
 
       - uses: gradle/actions/setup-gradle@v4
+        if: env.SKIP != '1'
 
       - name: Test, lint and build
+        if: env.SKIP != '1'
         run: ./gradlew --no-daemon -PappVersion="$VERSION" testDebugUnitTest lintRelease assembleRelease
 
       - name: Check what was built
+        if: env.SKIP != '1'
         run: |
           set -euo pipefail
           apk=app/build/outputs/apk/release/app-release.apk
@@ -135,6 +164,7 @@ jobs:
           esac
 
       - name: Name the files
+        if: env.SKIP != '1'
         run: |
           set -euo pipefail
           mkdir dist
@@ -144,6 +174,7 @@ jobs:
           cat "dist/MusicPlayer-$VERSION.apk.sha256"
 
       - name: Create the GitHub release
+        if: env.SKIP != '1'
         run: |
           gh release create "v$VERSION" \
             "dist/MusicPlayer-$VERSION.apk" \
@@ -158,7 +189,7 @@ jobs:
           gh release upload "v$VERSION" dist/MusicPlayer.apk
 
       - name: Upload reports when something failed
-        if: failure()
+        if: failure() && env.SKIP != '1'
         uses: actions/upload-artifact@v4
         with:
           name: reports

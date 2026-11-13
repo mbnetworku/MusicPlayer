@@ -76,7 +76,7 @@ public class SettingsActivityTest {
         RadioGroup group = a.findViewById(R.id.theme_group);
         assertEquals(R.id.theme_system, group.getCheckedRadioButtonId());
         assertTrue("says what the device is using", text(a, R.id.theme_system_now).contains("mode"));
-        assertFalse(switchIn(a, R.id.row_glass).isChecked());
+        assertTrue("liquid glass is on by default", switchIn(a, R.id.row_glass).isChecked());
         assertFalse(switchIn(a, R.id.row_show_all).isChecked());
         assertTrue("automatic update checks start on", switchIn(a, R.id.row_auto).isChecked());
         assertEquals("Version 1.1.0", ((TextView) a.findViewById(R.id.row_version).findViewById(R.id.set_title)).getText().toString());

@@ -118,7 +118,7 @@ final class Prefs {
     }
 
     boolean glass() {
-        return sp.getBoolean("glass", false);
+        return sp.getBoolean("glass", true);
     }
 
     /** What the glass look shows behind its panels: one of the Appearance.BG_* values. */
