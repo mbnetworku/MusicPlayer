@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.14.0] - 2026-11-13
+
+- New: swipe the cover left or right to change song, like on an iPhone. The cover follows your finger and the next one slides in. Tapping the cover no longer skips songs. You can turn swiping off in Settings under "Swipe the cover to change song".
+- New: drag the Now Playing screen down to close it, like on an iPhone. The sliders keep their own drag.
+- Changed: the volume slider only shows on screens at least 600dp tall, so the cover never gets squeezed on small phones.
+
 ## [1.13.0] - 2026-11-13
 
 - Changed: the Songs screen follows the iPhone Music look. Search, the equalizer and the menu now sit together in one glass capsule at the top, the menu dots are horizontal, and the song pictures are a little larger. Nothing was removed and the equalizer button is still there.

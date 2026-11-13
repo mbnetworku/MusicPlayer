@@ -2,6 +2,6 @@
 <resources>
     <!-- True when the library and the player share one screen (car head units, tablets). -->
     <bool name="split_layout">false</bool>
-    <!-- The volume slider on Now Playing. Car screens have their own volume. -->
-    <bool name="np_show_volume">true</bool>
+    <!-- The volume slider on Now Playing: only on screens tall enough (600dp), so the cover keeps its size. Car screens have their own volume. -->
+    <bool name="np_show_volume">false</bool>
 </resources>

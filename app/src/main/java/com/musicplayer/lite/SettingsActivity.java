@@ -119,8 +119,8 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             if (on) Haptics.tap(b);
         });
         Switch tapSkip = setupRow(R.id.row_cover_tap, R.string.set_cover_tap, R.string.set_cover_tap_sub, true);
-        tapSkip.setChecked(prefs.coverTapSkip());
-        tapSkip.setOnCheckedChangeListener((b, on) -> prefs.setCoverTapSkip(on));
+        tapSkip.setChecked(prefs.coverSwipe());
+        tapSkip.setOnCheckedChangeListener((b, on) -> prefs.setCoverSwipe(on));
         bindBarStyle();
     }
 

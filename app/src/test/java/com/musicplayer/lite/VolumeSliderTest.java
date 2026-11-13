@@ -20,6 +20,7 @@ public class VolumeSliderTest {
     @Test
     public void theSliderShowsAndChangesThePhonesMusicVolume() {
         Application app = RuntimeEnvironment.getApplication();
+        RuntimeEnvironment.setQualifiers("+w360dp-h700dp");   // a normal phone: tall enough for the slider
         TestMedia.install(app);
         AudioManager am = app.getSystemService(AudioManager.class);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, 3, 0);

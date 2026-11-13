@@ -96,20 +96,7 @@ public class NowPlayingView extends LinearLayout {
             Haptics.tap(v);
             if (service != null) service.previous();
         });
-        final View cover = (View) art.getParent();
-        cover.setOnTouchListener((v, e) -> {
-            if (!Prefs.get(getContext()).coverTapSkip() || service == null) return false;
-            if (e.getActionMasked() == MotionEvent.ACTION_DOWN) return true;   // keep the touch to see it lift
-            if (e.getActionMasked() == MotionEvent.ACTION_UP && v.getWidth() > 0) {
-                Haptics.tap(v);
-                final float x = e.getX() / v.getWidth();
-                if (x < 1f / 3f) service.previous();
-                else if (x > 2f / 3f) service.next(true);
-                else service.togglePlayPause();
-                return true;
-            }
-            return false;
-        });
+        bindCoverSwipe((View) art.getParent());
         shuffle.setOnClickListener(v -> {
             Haptics.tap(v);
             if (service != null) service.setShuffle(!service.queue().isShuffle());
@@ -242,6 +229,85 @@ public class NowPlayingView extends LinearLayout {
             art.setTag(R.id.tag_art, null);
             art.setImageDrawable(ArtLoader.get(c).placeholder("none"));
         }
+    }
+
+    // ---- swiping the cover -------------------------------------------------------------------------
+
+    private float swipeDownX;
+    private float swipeDownY;
+    private boolean swiping;
+    private android.view.VelocityTracker swipeVelocity;
+
+    /** Drag the cover left or right to change song; it follows the finger and slides away. */
+    private void bindCoverSwipe(final View cover) {
+        final int slop = android.view.ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        cover.setOnTouchListener((v, e) -> {
+            if (!Prefs.get(getContext()).coverSwipe() || service == null) return false;
+            switch (e.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    swipeDownX = e.getX();
+                    swipeDownY = e.getY();
+                    swiping = false;
+                    if (swipeVelocity != null) swipeVelocity.recycle();
+                    swipeVelocity = android.view.VelocityTracker.obtain();
+                    swipeVelocity.addMovement(e);
+                    return true;
+                case MotionEvent.ACTION_MOVE: {
+                    if (swipeVelocity != null) swipeVelocity.addMovement(e);
+                    final float dx = e.getX() - swipeDownX;
+                    final float dy = e.getY() - swipeDownY;
+                    if (!swiping && Math.abs(dx) > slop && Math.abs(dx) > Math.abs(dy) * 1.2f) {
+                        swiping = true;
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                    }
+                    if (swiping) {
+                        v.setTranslationX(dx);
+                        v.setRotation(dx / Math.max(1, v.getWidth()) * 6f);
+                        v.setAlpha(1f - Math.min(0.5f, Math.abs(dx) / Math.max(1, v.getWidth())));
+                    }
+                    return true;
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    float velocity = 0f;
+                    if (swipeVelocity != null) {
+                        swipeVelocity.addMovement(e);
+                        swipeVelocity.computeCurrentVelocity(1000);
+                        velocity = swipeVelocity.getXVelocity();
+                        swipeVelocity.recycle();
+                        swipeVelocity = null;
+                    }
+                    if (!swiping) return true;
+                    swiping = false;
+                    final float dx = e.getX() - swipeDownX;
+                    final boolean cancelled = e.getActionMasked() == MotionEvent.ACTION_CANCEL;
+                    final boolean far = Math.abs(dx) > v.getWidth() * 0.22f;
+                    final boolean fast = Math.abs(velocity) > 900f && Math.signum(velocity) == Math.signum(dx);
+                    if (!cancelled && (far || fast)) {
+                        Haptics.tap(v);
+                        final boolean forward = dx < 0;
+                        if (forward) service.next(true);
+                        else service.previous();
+                        slideNewCoverIn(v, forward);
+                    } else {
+                        v.animate().translationX(0f).rotation(0f).alpha(1f).setDuration(180).start();
+                    }
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        });
+    }
+
+    /** The old cover has gone; the next one arrives from the other side. */
+    private static void slideNewCoverIn(final View v, final boolean forward) {
+        final float w = Math.max(1, v.getWidth());
+        v.animate().cancel();
+        v.setTranslationX(forward ? w * 0.6f : -w * 0.6f);
+        v.setRotation(0f);
+        v.setAlpha(0f);
+        v.animate().translationX(0f).alpha(1f).setDuration(220).start();
     }
 
     // ---- volume ---------------------------------------------------------------------------------

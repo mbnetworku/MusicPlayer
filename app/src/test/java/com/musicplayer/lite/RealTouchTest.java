@@ -389,11 +389,11 @@ public class RealTouchTest {
     }
 
     @Test
-    public void tappingTheCoverEdgesSkipsWhenTheOptionIsOn() throws Exception {
+    public void swipingTheCoverChangesTheSongAndTappingDoesNot() throws Exception {
         loadLibrary();
         service.playQueue(Library.get(app).tracks(), 1, false);
         TestMedia.idle();
-        Prefs.get(app).setCoverTapSkip(true);
+        Prefs.get(app).setCoverSwipe(true);
         ActivityController<PlayerActivity> c =
                 Robolectric.buildActivity(PlayerActivity.class).create().start().resume().visible();
         c.windowFocusChanged(true);
@@ -403,16 +403,66 @@ public class RealTouchTest {
         View art = (View) a.findViewById(R.id.np_art).getParent();   // the cover frame the finger lands on
         int[] at = new int[2];
         art.getLocationInWindow(at);
+        float y = at[1] + art.getHeight() / 2f;
         long before = service.currentTrack().id;
-        tapAt(a, at[0] + art.getWidth() * 0.85f, at[1] + art.getHeight() / 2f);
+
+        tapAt(a, at[0] + art.getWidth() * 0.85f, y);
+        assertEquals("a tap on the cover changes nothing", before, service.currentTrack().id);
+
+        float mid = at[0] + art.getWidth() / 2f;
+        swipe(a, mid, mid - 300f, y);
         long afterNext = service.currentTrack().id;
-        assertTrue("right side went to the next song", afterNext != before);
-        tapAt(a, at[0] + art.getWidth() * 0.12f, at[1] + art.getHeight() / 2f);
-        assertEquals("left side went back", before, service.currentTrack().id);
-        Prefs.get(app).setCoverTapSkip(false);
-        tapAt(a, at[0] + art.getWidth() * 0.85f, at[1] + art.getHeight() / 2f);
+        assertTrue("swiping left went to the next song", afterNext != before);
+
+        swipe(a, mid, mid + 300f, y);
+        assertEquals("swiping right went back", before, service.currentTrack().id);
+
+        Prefs.get(app).setCoverSwipe(false);
+        swipe(a, mid, mid - 300f, y);
         assertEquals("nothing happens when the option is off", before, service.currentTrack().id);
         c.pause().stop().destroy();
+    }
+
+    @Test
+    public void draggingThePlayerDownClosesIt() throws Exception {
+        loadLibrary();
+        service.playQueue(Library.get(app).tracks(), 0, false);
+        TestMedia.idle();
+        ActivityController<PlayerActivity> c =
+                Robolectric.buildActivity(PlayerActivity.class).create().start().resume().visible();
+        c.windowFocusChanged(true);
+        TestMedia.idle();
+        PlayerActivity a = c.get();
+        measure(a);
+        int h = a.getResources().getDisplayMetrics().heightPixels;
+        int w = a.getResources().getDisplayMetrics().widthPixels;
+        long t = SystemClock.uptimeMillis();
+        View decor = a.getWindow().getDecorView();
+        float x = w / 2f;
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, x, h * 0.12f, 0));
+        for (int i = 1; i <= 8; i++) {
+            ShadowLooper.idleMainLooper(16, TimeUnit.MILLISECONDS);
+            decor.dispatchTouchEvent(MotionEvent.obtain(t, t + 16L * i, MotionEvent.ACTION_MOVE, x, h * 0.12f + h * 0.05f * i, 0));
+        }
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t + 150, MotionEvent.ACTION_UP, x, h * 0.52f, 0));
+        ShadowLooper.idleMainLooper(400, TimeUnit.MILLISECONDS);
+        assertTrue("a long drag down closed the player", a.isFinishing());
+        c.pause().stop().destroy();
+    }
+
+    /** A finger dragging across in several steps. */
+    private static void swipe(Activity a, float fromX, float toX, float y) {
+        long t = SystemClock.uptimeMillis();
+        View decor = a.getWindow().getDecorView();
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t, MotionEvent.ACTION_DOWN, fromX, y, 0));
+        for (int i = 1; i <= 8; i++) {
+            ShadowLooper.idleMainLooper(16, TimeUnit.MILLISECONDS);
+            decor.dispatchTouchEvent(MotionEvent.obtain(t, t + 16L * i, MotionEvent.ACTION_MOVE,
+                    fromX + (toX - fromX) * i / 8f, y, 0));
+        }
+        decor.dispatchTouchEvent(MotionEvent.obtain(t, t + 140, MotionEvent.ACTION_UP, toX, y, 0));
+        ShadowLooper.idleMainLooper(400, TimeUnit.MILLISECONDS);
+        TestMedia.idle();
     }
 
     private static void tapAt(Activity a, float x, float y) {

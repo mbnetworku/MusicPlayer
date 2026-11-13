@@ -145,8 +145,8 @@
     <string name="set_vibrate_sub">A short buzz when you tap.</string>
     <string name="set_vibrate_playing">Vibrate while music plays</string>
     <string name="set_vibrate_playing_sub">A soft, steady pulse while a song plays.</string>
-    <string name="set_cover_tap">Tap the cover to skip</string>
-    <string name="set_cover_tap_sub">Tap left for previous, right for next, middle to play or pause.</string>
+    <string name="set_cover_tap">Swipe the cover to change song</string>
+    <string name="set_cover_tap_sub">Swipe left for the next song, right for the previous one.</string>
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels.</string>
 

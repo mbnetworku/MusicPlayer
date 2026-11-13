@@ -71,13 +71,13 @@ final class Prefs {
         sp.edit().putBoolean("vibrate_playing", on).apply();
     }
 
-    /** Tapping the left or right of the big cover goes to the previous or next song. */
-    boolean coverTapSkip() {
-        return sp.getBoolean("cover_tap_skip", false);
+    /** Swiping the big cover to the left or right goes to the next or previous song. */
+    boolean coverSwipe() {
+        return sp.getBoolean("cover_swipe", true);
     }
 
-    void setCoverTapSkip(boolean on) {
-        sp.edit().putBoolean("cover_tap_skip", on).apply();
+    void setCoverSwipe(boolean on) {
+        sp.edit().putBoolean("cover_swipe", on).apply();
     }
 
     /** How song lists are sorted: see {@link SortOrder}. */
