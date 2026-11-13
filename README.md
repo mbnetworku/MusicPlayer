@@ -15,7 +15,7 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 
 <a href="https://github.com/mbnetworku/MusicPlayer/tree/main/download"><img src="https://img.shields.io/github/v/tag/mbnetworku/MusicPlayer?label=version&color=E5202B&style=for-the-badge&sort=semver" alt="Latest version"></a>
 <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0 and newer">
-<img src="https://img.shields.io/badge/APK-172%20KB-555555?style=for-the-badge" alt="APK size 172 KB">
+<img src="https://img.shields.io/badge/APK-171%20KB-555555?style=for-the-badge" alt="APK size 171 KB">
 <a href="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml"><img src="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml/badge.svg" alt="Build status" height="28"></a>
 
 <br><br>
@@ -28,24 +28,26 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 
 | | |
 |---|---|
-| **Latest version** | **1.6.0**, 12 November 2026 · [what's new](#whats-new) |
-| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer.apk) · 172 KB · Android 8.0 or newer |
-| **This exact file** | [MusicPlayer-1.6.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.6.0.apk) · SHA-256 [`e5333459ef03…`](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.6.0.apk.sha256) |
+| **Latest version** | **1.7.0**, 13 November 2026 · [what's new](#whats-new) |
+| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer.apk) · 171 KB · Android 8.0 or newer |
+| **This exact file** | [MusicPlayer-1.7.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk) · SHA-256 [`072ce501bf7b…`](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk.sha256) |
 | **All versions** | [the `download` folder](https://github.com/mbnetworku/MusicPlayer/tree/main/download) · [version history](#versions) |
 
 **Install it in three steps**
 
 1. **Download** the APK on your phone with the button above. For a car head unit, download it on a computer and copy it to a USB stick.
 2. **Open the file.** Android asks once to allow installing from your browser or file manager (*Install unknown apps*): allow it. This is normal for apps that do not come from the Play Store.
-3. **Open Music Player** and allow access to your music. The first time music plays on the Now Playing screen it also asks, once, whether the bars may follow the real sound. You can say no.
+3. **Open Music Player** and allow access to your music. That is the only permission it asks for at first.
 
 Good to know:
 
 * Every APK on this page is signed with the same test key, so a newer one installs **over** an older one and keeps your settings. If Android says *App not installed*, uninstall the old copy first (the very first test builds used another key).
-* It is a test build: signed with a test key and checked by 358 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
+* It is a test build: signed with a test key and checked by 307 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.7.0**: no microphone permission; vibration on taps and an optional pulse while music plays (Settings)
 
 **1.6.0**: tap the cover to skip (Settings)
 
@@ -69,7 +71,8 @@ The full list is in the [changelog](CHANGELOG.md).
 
 | Version | Date | Download | What changed |
 |---|---|---|---|
-| **1.6.0** (latest) | 2026-11-12 | [MusicPlayer-1.6.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.6.0.apk) | Tap the left or right of the cover to skip songs (turn it on in Settings). |
+| **1.7.0** (latest) | 2026-11-13 | [MusicPlayer-1.7.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk) | No microphone permission any more. Vibration on taps, and an optional soft pulse while music plays. |
+| 1.6.0 | 2026-11-12 | [MusicPlayer-1.6.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.6.0.apk) | Tap the left or right of the cover to skip songs (turn it on in Settings). |
 | 1.5.0 | 2026-11-12 | [MusicPlayer-1.5.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.5.0.apk) | Sort your songs by title, artist, album, recently added or length, and reverse the order. |
 | 1.4.0 | 2026-11-12 | [MusicPlayer-1.4.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk) | Choose the equalizer design: Bars, Dots, Mirror or Wave. |
 | 1.3.1 | 2026-11-12 | [MusicPlayer-1.3.1.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.3.1.apk) | Taps on songs, folders, albums and artists work again. Plays on car stereos that refuse the sound. |
@@ -106,7 +109,7 @@ These are renders of the app's real layouts and code with sample (fictional) son
 
 <img src="docs/screenshots/looks.png" alt="Songs and Now playing in six looks: dark, light, liquid glass on dark and on light, glass over cover art, and glass over a picture">
 
-**Pop-ups and menus** are liquid glass too, in every look: the music permission, the question before the bars may follow the sound, the delete confirmation and the more menu.
+**Pop-ups and menus** are liquid glass too, in every look: the music permission, the delete confirmation and the more menu.
 
 <img src="docs/screenshots/popups.png" alt="The music permission question, the question about the bars following the music, the delete confirmation and the more menu, in glass, on dark and light">
 
@@ -160,7 +163,7 @@ Tap the **heart** on the Now Playing screen, or **⋯ → Add to Favorites** on 
 </details>
 
 <details>
-<summary><b>Moving equalizer bars, and following the real sound</b></summary>
+<summary><b>Moving equalizer bars and their designs</b></summary>
 
 Bars that rise and fall while music plays and settle when you pause:
 
@@ -168,9 +171,7 @@ Bars that rise and fall while music plays and settle when you pause:
 * **Small bars** on the song that is playing in every list, in the mini player, and as the **Equalizer button** at the top of the library and the player (tap it to open the equalizer).
 * **Equalizer screen:** a row of bars at the top whose heights follow the sliders: a boosted band lets its bars reach the top, a cut band keeps them low.
 
-**Following the real sound.** The app reads the sound of its own player through Android's Visualizer effect and turns it into 48 bars from bass to treble (an FFT, scaled against the loudest recent sound so it looks the same at any volume, with bars that fall back gradually). Android only allows this with the permission it calls **microphone** (`RECORD_AUDIO`), although the app never uses the microphone: it listens only to the audio session of its own player, and nothing is recorded or sent anywhere. The app asks **once**, in a glass pop-up, the first time music plays on the Now Playing screen. **Settings → Bars follow the music** switches it on or off later.
-
-Without the permission, or on a device that refuses (many head units do), the bars keep a motion of their own. It looks like a spectrum but is **not** measured from the sound. Android may show its microphone indicator while the bars follow the sound (not verified).
+**Designs.** Settings → Equalizer design: Bars, Dots, Mirror or Wave. The bars are an animation made to look like a spectrum. They are **not** measured from the sound, so the app needs no microphone permission and reads no audio.
 
 **Battery.** One listener serves every bar on screen. It runs only while a bar is visible and music is playing, and it stops when you pause, hide the screen or leave. With **Remove animations** switched on in Android, the bars stand still.
 
@@ -228,7 +229,6 @@ How it is built, in case you want to change it (more in [docs/DEVELOPING.md](doc
 |---|---|---|
 | Appearance | Theme | Follow my device, Light or Dark. |
 | Appearance | Liquid glass | The glass look above. |
-| Appearance | Bars follow the music | Let the moving bars follow the real sound. Needs the permission Android calls microphone, which the app only uses to read its own music. See Moving equalizer bars below. |
 | Liquid glass background | White or black, Cover art, My picture, Device wallpaper | What shows behind the glass panels. |
 | Library | Show all audio files | Include ringtones, voice notes and other short sounds. |
 | Library | Scan storage for music | Index new files on internal storage, SD cards and USB drives. |
@@ -248,7 +248,6 @@ Android versions differ in what they need, so the app asks in one place, and alw
 | First start | Read your music: `READ_MEDIA_AUDIO` (13 and newer) or `READ_EXTERNAL_STORAGE` (12 and older). Android 13 and newer also ask to show the playback controls (`POST_NOTIFICATIONS`). | all |
 | Deleting a song | Write access to delete files, once. | 10 and older only. Android 11 and newer show their own "allow deleting?" screen for each delete instead. |
 | Installing an update | "Install unknown apps" for Music Player, once. | all |
-| The first time music plays on Now Playing | "Make the bars follow the music?" The permission Android calls microphone (`RECORD_AUDIO`), used only to read the app's own sound. | all. Asked once; Settings has a switch. |
 | Using your wallpaper | Reading the wallpaper picture. If Android says no, its colours are used. | storage permission on 12 and older; not available on 13 and newer |
 | After Android stops asking | A pop-up with **Open settings** for this app's page. | all |
 
@@ -299,16 +298,16 @@ A **banner** on the library screen shows when a newer version is known: **Update
 | `POST_NOTIFICATIONS` | Show the playback controls in the notification shade (Android 13+). Playback works if you decline. |
 | `WAKE_LOCK` | Stop the CPU sleeping in the middle of a song. |
 | `MODIFY_AUDIO_SETTINGS` | Standard permission for apps that use audio effects. |
+| `VIBRATE` | Only for the optional soft pulse while music plays. Android grants it without asking. The app asks for no microphone permission. |
 | `WRITE_EXTERNAL_STORAGE` (Android 10 and older only) | Delete songs. Android 11 and newer never grant it and ask per delete instead. The app also sets `requestLegacyExternalStorage` so Android 10 lets it delete files directly. |
-| `RECORD_AUDIO` | Only for the bars that follow the music: Android's Visualizer needs it, although the app never uses the microphone and records nothing. Asked once in a glass pop-up; the app works without it. |
 | `INTERNET` | Only to look for updates and download them from GitHub. |
 | `REQUEST_INSTALL_PACKAGES` | Only so Android lets the app hand a downloaded update to the installer. Android still asks you to confirm every install. |
 
 ## Status and limits
 
-* **Checked:** 358 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all eight looks (dark and light, flat and over each glass background).
+* **Checked:** 307 automated tests, Android lint, an R8-shrunk release build whose version, signature and manifest were inspected with `apksigner` and `aapt2`, and renders of every screen in all eight looks (dark and light, flat and over each glass background).
 * **Not yet run on real hardware or an emulator.** Actual sound output, the hardware equalizer effects, notifications, head-unit specifics (USB mounting, key mapping), how the glass look performs on slow head units, the real Android installer dialog during an update, Android's own delete confirmation on Android 11 and newer, the wallpaper on different versions, and the widget on different launchers all need hands-on testing. If something misbehaves, please open an issue with the device model and Android version.
-* **Following the real sound is untested on real devices.** Android's Visualizer behaves differently from device to device and many head units do not support it; the app then keeps the bars' own motion. The sound analysis itself is tested with made-up sound only, and whether Android shows its microphone indicator has not been checked.
+
 * The device equalizer is best effort: many devices do not let an app see or change it, and the card then says so. Controlling it affects every app and lasts only while Music Player runs.
 * Reading the wallpaper *picture* is not possible on the newest Android versions; the wallpaper's colours are used instead.
 * The app's own **Check for updates** looks at GitHub's *Releases* page, which is separate from the APK on this page. Until a release has been published (see [docs/DEVELOPING.md](docs/DEVELOPING.md#the-github-releases-page-one-click-optional)), the app says no update has been published yet. You can always download the newest APK here.

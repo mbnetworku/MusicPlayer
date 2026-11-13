@@ -35,7 +35,6 @@ public class PlayerActivity extends BoundActivity {
     protected void onPlaybackUpdated() {
         if (player != null) player.refresh();
         if (eqBars != null && service != null) eqBars.setPlaying(service.isPlaying());
-        if (service != null && service.isPlaying()) offerSoundBars();
     }
 
     @Override

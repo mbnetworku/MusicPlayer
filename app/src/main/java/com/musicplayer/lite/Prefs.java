@@ -53,15 +53,22 @@ final class Prefs {
         sp.edit().putString("favorites", text).apply();
     }
 
-    // ---- moving bars that follow the sound -----------------------------------------
-
-    /** Whether the bars may follow the real sound (the permission is asked for separately). */
-    boolean barsFollow() {
-        return sp.getBoolean("bars_follow", true);
+    /** A short vibration on taps. */
+    boolean vibrate() {
+        return sp.getBoolean("vibrate", true);
     }
 
-    void setBarsFollow(boolean on) {
-        sp.edit().putBoolean("bars_follow", on).apply();
+    void setVibrate(boolean on) {
+        sp.edit().putBoolean("vibrate", on).apply();
+    }
+
+    /** A soft pulse while music plays. */
+    boolean vibratePlaying() {
+        return sp.getBoolean("vibrate_playing", false);
+    }
+
+    void setVibratePlaying(boolean on) {
+        sp.edit().putBoolean("vibrate_playing", on).apply();
     }
 
     /** Tapping the left or right of the big cover goes to the previous or next song. */
@@ -87,6 +94,8 @@ final class Prefs {
         sp.edit().putInt("sort_key", key).putBoolean("sort_reverse", reverse).apply();
     }
 
+    // ---- moving bars --------------------------------------------------------------
+
     /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave. */
     int barStyle() {
         int v = sp.getInt("bar_style", 0);
@@ -95,15 +104,6 @@ final class Prefs {
 
     void setBarStyle(int style) {
         sp.edit().putInt("bar_style", style).apply();
-    }
-
-    /** True once the glass pop-up that asks for the permission has been shown, so it is shown only once. */
-    boolean barsAsked() {
-        return sp.getBoolean("bars_asked", false);
-    }
-
-    void setBarsAsked(boolean asked) {
-        sp.edit().putBoolean("bars_asked", asked).apply();
     }
 
     // ---- appearance ----------------------------------------------------------

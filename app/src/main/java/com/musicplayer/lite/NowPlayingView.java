@@ -72,22 +72,27 @@ public class NowPlayingView extends LinearLayout {
         plain = ColorStateList.valueOf(context.getColor(R.color.icon));
 
         more.setOnClickListener(v -> {
+            Haptics.tap(v);
             Track t = service == null ? null : service.currentTrack();
             if (t != null && moreListener != null) moreListener.onMore(t);
         });
         favorite.setOnClickListener(v -> {
+            Haptics.tap(v);
             Track t = service == null ? null : service.currentTrack();
             if (t == null) return;
             // The Favorites listener redraws the heart here and in every other view that shows it.
             if (favorites.toggle(t)) pop(favorite);
         });
         play.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.togglePlayPause();
         });
         next.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.next(true);
         });
         prev.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.previous();
         });
         final View cover = (View) art.getParent();
@@ -95,6 +100,7 @@ public class NowPlayingView extends LinearLayout {
             if (!Prefs.get(getContext()).coverTapSkip() || service == null) return false;
             if (e.getActionMasked() == MotionEvent.ACTION_DOWN) return true;   // keep the touch to see it lift
             if (e.getActionMasked() == MotionEvent.ACTION_UP && v.getWidth() > 0) {
+                Haptics.tap(v);
                 final float x = e.getX() / v.getWidth();
                 if (x < 1f / 3f) service.previous();
                 else if (x > 2f / 3f) service.next(true);
@@ -104,9 +110,11 @@ public class NowPlayingView extends LinearLayout {
             return false;
         });
         shuffle.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.setShuffle(!service.queue().isShuffle());
         });
         repeat.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.cycleRepeat();
         });
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

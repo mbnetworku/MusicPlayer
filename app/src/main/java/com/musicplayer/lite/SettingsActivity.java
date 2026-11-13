@@ -30,8 +30,6 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
 
     private TextView action;
     private TextView secondary;
-    private Switch barsSwitch;
-    private boolean syncingBars;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -60,7 +58,6 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     @Override
     protected void onResume() {
         super.onResume();
-        syncBarsSwitch();   // the permission may have been changed in Android's own settings
         // Back from Android's "install unknown apps" screen with the permission granted: carry on.
         if (updater.state() == Updater.State.NEEDS_PERMISSION && Updater.canInstall(this)) {
             updater.install(this);
@@ -107,27 +104,23 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             recreate();
         });
 
+        Switch vibrate = setupRow(R.id.row_vibrate, R.string.set_vibrate, R.string.set_vibrate_sub, true);
+        vibrate.setChecked(prefs.vibrate());
+        vibrate.setOnCheckedChangeListener((b, on) -> {
+            prefs.setVibrate(on);
+            if (on) Haptics.tap(b);
+        });
+        Switch buzz = setupRow(R.id.row_vibrate_playing, R.string.set_vibrate_playing,
+                R.string.set_vibrate_playing_sub, true);
+        buzz.setChecked(prefs.vibratePlaying());
+        buzz.setOnCheckedChangeListener((b, on) -> {
+            prefs.setVibratePlaying(on);
+            if (on) Haptics.tap(b);
+        });
         Switch tapSkip = setupRow(R.id.row_cover_tap, R.string.set_cover_tap, R.string.set_cover_tap_sub, true);
         tapSkip.setChecked(prefs.coverTapSkip());
         tapSkip.setOnCheckedChangeListener((b, on) -> prefs.setCoverTapSkip(on));
         bindBarStyle();
-        barsSwitch = setupRow(R.id.row_bars, R.string.set_bars, R.string.set_bars_sub, true);
-        syncBarsSwitch();
-        barsSwitch.setOnCheckedChangeListener((b, on) -> {
-            if (syncingBars) return;
-            prefs.setBarsFollow(on);
-            if (!on) {
-                SoundBars.get(this).refresh();
-            } else if (Permissions.hasRecord(this)) {
-                SoundBars.get(this).refresh();
-            } else {
-                // Explain first, then Android asks. "Not allowed" puts the switch back.
-                Permissions.askForBars(this, REQ_BARS, () -> {
-                    prefs.setBarsFollow(false);
-                    syncBarsSwitch();
-                });
-            }
-        });
     }
 
     private void bindBarStyle() {
@@ -137,27 +130,6 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         g.setOnCheckedChangeListener((group, id) -> {
             for (int i = 0; i < ids.length; i++) if (ids[i] == id) prefs.setBarStyle(i);
         });
-    }
-
-    /** On only when the bars may follow the sound and Android has said yes. */
-    private void syncBarsSwitch() {
-        syncingBars = true;
-        barsSwitch.setChecked(prefs.barsFollow() && Permissions.hasRecord(this));
-        syncingBars = false;
-    }
-
-    @Override
-    protected void onBarsPermission(boolean granted) {
-        if (granted) {
-            prefs.setBarsFollow(true);
-        } else {
-            prefs.setBarsFollow(false);
-            if (!shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
-                Permissions.askForSettings(this, R.drawable.ic_bars, R.string.perm_bars_title,
-                        R.string.perm_bars_settings, null);
-            }
-        }
-        syncBarsSwitch();
     }
 
     // ---- glass background --------------------------------------------------------------------------

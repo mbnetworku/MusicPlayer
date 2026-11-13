@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.7.0] - 2026-11-13
+
+- Removed: the microphone permission. The app no longer asks for it and no longer has "Bars follow the music". The moving bars are an animation. The app reads no audio.
+- New: Vibration. In Settings, "Vibration" gives a short buzz when you tap a song, a button or a tab. It is on by default and follows Android's own touch feedback setting.
+- New: "Vibrate while music plays" gives a soft pulse about twice a second while a song plays. It is off until you turn it on. It is a steady pulse, not matched to the beat of the song.
+
 ## [1.6.0] - 2026-11-12
 
 - New: tap the cover to skip. Turn it on in Settings under "Tap the cover to skip". On the Now Playing picture, tap the left side for the previous song, the right side for the next song, and the middle to play or pause. It is off until you turn it on.

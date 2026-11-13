@@ -113,7 +113,7 @@ final class TestMedia {
     static void resetSingletons() {
         DELETED.clear();
         EqBarsView.resetClock();
-        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class, Favorites.class, SoundBars.class}) {
+        for (Class<?> c : new Class<?>[]{Library.class, Prefs.class, ArtLoader.class, Updater.class, Favorites.class}) {
             try {
                 java.lang.reflect.Field f = c.getDeclaredField("instance");
                 f.setAccessible(true);

@@ -19,9 +19,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <!-- Only for the bars that follow the music: Android's Visualizer needs it, even though it only
-         reads this app's own sound and never the microphone. Asked for once, in a glass pop-up. -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Only for the optional vibration while music plays. Android grants it without asking. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Only for updates: looking for a newer release on GitHub and downloading it. Music never uses the network. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,10 +29,6 @@
     <!-- Car head units and TV boxes may not report a touchscreen the way phones do. -->
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
-    <!-- The permission above implies a microphone; the app works without one. -->
-    <uses-feature
-        android:name="android.hardware.microphone"
         android:required="false" />
 
     <queries>

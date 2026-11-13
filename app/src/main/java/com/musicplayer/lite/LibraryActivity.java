@@ -135,12 +135,18 @@ public class LibraryActivity extends BoundActivity
         adapter = new RowAdapter(this, this);
         adapter.setMoreListener((row, anchor) -> onRowLongClick(row));
         list.setAdapter(adapter);
-        list.setOnItemClickListener((p, v, position, id) -> onRowClick(adapter.getItem(position)));
+        list.setOnItemClickListener((p, v, position, id) -> {
+            Haptics.tap(v);
+            onRowClick(adapter.getItem(position));
+        });
         list.setOnItemLongClickListener((p, v, position, id) -> onRowLongClick(adapter.getItem(position)));
 
         for (int i = 0; i < tabViews.length; i++) {
             final int t = i;
-            tabViews[i].setOnClickListener(v -> selectTab(t));
+            tabViews[i].setOnClickListener(v -> {
+                Haptics.tap(v);
+                selectTab(t);
+            });
         }
         findViewById(R.id.btn_search).setOnClickListener(v -> toggleSearch());
         findViewById(R.id.search_close).setOnClickListener(v -> closeSearch());
@@ -259,7 +265,6 @@ public class LibraryActivity extends BoundActivity
         adapter.setCurrentTrack(t == null ? -1 : t.id);
         adapter.setPlaying(service.isPlaying());
         eqBars.setPlaying(service.isPlaying());
-        if (panel != null && service.isPlaying()) offerSoundBars();   // the car layout has the big bars here
         if (mini != null) mini.refresh();
         if (panel != null) panel.refresh();
     }

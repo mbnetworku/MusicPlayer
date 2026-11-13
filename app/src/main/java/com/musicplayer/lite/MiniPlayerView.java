@@ -39,9 +39,11 @@ public class MiniPlayerView extends LinearLayout {
         findViewById(R.id.mini_body).setOnClickListener(
                 v -> context.startActivity(new Intent(context, PlayerActivity.class)));
         play.setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.togglePlayPause();
         });
         findViewById(R.id.mini_next).setOnClickListener(v -> {
+            Haptics.tap(v);
             if (service != null) service.next(true);
         });
         setVisibility(GONE);

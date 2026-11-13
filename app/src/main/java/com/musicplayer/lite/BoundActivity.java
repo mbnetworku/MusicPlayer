@@ -27,7 +27,6 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     private static final int BACKDROP_ART_PX = 96;
     private static final int REQ_DELETE = 9001;
     private static final int REQ_WRITE = 9002;
-    protected static final int REQ_BARS = 9003;
 
     /** Non-null between {@link #onServiceReady()} and onStop. */
     protected PlaybackService service;
@@ -115,21 +114,6 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
 
     /** About twice a second while the screen is visible and the service is connected. */
     protected void onTick() {
-    }
-
-    /**
-     * Asks once, in a glass pop-up, whether the bars may follow the real sound (which Android
-     * counts as microphone access). Call it when music is playing on a screen that shows the big bars.
-     */
-    protected final void offerSoundBars() {
-        final Prefs prefs = Prefs.get(this);
-        if (prefs.barsAsked() || !prefs.barsFollow() || Permissions.hasRecord(this)) return;
-        prefs.setBarsAsked(true);
-        Permissions.askForBars(this, REQ_BARS, null);
-    }
-
-    /** The user answered Android's question about listening to the sound. */
-    protected void onBarsPermission(boolean granted) {
     }
 
     /** A song was added to the favorites or taken off, here or on another screen. Main thread. */
@@ -344,12 +328,6 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(requestCode, permissions, results);
-        if (requestCode == REQ_BARS) {
-            final boolean granted = results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED;
-            if (granted) SoundBars.get(this).refresh();
-            onBarsPermission(granted);
-            return;
-        }
         if (requestCode != REQ_WRITE) return;
         List<Track> asked = pendingDelete;
         pendingDelete = Collections.emptyList();

@@ -140,10 +140,12 @@
     <string name="bar_style_dots">Dots</string>
     <string name="bar_style_mirror">Mirror</string>
     <string name="bar_style_wave">Wave</string>
+    <string name="set_vibrate">Vibration</string>
+    <string name="set_vibrate_sub">A short buzz when you tap a song, a button or a tab. It also follows Android\'s own touch feedback setting.</string>
+    <string name="set_vibrate_playing">Vibrate while music plays</string>
+    <string name="set_vibrate_playing_sub">A soft pulse about twice a second while a song plays. It is a steady pulse, not matched to the beat of the song. Off until you turn it on.</string>
     <string name="set_cover_tap">Tap the cover to skip</string>
     <string name="set_cover_tap_sub">On the Now Playing picture, tap the left side for the previous song, the right side for the next song, and the middle to play or pause.</string>
-    <string name="set_bars">Bars follow the music</string>
-    <string name="set_bars_sub">The moving bars rise and fall with the sound of your music. Android calls the permission for this microphone access; the app only reads its own music.</string>
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels. Choose what is behind them below.</string>
 
@@ -214,9 +216,6 @@
     <string name="perm_write_settings">Android will not ask again. Open this app\'s settings, choose Permissions, and allow access to files and media.</string>
     <string name="perm_install_title">Allow installing updates?</string>
     <string name="perm_install_body">Android asks you once to let Music Player install apps. The app only installs files that come from this project\'s releases and carry its signature.</string>
-    <string name="perm_bars_title">Make the bars follow the music?</string>
-    <string name="perm_bars_body">To draw bars that move with your music, Android asks for microphone access. Music Player never uses the microphone: it only looks at the sound of its own music, and nothing is recorded or sent anywhere. If you say Not allowed, the bars still move, they just do not follow the sound. You can change this in Settings.</string>
-    <string name="perm_bars_settings">Android will not ask again. Open this app\'s settings, choose Permissions, and allow the microphone.</string>
     <string name="perm_wallpaper_title">Use your wallpaper?</string>
     <string name="perm_wallpaper_body">Music Player asks Android for your wallpaper picture. It stays on this device. If Android refuses, the wallpaper\'s colours are used instead.</string>
     <string name="action_favorite_add">Add to Favorites</string>

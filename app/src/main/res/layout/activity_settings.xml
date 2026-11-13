@@ -101,7 +101,11 @@
                     android:background="@color/divider" />
 
                 <include
-                    android:id="@+id/row_bars"
+                    android:id="@+id/row_vibrate"
+                    layout="@layout/row_setting" />
+
+                <include
+                    android:id="@+id/row_vibrate_playing"
                     layout="@layout/row_setting" />
 
                 <include

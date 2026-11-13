@@ -17,10 +17,6 @@ import java.util.List;
  * Bars that jump up and down while music plays and settle low when it is paused, like the
  * equalizer of a music app.
  *
- * <p>When the app may listen to its own sound (see {@link SoundBars}) the bars follow the real
- * sound: bass on the left, treble on the right. Otherwise they keep a motion of their own, which
- * is an animation and not a measurement of the sound.
- *
  * <p>All bar views share one clock (about 30 frames a second). The clock only runs while at least
  * one view is on screen and moving, so a paused, hidden or stopped player costs nothing. With the
  * system's animations switched off the bars stand still instead of moving.
@@ -176,8 +172,6 @@ public class EqBarsView extends View {
     private final float roundness;
     /** The shape the bars' own motion takes (null: no particular shape). */
     private final float[] ownShape;
-    /** Set while this view is holding the sound listener open. */
-    private SoundBars sound;
 
     private boolean playing;
     /** 0 = resting, 1 = moving. Eases between them while the clock runs. */
@@ -298,19 +292,11 @@ public class EqBarsView extends View {
 
     private void joinClock() {
         if (!RUNNING.contains(this)) RUNNING.add(this);
-        if (sound == null) {
-            sound = SoundBars.get(getContext());
-            sound.acquire();
-        }
         schedule();
     }
 
     private void leaveClock() {
         RUNNING.remove(this);
-        if (sound != null) {
-            sound.release();
-            sound = null;
-        }
     }
 
     private void step(long nowMs, long dt) {
@@ -356,19 +342,11 @@ public class EqBarsView extends View {
         final long t = frozen ? frozenAt : (pinned >= 0 ? pinned : (motion ? clock : STILL_MS));
         final float radius = barWidth * roundness;
         final float bottom = getPaddingTop() + h;
-        // The real sound, when it is coming in; otherwise the bars' own motion.
-        final SoundBars live = sound != null && sound.following() ? sound : null;
-        final float[] shape = envelope != null ? envelope : (live == null ? ownShape : null);
+        final float[] shape = envelope != null ? envelope : ownShape;
         if (frames.length != n) frames = new float[n];
         final float[] fr = frames;
         for (int i = 0; i < n; i++) {
-            final float base;
-            if (live != null) {
-                final float rest = REST[i % REST.length] * restScale;
-                base = rest + (live.level(i, n) - rest) * moving;
-            } else {
-                base = height(i, t, moving, restScale);
-            }
+            final float base = height(i, t, moving, restScale);
             fr[i] = Math.max(0f, Math.min(1f, base * envelopeAt(shape, i, n)));
         }
         final int look = style >= 0 ? style : Prefs.get(getContext()).barStyle();

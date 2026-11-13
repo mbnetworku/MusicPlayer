@@ -67,6 +67,7 @@ public final class PlaybackService extends Service {
 
     private final IBinder binder = new LocalBinder();
     private final Handler main = new Handler(Looper.getMainLooper());
+    private BeatBuzz buzz;
     private final List<Listener> listeners = new ArrayList<>();
     private final PlayQueue queue = new PlayQueue();
 
@@ -131,7 +132,6 @@ public final class PlaybackService extends Service {
 
         effects = new EffectsController(this, audioSessionId);
         broadcastEffectSession(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
-        SoundBars.get(this).setSession(audioSessionId);
 
         // Bring back the last queue (paused, at the saved position) once the library is known.
         library.whenLoaded(this::restoreQueue);
@@ -179,7 +179,7 @@ public final class PlaybackService extends Service {
         releasePlayer();
         abandonFocus();
         unregisterNoisy();
-        SoundBars.get(this).setSession(0);
+        if (buzz != null) buzz.stop();
         broadcastEffectSession(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
         effects.release();
         session.release();
@@ -732,6 +732,8 @@ public final class PlaybackService extends Service {
     }
 
     private void updateSession() {
+        if (buzz == null) buzz = new BeatBuzz(this);
+        buzz.setPlaying(playing);
         Track t = queue.current();
         int state;
         if (t == null) state = PlaybackState.STATE_NONE;

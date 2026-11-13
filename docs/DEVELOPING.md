@@ -102,7 +102,7 @@ Use the same password for the store and the key: the default PKCS #12 key store 
 | `MediaDeleter` | Deleting songs: the system request on Android 11 and newer, direct deletion before. |
 | `DeviceEq` | The device equalizer (output mix) as far as Android allows, behind a small interface so it can be tested. |
 | `Favorites` | The hearted songs: remembered by file path, newest first, saved in the preferences, with listeners that refresh the screens. |
-| `EqBarsView`, `SoundBars`, `SpectrumAnalyzer`, `VisualizerSource` | The moving bars: one shared animation clock, the real sound through Android's Visualizer (listening only while bars are visible and playing), the arithmetic that turns an FFT into bars, and the bars' own motion when the sound is not available. |
+| `EqBarsView` | The moving bars: one shared animation clock and four designs (bars, dots, mirror, wave). The motion is an animation, not a measurement of the sound: the app has no microphone permission. |
 | `PlayerWidget`, `WidgetConfigActivity` | The home-screen widget and the screen where its style is chosen. |
 | `Updater`, `Release`, `ReleaseApi` | The update state machine (check, download, verify, install), GitHub release parsing, and the HTTPS download with a checksum. |
 | `ApkVerifier`, `UpdateInstaller`, `InstallReceiver` | Checks the downloaded file (package, version, signing key) and hands it to Android's `PackageInstaller`. |
