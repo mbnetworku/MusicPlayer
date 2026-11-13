@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.19.0] - 2026-11-13
+
+- New: the ambient background is alive. When "Ambient background" is on, the colours from the song drift slowly, like in Apple Music. They only move while the screen is in use, and not at all if the phone's animations are switched off.
+
 ## [1.18.0] - 2026-11-13
 
 - New: an "Ambient background" switch in Settings. When it is on, the colours of the song that is playing fill the background, like in Apple Music. When it is off, the background is pure black or pure white. It is off by default.

@@ -83,6 +83,13 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
         super.onResume();
         // The look was changed in Settings while this screen waited in the background.
         if (Appearance.signature(this) != look) recreate();
+        if (backdrop != null && coverBackdrop) backdrop.setDrifting(true);   // the ambient colours move while the screen is in use
+    }
+
+    @Override
+    protected void onPause() {
+        if (backdrop != null) backdrop.setDrifting(false);
+        super.onPause();
     }
 
     @Override

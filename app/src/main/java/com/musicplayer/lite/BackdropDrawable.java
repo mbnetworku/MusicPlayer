@@ -66,6 +66,10 @@ final class BackdropDrawable extends Drawable {
     private Layer incoming;
     private float fade;
     private ValueAnimator animator;
+    /** Where the slow drift of the ambient colours is, 0 to 1 around, and the animator that moves it. */
+    private float drift;
+    private ValueAnimator drifter;
+    private long lastDriftDraw;
 
     private Shader auroraBase;
     private final Shader[] glows = new Shader[3];
@@ -193,6 +197,11 @@ final class BackdropDrawable extends Drawable {
         float growX = b.width() * 0.08f;
         float growY = b.height() * 0.08f;
         dst.set(b.left - growX, b.top - growY, b.right + growX, b.bottom + growY);
+        if (drifter != null && !layer.crop) {
+            // The ambient colours drift slowly, a few percent in each direction, and never show an edge.
+            final double a = drift * 2 * Math.PI;
+            dst.offset((float) Math.sin(a) * b.width() * 0.035f, (float) Math.cos(a * 0.8) * b.height() * 0.025f);
+        }
         bitmapPaint.setAlpha(alpha);
         if (layer.crop) {
             cropTo(layer.bitmap.getWidth(), layer.bitmap.getHeight(), dst.width(), dst.height(), src);
@@ -212,6 +221,33 @@ final class BackdropDrawable extends Drawable {
         final int left = (bw - w) / 2;
         final int top = (bh - h) / 2;
         out.set(left, top, left + w, top + h);
+    }
+
+    /** Start or stop the slow drift of the colours (the ambient look). It stops by itself when animations are off. */
+    void setDrifting(boolean on) {
+        if (on && drifter == null && ValueAnimator.areAnimatorsEnabled()) {
+            drifter = ValueAnimator.ofFloat(0f, 1f);
+            drifter.setDuration(26000);
+            drifter.setInterpolator(new android.view.animation.LinearInterpolator());
+            drifter.setRepeatCount(ValueAnimator.INFINITE);
+            drifter.addUpdateListener(a -> {
+                // About 20 frames a second is plenty for a slow drift, and keeps the battery cost low.
+                final long now = android.os.SystemClock.uptimeMillis();
+                if (now - lastDriftDraw < 50) return;
+                lastDriftDraw = now;
+                drift = (float) a.getAnimatedValue();
+                invalidateSelf();
+            });
+            drifter.start();
+        } else if (!on && drifter != null) {
+            drifter.cancel();
+            drifter = null;
+            invalidateSelf();
+        }
+    }
+
+    boolean isDrifting() {
+        return drifter != null;
     }
 
     @Override
