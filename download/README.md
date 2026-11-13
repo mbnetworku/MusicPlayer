@@ -1,3 +1,7 @@
+> **These files are older test-key builds.** The newest version is on the
+> [Releases page](https://github.com/mbnetworku/MusicPlayer/releases/latest), built on GitHub and signed with the
+> owner's own key. An app from this folder cannot be updated to it without uninstalling first.
+
 # Downloads
 
 The APK files of Music Player. **`MusicPlayer.apk` is always the newest version.**

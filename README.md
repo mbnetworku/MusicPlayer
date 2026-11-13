@@ -9,7 +9,7 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 
 <br>
 
-<a href="https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer.apk"><img src="docs/download-button.svg" width="340" alt="Download the APK"></a>
+<a href="https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk"><img src="docs/download-button.svg" width="340" alt="Download the APK"></a>
 
 <br>
 
@@ -28,9 +28,9 @@ Looks like Apple Music &nbsp;·&nbsp; every folder &nbsp;·&nbsp; favorites &nbs
 
 | | |
 |---|---|
-| **Latest version** | **1.7.0**, 13 November 2026 · [what's new](#whats-new) |
-| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer.apk) · 171 KB · Android 8.0 or newer |
-| **This exact file** | [MusicPlayer-1.7.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk) · SHA-256 [`072ce501bf7b…`](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk.sha256) |
+| **Latest version** | **1.7.1**, 13 November 2026 · [what's new](#whats-new) |
+| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 171 KB · Android 8.0 or newer |
+| **This exact file** | [MusicPlayer-1.7.1.apk](https://github.com/mbnetworku/MusicPlayer/releases/download/v1.7.1/MusicPlayer-1.7.1.apk) · SHA-256 [`40865cbccee4…`](https://github.com/mbnetworku/MusicPlayer/releases/download/v1.7.1/MusicPlayer-1.7.1.apk.sha256) · signed with the owner's own key |
 | **All versions** | [the `download` folder](https://github.com/mbnetworku/MusicPlayer/tree/main/download) · [version history](#versions) |
 
 **Install it in three steps**
@@ -46,6 +46,8 @@ Good to know:
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.7.1**: the first version signed with your own key. Uninstall the old app once, then install this one; later updates install over it.
 
 **1.7.0**: no microphone permission; vibration on taps and an optional pulse while music plays (Settings)
 
@@ -71,7 +73,8 @@ The full list is in the [changelog](CHANGELOG.md).
 
 | Version | Date | Download | What changed |
 |---|---|---|---|
-| **1.7.0** (latest) | 2026-11-13 | [MusicPlayer-1.7.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk) | No microphone permission any more. Vibration on taps, and an optional soft pulse while music plays. |
+| **1.7.1** (latest) | 2026-11-13 | [MusicPlayer-1.7.1.apk](https://github.com/mbnetworku/MusicPlayer/releases/download/v1.7.1/MusicPlayer-1.7.1.apk) | Same app as 1.7.0, built on GitHub and signed with the owner's own key. Uninstall the old app once. |
+| 1.7.0 (test key) | 2026-11-13 | [MusicPlayer-1.7.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.7.0.apk) | No microphone permission any more. Vibration on taps, and an optional soft pulse while music plays. |
 | 1.6.0 | 2026-11-12 | [MusicPlayer-1.6.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.6.0.apk) | Tap the left or right of the cover to skip songs (turn it on in Settings). |
 | 1.5.0 | 2026-11-12 | [MusicPlayer-1.5.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.5.0.apk) | Sort your songs by title, artist, album, recently added or length, and reverse the order. |
 | 1.4.0 | 2026-11-12 | [MusicPlayer-1.4.0.apk](https://github.com/mbnetworku/MusicPlayer/raw/main/download/MusicPlayer-1.4.0.apk) | Choose the equalizer design: Bars, Dots, Mirror or Wave. |
