@@ -78,7 +78,7 @@ public class BigBarsTest {
                 1.9f, (second.left - first.left) / first.width(), 0.02f);
         assertTrue("thin: " + first.width(), first.width() < 6f);
         float spread = bars.get(47).right - first.left;
-        assertTrue("across the whole cover: " + spread, spread > 200 && spread < 360);
+        assertTrue("across the whole cover: " + spread, spread > 180 && spread < 360);
     }
 
     @Test

@@ -2,4 +2,6 @@
 <resources>
     <!-- True when the library and the player share one screen (car head units, tablets). -->
     <bool name="split_layout">false</bool>
+    <!-- The volume slider on Now Playing. Car screens have their own volume. -->
+    <bool name="np_show_volume">true</bool>
 </resources>

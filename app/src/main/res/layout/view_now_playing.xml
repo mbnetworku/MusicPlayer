@@ -213,5 +213,44 @@
                 android:contentDescription="@string/cd_repeat"
                 android:src="@drawable/ic_repeat" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/np_volume_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/np_side_pad"
+            android:paddingEnd="@dimen/np_side_pad"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_volume_low"
+                android:tint="@color/icon_dim" />
+
+            <SeekBar
+                android:id="@+id/np_volume"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/cd_volume"
+                android:maxHeight="4dp"
+                android:minHeight="4dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:progressDrawable="@drawable/seek_progress"
+                android:splitTrack="false"
+                android:thumb="@drawable/seek_thumb" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_volume_high"
+                android:tint="@color/icon_dim" />
+        </LinearLayout>
     </LinearLayout>
 </merge>

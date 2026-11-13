@@ -66,6 +66,7 @@ public class NowPlayingView extends LinearLayout {
         more = findViewById(R.id.np_more);
         favorite = findViewById(R.id.np_fav);
         bars = findViewById(R.id.np_bars);
+        bindVolume();
         favorites = Favorites.get(context);
         accent = ColorStateList.valueOf(context.getColor(R.color.accent_text));
         dim = ColorStateList.valueOf(context.getColor(R.color.icon_dim));
@@ -146,11 +147,13 @@ public class NowPlayingView extends LinearLayout {
         super.onAttachedToWindow();
         favorites.addListener(favoritesListener);
         syncFavorite();   // it may have changed while this view was away
+        listenForVolume();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         favorites.removeListener(favoritesListener);
+        stopListeningForVolume();
         super.onDetachedFromWindow();
     }
 
@@ -238,6 +241,80 @@ public class NowPlayingView extends LinearLayout {
             shownArt = "";
             art.setTag(R.id.tag_art, null);
             art.setImageDrawable(ArtLoader.get(c).placeholder("none"));
+        }
+    }
+
+    // ---- volume ---------------------------------------------------------------------------------
+
+    private SeekBar volume;
+    private android.media.AudioManager audio;
+    private final android.content.BroadcastReceiver volumeReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, android.content.Intent i) {
+            syncVolume();
+        }
+    };
+
+    private void bindVolume() {
+        final View row = findViewById(R.id.np_volume_row);
+        if (row == null) return;
+        if (!getResources().getBoolean(R.bool.np_show_volume)) {
+            row.setVisibility(GONE);
+            return;
+        }
+        audio = getContext().getSystemService(android.media.AudioManager.class);
+        volume = findViewById(R.id.np_volume);
+        if (audio == null || volume == null) {
+            row.setVisibility(GONE);
+            return;
+        }
+        volume.setMax(Math.max(1, audio.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)));
+        syncVolume();
+        volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) {
+                if (!fromUser) return;
+                try {
+                    audio.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, progress, 0);
+                } catch (SecurityException ignored) {
+                    // Do Not Disturb can refuse a change; the slider then goes back on the next sync.
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar bar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar bar) {
+                syncVolume();
+            }
+        });
+    }
+
+    /** The slider shows the phone's music volume, also after the volume buttons were pressed. */
+    void syncVolume() {
+        if (volume == null || audio == null) return;
+        volume.setProgress(audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC));
+    }
+
+    private void listenForVolume() {
+        if (volume == null) return;
+        final android.content.IntentFilter filter = new android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION");
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            getContext().registerReceiver(volumeReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            getContext().registerReceiver(volumeReceiver, filter);
+        }
+        syncVolume();
+    }
+
+    private void stopListeningForVolume() {
+        if (volume == null) return;
+        try {
+            getContext().unregisterReceiver(volumeReceiver);
+        } catch (IllegalArgumentException ignored) {
+            // Never registered.
         }
     }
 }

@@ -122,15 +122,15 @@ final class GlassDrawable extends Drawable {
                 hairline = strong ? 0x24000000 : 0x14000000;
             }
         } else if (night) {
-            fillColor = strong ? 0x33FFFFFF : 0x0FFFFFFF;
-            highlight = strong ? 0x2EFFFFFF : 0x1AFFFFFF;
+            fillColor = strong ? 0x30FFFFFF : 0x0AFFFFFF;
+            highlight = strong ? 0x2EFFFFFF : 0x1FFFFFFF;
             shade = 0x24000000;
             rimBright = 0x6BFFFFFF;
             rimFaint = 0x0DFFFFFF;
             hairline = 0;
         } else {
-            fillColor = strong ? 0xB3FFFFFF : 0x80FFFFFF;
-            highlight = 0x8CFFFFFF;
+            fillColor = strong ? 0xB3FFFFFF : 0x66FFFFFF;
+            highlight = 0x99FFFFFF;
             shade = 0x1A7A8CA0;
             rimBright = 0xF2FFFFFF;
             rimFaint = 0x59FFFFFF;

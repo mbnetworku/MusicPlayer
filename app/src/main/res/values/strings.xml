@@ -39,6 +39,7 @@
     <string name="cd_pause">Pause</string>
     <string name="cd_next">Next</string>
     <string name="cd_previous">Previous</string>
+    <string name="cd_volume">Volume</string>
     <string name="cd_shuffle">Shuffle</string>
     <string name="cd_repeat">Repeat</string>
     <string name="cd_album_art">Album art</string>

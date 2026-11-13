@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.12.0] - 2026-11-13
+
+- New: a volume slider on the Now Playing screen, with small speaker icons. It follows the phone's music volume, also when you press the volume buttons. It is hidden on car screens, which have their own volume.
+- Changed: new play, pause, previous and next icons in the iPhone style. The layout stays the same, and the equalizer button is still there.
+- Changed: the glass panels are clearer, so more of the colour behind them shows through.
+
 ## [1.11.0] - 2026-11-13
 
 - Changed: a more complete Liquid Glass look. Panels are clearer glass with bright edges at two opposite corners and a soft glow just inside, like a thick pane of glass.
