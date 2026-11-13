@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.20.0] - 2026-11-13
+
+- Changed: "Vibrate with the music" now follows the music itself. The phone buzzes on the strong low notes of the song, the drums and the bass. Heavy music gives a strong buzz, and quiet parts give none. The steady pulse is gone.
+- How it works: when a song starts, the app reads the song file once in the background and measures its bass. It does not use the microphone and records nothing. A song the phone cannot read gives no buzz. The option is off until you turn it on in Settings.
+
 ## [1.19.0] - 2026-11-13
 
 - New: the ambient background is alive. When "Ambient background" is on, the colours from the song drift slowly, like in Apple Music. They only move while the screen is in use, and not at all if the phone's animations are switched off.

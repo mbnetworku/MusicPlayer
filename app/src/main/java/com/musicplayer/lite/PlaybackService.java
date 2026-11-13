@@ -732,7 +732,8 @@ public final class PlaybackService extends Service {
     }
 
     private void updateSession() {
-        if (buzz == null) buzz = new BeatBuzz(this);
+        if (buzz == null) buzz = new BeatBuzz(this, this::position);
+        buzz.setTrack(queue.current());
         buzz.setPlaying(playing);
         Track t = queue.current();
         int state;

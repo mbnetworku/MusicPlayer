@@ -59,23 +59,30 @@ public class HapticsTest {
     }
 
     @Test
-    public void theMusicPulseRunsOnlyWhenOnAndPlaying() {
+    public void theBuzzFollowsTheEnvelopeOnlyWhenOnAndPlaying() {
         Application app = RuntimeEnvironment.getApplication();
         Prefs p = Prefs.get(app);
+        final int[] position = {0};
+        float[] heavy = new float[100];
+        java.util.Arrays.fill(heavy, 1f);
         p.setVibratePlaying(false);
-        BeatBuzz off = new BeatBuzz(app);
+        BeatBuzz off = new BeatBuzz(app, () -> position[0]);
         off.setPlaying(true);
-        org.robolectric.shadows.ShadowLooper.idleMainLooper(2000, java.util.concurrent.TimeUnit.MILLISECONDS);
-        assertEquals("off: no pulses", 0, off.pulses());
+        off.useEnvelope(heavy);
+        org.robolectric.shadows.ShadowLooper.idleMainLooper(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+        assertEquals("off: no buzz", 0, off.buzzes());
 
         p.setVibratePlaying(true);
-        BeatBuzz on = new BeatBuzz(app);
+        BeatBuzz on = new BeatBuzz(app, () -> position[0]);
         on.setPlaying(true);
-        org.robolectric.shadows.ShadowLooper.idleMainLooper(2100, java.util.concurrent.TimeUnit.MILLISECONDS);
-        assertEquals("four pulses in two seconds", 4, on.pulses());
+        on.useEnvelope(heavy);
+        org.robolectric.shadows.ShadowLooper.idleMainLooper(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+        assertTrue("heavy music buzzes", on.buzzes() > 10);
+        assertTrue("and strongly", on.lastStrength() > 200);
+        int before = on.buzzes();
         on.setPlaying(false);
-        org.robolectric.shadows.ShadowLooper.idleMainLooper(2000, java.util.concurrent.TimeUnit.MILLISECONDS);
-        assertEquals("paused: it stops", 4, on.pulses());
+        org.robolectric.shadows.ShadowLooper.idleMainLooper(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+        assertEquals("paused: it stops", before, on.buzzes());
         p.setVibratePlaying(false);
     }
 
