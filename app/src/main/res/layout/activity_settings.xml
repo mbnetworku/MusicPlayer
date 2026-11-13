@@ -15,6 +15,8 @@
 
         <ImageButton
             android:id="@+id/btn_back"
+            android:layout_marginStart="6dp"
+            android:tag="glass:pill"
             style="@style/IconButton"
             android:contentDescription="@string/cd_back"
             android:src="@drawable/ic_arrow_back" />

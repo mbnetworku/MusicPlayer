@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.21.0] - 2026-11-13
+
+- Changed: closer to the iPhone Music look. The back button on the player, the queue, Settings and the equalizer is a round glass button. Shuffle and repeat are white instead of red, dim when off and bright when on.
+
 ## [1.20.0] - 2026-11-13
 
 - Changed: "Vibrate with the music" now follows the music itself. The phone buzzes on the strong low notes of the song, the drums and the bass. Heavy music gives a strong buzz, and quiet parts give none. The steady pulse is gone.

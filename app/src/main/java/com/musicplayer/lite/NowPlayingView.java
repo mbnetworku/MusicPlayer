@@ -204,9 +204,9 @@ public class NowPlayingView extends LinearLayout {
 
         play.setImageResource(playing ? R.drawable.ic_pause : R.drawable.ic_play);
         play.setContentDescription(c.getString(playing ? R.string.cd_pause : R.string.cd_play));
-        shuffle.setImageTintList(shuffleOn ? accent : dim);
+        shuffle.setImageTintList(shuffleOn ? plain : dim);
         repeat.setImageResource(repeatMode == PlayQueue.REPEAT_ONE ? R.drawable.ic_repeat_one : R.drawable.ic_repeat);
-        repeat.setImageTintList(repeatMode == PlayQueue.REPEAT_OFF ? dim : accent);
+        repeat.setImageTintList(repeatMode == PlayQueue.REPEAT_OFF ? dim : plain);
         more.setVisibility(has ? VISIBLE : INVISIBLE);
         favorite.setVisibility(has ? VISIBLE : INVISIBLE);
         showFavorite(has && favorites.contains(t));
