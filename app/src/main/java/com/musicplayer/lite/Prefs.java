@@ -123,7 +123,7 @@ final class Prefs {
 
     /** What the glass look shows behind its panels: one of the Appearance.BG_* values. */
     int glassBackground() {
-        return sp.getInt("glass_bg", Appearance.BG_PLAIN);
+        return sp.getInt("glass_bg", Appearance.BG_COVER);
     }
 
     void setGlassBackground(int background) {

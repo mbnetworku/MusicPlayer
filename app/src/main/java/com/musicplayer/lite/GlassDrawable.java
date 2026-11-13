@@ -41,7 +41,10 @@ final class GlassDrawable extends Drawable {
     private final Paint bottom = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint rim = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint hair = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint glow = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final int glowColor;
     private final RectF rect = new RectF();
+    private final RectF rectGlow = new RectF();
     private int alpha = 255;
 
     /** Glass over a cover or a picture: mostly see-through. */
@@ -76,7 +79,7 @@ final class GlassDrawable extends Drawable {
         this.accent = accent;
         this.strong = strong;
         this.style = style;
-        cardRadius = (style == STYLE_DIALOG ? 28 : 24) * density;
+        cardRadius = (style == STYLE_DIALOG ? 28 : 26) * density;
         stroke = 1.2f * density;
 
         if (accent) {
@@ -133,6 +136,9 @@ final class GlassDrawable extends Drawable {
             rimFaint = 0x59FFFFFF;
             hairline = 0x0F000000;
         }
+        glowColor = style == STYLE_GLASS ? (night ? 0x22FFFFFF : 0x66FFFFFF) : 0;
+        glow.setStyle(Paint.Style.STROKE);
+        glow.setStrokeWidth(3.2f * density);
         fill.setColor(fillColor);
         rim.setStyle(Paint.Style.STROKE);
         rim.setStrokeWidth(stroke);
@@ -152,9 +158,14 @@ final class GlassDrawable extends Drawable {
                 highlight, transparent(highlight), Shader.TileMode.CLAMP));
         bottom.setShader(new LinearGradient(0, b.bottom, 0, b.bottom - b.height() * 0.35f,
                 shade, transparent(shade), Shader.TileMode.CLAMP));
-        int rimEnd = (((rimBright >>> 24) / 2) << 24) | transparent(rimBright);
+        // Light catches two opposite edges, top left and bottom right, like a thick pane of glass.
+        int rimEnd = (((rimBright >>> 24) * 3 / 4) << 24) | transparent(rimBright);
         rim.setShader(new LinearGradient(b.left, b.top, b.right, b.bottom,
-                new int[]{rimBright, rimFaint, rimEnd}, new float[]{0f, 0.55f, 1f}, Shader.TileMode.CLAMP));
+                new int[]{rimBright, rimFaint, rimFaint, rimEnd}, new float[]{0f, 0.32f, 0.68f, 1f},
+                Shader.TileMode.CLAMP));
+        // A soft inner glow just inside the rim, strongest at the top.
+        glow.setShader(new LinearGradient(0, b.top, 0, b.top + b.height() * 0.35f,
+                glowColor, transparent(glowColor), Shader.TileMode.CLAMP));
     }
 
     private float radiusFor(Rect b) {
@@ -174,6 +185,12 @@ final class GlassDrawable extends Drawable {
         canvas.drawRoundRect(rect, r, r, fill);
         canvas.drawRoundRect(rect, r, r, top);
         canvas.drawRoundRect(rect, r, r, bottom);
+        if (glowColor != 0) {
+            rectGlow.set(rect);
+            rectGlow.inset(2.2f * density, 2.2f * density);
+            float rg = Math.max(0f, r - 2.2f * density);
+            canvas.drawRoundRect(rectGlow, rg, rg, glow);
+        }
         canvas.drawRoundRect(rect, r, r, rim);
         if (hairline != 0) canvas.drawRoundRect(rect, r, r, hair);
         if (saved >= 0) canvas.restoreToCount(saved);

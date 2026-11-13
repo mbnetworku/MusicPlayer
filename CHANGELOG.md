@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.11.0] - 2026-11-13
+
+- Changed: a more complete Liquid Glass look. Panels are clearer glass with bright edges at two opposite corners and a soft glow just inside, like a thick pane of glass.
+- Changed: the background now takes its colours from the song's cover by default, and shows a soft coloured glow when nothing is playing. You can still choose white or black, a picture or your wallpaper in Settings.
+
 ## [1.10.0] - 2026-11-13
 
 - Changed: the look is now Liquid Glass by default, like the newest iPhone look. You can still switch it off in Settings.

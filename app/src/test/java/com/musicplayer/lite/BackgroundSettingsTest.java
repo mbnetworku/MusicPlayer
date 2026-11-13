@@ -46,15 +46,20 @@ public class BackgroundSettingsTest {
     }
 
     private ActivityController<SettingsActivity> open() {
+        return open(true);
+    }
+
+    private ActivityController<SettingsActivity> open(boolean fromWhitePage) {
+        if (fromWhitePage) prefs.setGlassBackground(Appearance.BG_PLAIN);
         return Robolectric.buildActivity(SettingsActivity.class).create().start().resume().visible();
     }
 
     @Test
-    public void aWhiteOrBlackPageIsTheDefault() {
-        ActivityController<SettingsActivity> c = open();
+    public void theCoverBackdropIsTheDefault() {
+        ActivityController<SettingsActivity> c = open(false);
         RadioGroup group = c.get().findViewById(R.id.bg_group);
-        assertEquals(R.id.bg_plain, group.getCheckedRadioButtonId());
-        assertEquals(Appearance.BG_PLAIN, prefs.glassBackground());
+        assertEquals(R.id.bg_cover, group.getCheckedRadioButtonId());
+        assertEquals(Appearance.BG_COVER, prefs.glassBackground());
         assertEquals("pick a picture from your gallery",
                 ((TextView) c.get().findViewById(R.id.bg_picture_sub)).getText().toString(),
                 app.getString(R.string.set_bg_picture_none));
