@@ -66,7 +66,7 @@ public class DeleteFlowTest {
     public void everySongRowHasAMoreButtonThatOpensTheGlassMenu() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
         ListView list = c.get().findViewById(R.id.list);
-        View row = list.getAdapter().getView(0, null, list);
+        View row = list.getAdapter().getView(TestMedia.songPos(list, 0), null, list);
         assertEquals(View.VISIBLE, row.findViewById(R.id.row_more).getVisibility());
 
         row.findViewById(R.id.row_more).performClick();
@@ -93,7 +93,7 @@ public class DeleteFlowTest {
     public void askingToDeleteAsksAgainAndNothingIsDeletedUntilYouAgree() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
         ListView list = c.get().findViewById(R.id.list);
-        list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
+        list.getAdapter().getView(TestMedia.songPos(list, 0), null, list).findViewById(R.id.row_more).performClick();
         deleteRow().performClick();
 
         // The confirmation: what is deleted, that it is for good, and a way out.
@@ -111,7 +111,7 @@ public class DeleteFlowTest {
         ReflectionHelpers.setStaticField(Build.VERSION.class, "SDK_INT", 29);
 
         ListView list = c.get().findViewById(R.id.list);
-        list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
+        list.getAdapter().getView(TestMedia.songPos(list, 0), null, list).findViewById(R.id.row_more).performClick();
         deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();
 
@@ -149,7 +149,7 @@ public class DeleteFlowTest {
         ReflectionHelpers.setStaticField(Build.VERSION.class, "SDK_INT", 28);
 
         ListView list = c.get().findViewById(R.id.list);
-        list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
+        list.getAdapter().getView(TestMedia.songPos(list, 0), null, list).findViewById(R.id.row_more).performClick();
         deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();       // confirm the delete
 
@@ -172,7 +172,7 @@ public class DeleteFlowTest {
     public void onAndroid11AndNewerTheSystemRequestIsUsedAndDeclineChangesNothing() throws Exception {
         ActivityController<LibraryActivity> c = openLibrary();
         ListView list = c.get().findViewById(R.id.list);
-        list.getAdapter().getView(0, null, list).findViewById(R.id.row_more).performClick();
+        list.getAdapter().getView(TestMedia.songPos(list, 0), null, list).findViewById(R.id.row_more).performClick();
         deleteRow().performClick();
         dialogView(R.id.gd_positive).performClick();
 

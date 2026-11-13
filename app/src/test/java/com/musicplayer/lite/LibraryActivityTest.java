@@ -46,10 +46,14 @@ public class LibraryActivityTest {
         ListView list = a.findViewById(R.id.list);
         assertEquals(View.VISIBLE, list.getVisibility());
         assertEquals(View.GONE, a.findViewById(R.id.empty).getVisibility());
-        assertEquals("all five songs are listed", 5, list.getAdapter().getCount());
+        int songs = 0;
+        for (int i = 0; i < list.getAdapter().getCount(); i++) {
+            if (((RowAdapter.Row) list.getAdapter().getItem(i)).type == RowAdapter.TRACK) songs++;
+        }
+        assertEquals("all five songs are listed", 5, songs);
         assertEquals("3 folders on internal storage + 1 on the SD card = 4",
                 "5 songs · 4 folders", ((TextView) a.findViewById(R.id.subtitle)).getText().toString());
-        RowAdapter.Row first = (RowAdapter.Row) list.getAdapter().getItem(0);
+        RowAdapter.Row first = (RowAdapter.Row) list.getAdapter().getItem(TestMedia.songPos(list, 0));
         assertEquals("sorted by title", "Ember", first.title);
 
         // Folders tab: a header, then the two storage volumes. Internal storage has only a
@@ -91,7 +95,7 @@ public class LibraryActivityTest {
         ((android.widget.EditText) a.findViewById(R.id.search_input)).setText("glass");
         assertEquals(1, list.getAdapter().getCount());
         a.findViewById(R.id.search_close).performClick();
-        assertEquals(5, list.getAdapter().getCount());
+        assertEquals("back on Songs: a Play row, five letters and five songs", 11, list.getAdapter().getCount());
         c.pause().stop().destroy();
     }
 
@@ -196,7 +200,7 @@ public class LibraryActivityTest {
         TestMedia.awaitLibrary(Library.get(app));
         ListView list = a.findViewById(R.id.list);
 
-        list.performItemClick(null, 0, 0);
+        list.performItemClick(null, TestMedia.songPos(list, 0), 0);
         TestMedia.idle();
 
         assertNotNull(service.currentTrack());

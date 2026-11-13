@@ -4,6 +4,10 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.15.0] - 2026-11-13
+
+- Changed: the Songs list follows the iPhone Music look. Play and Shuffle sit at the top, and a big letter (A, B, C…) starts each group of songs when the list is sorted by title. The quick letter index on the right still works.
+
 ## [1.14.0] - 2026-11-13
 
 - New: swipe the cover left or right to change song, like on an iPhone. The cover follows your finger and the next one slides in. Tapping the cover no longer skips songs. You can turn swiping off in Settings under "Swipe the cover to change song".

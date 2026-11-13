@@ -21,7 +21,9 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     static final int FOLDER = 1;
     static final int GROUP = 2;
     static final int HEADER = 3;
-    private static final int TYPES = 4;
+    /** The letter above a group of songs. */
+    static final int SECTION = 4;
+    private static final int TYPES = 5;
 
     static final int SUB_ARTIST_ALBUM = 0;
     static final int SUB_ARTIST = 1;
@@ -82,6 +84,10 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
 
         static Row header(String path, String title, String sub, boolean actions, Object tag) {
             return new Row(HEADER, title, sub, path, actions, null, 0, -1, 0, tag);
+        }
+
+        static Row section(String letter) {
+            return new Row(SECTION, letter, "", null, false, null, 0, -1, 0, null);
         }
 
         /** Songs, albums, artists and folders have songs behind them, so they have a menu. */
@@ -205,6 +211,10 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         sectionOfRow = new int[rows.size()];
         String last = null;
         for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).type == HEADER) {   // the Play and Shuffle row belongs to no letter
+                sectionOfRow[i] = 0;
+                continue;
+            }
             String s = Fmt.section(rows.get(i).title);
             if (!s.equals(last)) {
                 names.add(s);
@@ -247,12 +257,14 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
 
     @Override
     public boolean isEnabled(int position) {
-        return rows.get(position).type != HEADER;
+        final int type = rows.get(position).type;
+        return type != HEADER && type != SECTION;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Row r = rows.get(position);
+        if (r.type == SECTION) return sectionView(r, convertView, parent);
         return r.type == HEADER ? headerView(r, convertView, parent) : itemView(r, convertView, parent);
     }
 
@@ -292,6 +304,12 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
             h.art.setImageTintList(accentTint);
             h.art.setImageResource(r.icon);
         }
+        return v;
+    }
+
+    private View sectionView(Row r, View convertView, ViewGroup parent) {
+        View v = convertView != null ? convertView : inflater.inflate(R.layout.row_section, parent, false);
+        ((TextView) v.findViewById(R.id.sec_letter)).setText(r.title);
         return v;
     }
 

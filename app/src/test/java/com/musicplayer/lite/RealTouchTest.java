@@ -107,7 +107,11 @@ public class RealTouchTest {
 
     private static View firstRow(ListView list) {
         assertTrue("the list is laid out and has rows", list.getChildCount() > 0);
-        return list.getChildAt(0);
+        for (int i = 0; i < list.getChildCount(); i++) {   // skip the Play row and the letters
+            RowAdapter.Row r = (RowAdapter.Row) list.getAdapter().getItem(list.getFirstVisiblePosition() + i);
+            if (r.type != RowAdapter.HEADER && r.type != RowAdapter.SECTION) return list.getChildAt(i);
+        }
+        throw new AssertionError("no song row on screen");
     }
 
     @Test
@@ -155,10 +159,12 @@ public class RealTouchTest {
         ActivityController<LibraryActivity> c = openLibrary();
         LibraryActivity a = c.get();
         ListView list = a.findViewById(R.id.list);
-        tap(a, list.getChildAt(0));
+        tap(a, firstRow(list));
         assertEquals("Ember", service.currentTrack().title);
         measure(a);
-        tap(a, list.getChildAt(1));
+        list.setSelection(TestMedia.songPos(list, 1));   // bring the second song to the top of the list
+        measure(a);
+        tap(a, firstRow(list));
         assertEquals("Glass Cities", service.currentTrack().title);
         c.pause().stop().destroy();
     }
@@ -194,6 +200,8 @@ public class RealTouchTest {
         ActivityController<LibraryActivity> c = openLibrary();
         LibraryActivity a = c.get();
         ListView list = a.findViewById(R.id.list);
+        list.setSelection(TestMedia.songPos(list, 0));   // the short screen first shows the Play row and a letter
+        measure(a);
         tap(a, firstRow(list));
         assertNotNull(service.currentTrack());
         c.pause().stop().destroy();
@@ -364,7 +372,7 @@ public class RealTouchTest {
         ActivityController<LibraryActivity> c = openLibrary();
         LibraryActivity a = c.get();
         ListView list = a.findViewById(R.id.list);
-        long before = ((RowAdapter.Row) list.getAdapter().getItem(0)).track.id;
+        long before = ((RowAdapter.Row) list.getAdapter().getItem(TestMedia.songPos(list, 0))).track.id;
         tap(a, a.findViewById(R.id.btn_more));
         Dialog d = openDialog();
         assertNotNull("the menu opened", d);
@@ -382,7 +390,7 @@ public class RealTouchTest {
         assertNotNull(recent);
         clickRowOf(recent);
         TestMedia.idle();
-        long after = ((RowAdapter.Row) list.getAdapter().getItem(0)).track.id;
+        long after = ((RowAdapter.Row) list.getAdapter().getItem(TestMedia.songPos(list, 0))).track.id;
         assertEquals(SortOrder.ARTIST, Prefs.get(app).sortKey());
         assertTrue("the first song changed", before != after);
         c.pause().stop().destroy();

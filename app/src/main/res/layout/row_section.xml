@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The big letter above a group of songs: A, B, C. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sec_letter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/gutter"
+    android:paddingTop="16dp"
+    android:paddingEnd="@dimen/gutter"
+    android:paddingBottom="4dp"
+    android:textColor="@color/text_primary"
+    android:textSize="20sp"
+    android:textStyle="bold" />

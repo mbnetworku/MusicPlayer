@@ -392,7 +392,19 @@ public class LibraryActivity extends BoundActivity
             default: {
                 List<Track> src = sorted(searching ? library.search(query) : library.tracks());
                 context = src;
+                final boolean letters = !searching && prefs.sortKey() == SortOrder.TITLE && !prefs.sortReverse();
+                if (!searching && !src.isEmpty()) {
+                    rows.add(RowAdapter.Row.header("", "", "", true, new TrackList(src)));   // Play and Shuffle
+                }
+                String lastLetter = "";
                 for (int i = 0; i < src.size(); i++) {
+                    if (letters) {
+                        final String letter = Fmt.section(src.get(i).title);
+                        if (!letter.equals(lastLetter)) {
+                            rows.add(RowAdapter.Row.section(letter));
+                            lastLetter = letter;
+                        }
+                    }
                     rows.add(RowAdapter.Row.track(src.get(i), RowAdapter.SUB_ARTIST_ALBUM, i));
                 }
                 indexed = !searching && prefs.sortKey() == SortOrder.TITLE && !prefs.sortReverse();

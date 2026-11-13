@@ -151,4 +151,14 @@ final class TestMedia {
     static void idle() {
         shadowOf(Looper.getMainLooper()).idle();
     }
+
+    /** The position, in a list, of the n-th song row (the list also holds a Play row and letter rows). */
+    static int songPos(android.widget.ListView list, int n) {
+        int seen = 0;
+        for (int i = 0; i < list.getAdapter().getCount(); i++) {
+            RowAdapter.Row r = (RowAdapter.Row) list.getAdapter().getItem(i);
+            if (r.type == RowAdapter.TRACK && seen++ == n) return i;
+        }
+        throw new AssertionError("no song row number " + n);
+    }
 }

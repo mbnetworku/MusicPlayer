@@ -141,14 +141,14 @@ public class FavoritesUiTest {
         LibraryActivity a = c.get();
         ListView list = list(a);
 
-        openMenu(list, 0);                                   // Ember
+        openMenu(list, TestMedia.songPos(list, 0));                                   // Ember
         View add = sheetItem("Add to Favorites");
         assertNotNull(add);
         add.performClick();
         assertEquals("Added to Favorites", ShadowToast.getTextOfLatestToast());
         assertTrue(Favorites.get(app).contains(songNamed("Ember")));
 
-        openMenu(list, 1);                                   // Glass Cities
+        openMenu(list, TestMedia.songPos(list, 1));                                   // Glass Cities
         sheetItem("Add to Favorites").performClick();
 
         a.findViewById(R.id.tab_favorites).performClick();
@@ -173,7 +173,7 @@ public class FavoritesUiTest {
         ListView list = list(a);
         Favorites.get(app).toggle(songNamed("Ember"));
 
-        openMenu(list, 0);
+        openMenu(list, TestMedia.songPos(list, 0));
         assertNull("it is already one", sheetItem("Add to Favorites"));
         sheetItem("Remove from Favorites").performClick();
         assertEquals("Removed from Favorites", ShadowToast.getTextOfLatestToast());
@@ -235,14 +235,14 @@ public class FavoritesUiTest {
         ListView list = list(a);
         Favorites.get(app).toggle(songNamed("Ember"));
 
-        View ember = list.getAdapter().getView(0, null, list);
-        View glass = list.getAdapter().getView(1, null, list);
+        View ember = list.getAdapter().getView(TestMedia.songPos(list, 0), null, list);
+        View glass = list.getAdapter().getView(TestMedia.songPos(list, 1), null, list);
         assertEquals(View.VISIBLE, ember.findViewById(R.id.row_fav).getVisibility());
         assertEquals(View.GONE, glass.findViewById(R.id.row_fav).getVisibility());
 
         Favorites.get(app).toggle(songNamed("Ember"));
         assertEquals("the heart goes with the favorite", View.GONE,
-                list.getAdapter().getView(0, null, list).findViewById(R.id.row_fav).getVisibility());
+                list.getAdapter().getView(TestMedia.songPos(list, 0), null, list).findViewById(R.id.row_fav).getVisibility());
 
         // Folder, album and artist rows are not songs: no heart.
         a.findViewById(R.id.tab_albums).performClick();
@@ -348,7 +348,7 @@ public class FavoritesUiTest {
         ReflectionHelpers.setStaticField(Build.VERSION.class, "SDK_INT", 29);
         Favorites.get(app).add(Arrays.asList(songNamed("Ember"), songNamed("Sunday Static")));
 
-        openMenu(list(a), 0);                                 // Ember
+        openMenu(list(a), TestMedia.songPos(list(a), 0));                                 // Ember
         LinearLayout items = ShadowDialog.getLatestDialog().findViewById(R.id.gd_items);
         items.getChildAt(items.getChildCount() - 1).performClick();   // Delete…
         ShadowDialog.getLatestDialog().findViewById(R.id.gd_positive).performClick();
@@ -500,24 +500,24 @@ public class FavoritesUiTest {
         assertFalse("nothing plays yet", top.isPlaying());
         assertEquals(View.GONE, mini.getVisibility());
 
-        list.performItemClick(null, 0, 0);                      // Ember
+        list.performItemClick(null, TestMedia.songPos(list, 0), 0);   // Ember
         TestMedia.idle();
         assertTrue(top.isPlaying());
         assertEquals(View.VISIBLE, mini.getVisibility());
         assertTrue(mini.isPlaying());
 
-        View playingRow = list.getAdapter().getView(0, null, list);
+        View playingRow = list.getAdapter().getView(TestMedia.songPos(list, 0), null, list);
         EqBarsView bars = playingRow.findViewById(R.id.row_playing);
         assertEquals(View.VISIBLE, bars.getVisibility());
         assertTrue(bars.isPlaying());
-        View otherRow = list.getAdapter().getView(1, null, list);
+        View otherRow = list.getAdapter().getView(TestMedia.songPos(list, 1), null, list);
         assertEquals("only the current song", View.GONE, otherRow.findViewById(R.id.row_playing).getVisibility());
 
         service.togglePlayPause();                              // pause
         TestMedia.idle();
         assertFalse(top.isPlaying());
         assertEquals("the mini player keeps quiet while paused", View.GONE, mini.getVisibility());
-        playingRow = list.getAdapter().getView(0, null, list);
+        playingRow = list.getAdapter().getView(TestMedia.songPos(list, 0), null, list);
         assertEquals("the current song is still marked", View.VISIBLE, playingRow.findViewById(R.id.row_playing).getVisibility());
         assertFalse("but its bars rest", ((EqBarsView) playingRow.findViewById(R.id.row_playing)).isPlaying());
         c.pause().stop().destroy();

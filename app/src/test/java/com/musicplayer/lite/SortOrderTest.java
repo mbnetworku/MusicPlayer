@@ -71,7 +71,7 @@ public class SortOrderTest {
         TestMedia.awaitLibrary(Library.get(app));
         TestMedia.idle();
         ListView list = a.findViewById(R.id.list);
-        RowAdapter.Row first = (RowAdapter.Row) list.getAdapter().getItem(0);
+        RowAdapter.Row first = (RowAdapter.Row) list.getAdapter().getItem(TestMedia.songPos(list, 0));
         long newest = 0;
         for (Track x : Library.get(app).tracks()) newest = Math.max(newest, x.id);
         assertEquals("newest file first", newest, first.track.id);
