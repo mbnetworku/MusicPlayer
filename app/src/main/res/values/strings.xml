@@ -150,6 +150,8 @@
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels.</string>
 
+    <string name="set_ambient">Ambient background</string>
+    <string name="set_ambient_sub">Colours from the song that is playing fill the background. Off is pure black or white.</string>
     <string name="set_playing">Playing</string>
     <string name="set_library">Library</string>
     <string name="set_show_all">Show all audio files</string>

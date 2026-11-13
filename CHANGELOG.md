@@ -4,6 +4,11 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.18.0] - 2026-11-13
+
+- New: an "Ambient background" switch in Settings. When it is on, the colours of the song that is playing fill the background, like in Apple Music. When it is off, the background is pure black or pure white. It is off by default.
+- Fixed: after the Settings screen was rebuilt, for example after you turned the screen, one switch could copy the position of another and flip a setting such as Liquid Glass by itself. Each switch now keeps its own setting.
+
 ## [1.17.0] - 2026-11-13
 
 - Changed: the background is pure black in dark mode and pure white in light mode, with no colour. The colourful background from the song cover is no longer the default. You can still choose it, a picture or your wallpaper in Settings.

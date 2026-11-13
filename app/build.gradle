@@ -2,9 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
-// Version: set it in one place. `-PappVersion=1.17.0` overrides the default (the release
+// Version: set it in one place. `-PappVersion=1.18.0` overrides the default (the release
 // workflow does this). versionCode is derived: major * 10000 + minor * 100 + patch.
-def appVersion = (project.findProperty('appVersion') ?: '1.17.0').toString()
+def appVersion = (project.findProperty('appVersion') ?: '1.18.0').toString()
 def versionParts = appVersion.tokenize('.').collect { (it.replaceAll('[^0-9]', '') ?: '0') as int }
 while (versionParts.size() < 3) versionParts << 0
 def appVersionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
@@ -79,6 +79,10 @@ android {
     testOptions {
         unitTests {
             returnDefaultValues = true
+            // The screens are built many times over in the tests; the default memory is too small for that.
+            all {
+                maxHeapSize = '1536m'
+            }
             // Robolectric smoke tests need the merged manifest and resources.
             includeAndroidResources = true
             all {

@@ -43,6 +43,11 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         bindAppearance();
         bindBackground();
+        final Switch ambient = setupRow(R.id.row_ambient, R.string.set_ambient, R.string.set_ambient_sub, true);
+        ambient.setSaveEnabled(false);   // the setting is read again below, never restored from an old state
+        ambient.setChecked(prefs.glassBackground() == Appearance.BG_COVER);
+        ambient.setOnCheckedChangeListener((b, on) ->
+                applyBackground(on ? Appearance.BG_COVER : Appearance.BG_PLAIN));
         bindLibrary();
         bindUpdates();
         ((TextView) findViewById(R.id.about_text)).setText(R.string.about_body);
@@ -485,6 +490,9 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             subView.setVisibility(View.VISIBLE);
         }
         final Switch toggle = row.findViewById(R.id.set_switch);
+        // Every row's switch has the same id, so Android would copy one switch's saved position onto the
+        // others when the screen is rebuilt. Each switch is set from its own saved setting instead.
+        toggle.setSaveEnabled(false);
         if (withSwitch) {
             toggle.setVisibility(View.VISIBLE);
             row.setOnClickListener(v -> toggle.toggle());
@@ -496,7 +504,10 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     private static void badge(View row, int rowId) {
         final int icon;
         final int color;
-        if (rowId == R.id.row_glass) {
+        if (rowId == R.id.row_ambient) {
+            icon = R.drawable.ic_music_note;
+            color = 0xFFAF52DE;
+        } else if (rowId == R.id.row_glass) {
             icon = R.drawable.ic_image;
             color = 0xFF5856D6;
         } else if (rowId == R.id.row_vibrate) {

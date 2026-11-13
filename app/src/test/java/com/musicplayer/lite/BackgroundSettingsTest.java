@@ -165,4 +165,26 @@ public class BackgroundSettingsTest {
         prefs.setGlass(false);
         assertFalse("flat looks are never glass", Appearance.glassPlain(app));
     }
+
+    @Test
+    public void theAmbientSwitchIsOffByDefaultAndTurnsTheCoverColoursOn() {
+        prefs.setGlassBackground(Appearance.BG_PLAIN);
+        ActivityController<SettingsActivity> c = open(false);
+        android.widget.Switch ambient = c.get().findViewById(R.id.row_ambient).findViewById(R.id.set_switch);
+        assertFalse("off by default: a pure black or white page", ambient.isChecked());
+        ambient.setChecked(true);
+        assertEquals(Appearance.BG_COVER, prefs.glassBackground());
+        c.pause().stop().destroy();
+    }
+
+    @Test
+    public void theAmbientSwitchShowsTheSavedChoiceAndTurnsOff() {
+        prefs.setGlassBackground(Appearance.BG_COVER);
+        ActivityController<SettingsActivity> c = open(false);
+        android.widget.Switch ambient = c.get().findViewById(R.id.row_ambient).findViewById(R.id.set_switch);
+        assertTrue("it shows the saved choice", ambient.isChecked());
+        ambient.setChecked(false);
+        assertEquals(Appearance.BG_PLAIN, prefs.glassBackground());
+        c.pause().stop().destroy();
+    }
 }
