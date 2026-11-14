@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.25.3] - 2026-11-14
+
+- Fixed: "Can't play this file" on a USB drive in a car stereo. A song that cannot be opened one way is now tried the other way, by its file path or by its address in the music library. When one way works, the app uses it first for the next songs.
+- New: the message now says why, for example "Can't play this file: the file could not be read". Settings, under About, shows the last song that did not play and the reason.
+- Fixed: a device that cannot vibrate, such as most car stereos, no longer reads every song file for "Vibrate with the music". That also takes load off a slow USB drive.
+
 ## [1.25.2] - 2026-11-14
 
 - Fixed: the cover pictures no longer pile up when you scroll very fast through a long list. Only the newest requests wait, and the cover of the song that is playing is never held up.

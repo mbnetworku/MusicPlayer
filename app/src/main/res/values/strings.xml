@@ -97,6 +97,15 @@
     <string name="toast_play_next">Will play next</string>
     <string name="toast_skipped">Skipped a file that can\'t be played</string>
     <string name="toast_cant_play">Can\'t play this file</string>
+    <string name="toast_cant_play_reason">Can\'t play this file: %1$s</string>
+    <string name="reason_io">the file could not be read</string>
+    <string name="reason_unsupported">this format is not supported</string>
+    <string name="reason_malformed">the file is damaged</string>
+    <string name="reason_timeout">it took too long to start</string>
+    <string name="reason_open">the file could not be opened</string>
+    <string name="reason_unknown">error %1$d, %2$d</string>
+    <string name="diag_play_failed">%1$d songs could not be played.</string>
+    <string name="diag_play_last">The last one: %1$s</string>
 
     <string name="eq_title">Equalizer</string>
     <string name="eq_custom">Custom</string>

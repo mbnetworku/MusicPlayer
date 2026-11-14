@@ -59,6 +59,7 @@ final class BeatBuzz {
         cancel.set(true);
         cancel = new AtomicBoolean();
         if (track == null || !Prefs.get(context).vibratePlaying()) return;
+        if (!hasVibrator()) return;   // nothing could buzz, so the file is not read at all
         if (track.durationMs > EnvelopeDecoder.MAX_DURATION_MS) {
             Diag.count(Diag.BASS_TOO_LONG);   // a very long recording: reading all of it would take too long
             return;
@@ -91,6 +92,11 @@ final class BeatBuzz {
                 }
             });
         });
+    }
+
+    private boolean hasVibrator() {
+        final Vibrator v = context.getSystemService(Vibrator.class);
+        return v != null && v.hasVibrator();
     }
 
     /** Tell it whether music is playing now. */

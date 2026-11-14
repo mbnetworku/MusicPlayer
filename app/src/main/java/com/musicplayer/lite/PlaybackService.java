@@ -382,6 +382,22 @@ public final class PlaybackService extends Service {
 
     // ---- starting a track -----------------------------------------------------------
 
+    /** The two ways to open a song: by its content address (the default) or by its file path. */
+    private static final int WAY_AUTO = 0;
+    private static final int WAY_PATH = 1;
+    private static final int WAY_URI = 2;
+    /** How the next start opens the song. Set when the first way failed, so the other is tried. */
+    private int nextWay = WAY_AUTO;
+    /** The song that is loading was opened by its file path. */
+    private boolean viaPath;
+    /** The song whose other way in was already tried, so it is tried only once. */
+    private long otherWayTriedFor = -1;
+    /** Songs failed by one way and worked by the other: from now on the way that worked goes first. */
+    private boolean preferPath;
+    /** Why the last song could not be played: a MediaPlayer error code, or one of the values below. */
+    private static final int WHY_OPEN = -9001;
+    private static final int WHY_TIMEOUT = -9002;
+
     private void startCurrent(boolean autoPlay, int startMs) {
         Track t = queue.current();
         releasePlayer();
@@ -399,6 +415,10 @@ public final class PlaybackService extends Service {
         }
         final int gen = ++generation;
         loadArt(t, gen);
+        final boolean byPath = !t.dir.isEmpty()
+                && (nextWay == WAY_PATH || (nextWay == WAY_AUTO && preferPath));
+        nextWay = WAY_AUTO;
+        viaPath = byPath;
 
         MediaPlayer mp = new MediaPlayer();
         player = mp;
@@ -409,16 +429,17 @@ public final class PlaybackService extends Service {
             mp.setOnPreparedListener(m -> onPrepared(gen));
             mp.setOnCompletionListener(m -> onCompleted(gen));
             mp.setOnErrorListener((m, what, extra) -> {
-                onError(gen);
+                onError(gen, what, extra);
                 return true;
             });
-            mp.setDataSource(getApplicationContext(), t.uri());
+            if (byPath) mp.setDataSource(t.path());
+            else mp.setDataSource(getApplicationContext(), t.uri());
             mp.prepareAsync();
             timeoutGeneration = gen;
             main.removeCallbacks(prepareTimeout);
             main.postDelayed(prepareTimeout, PREPARE_TIMEOUT_MS);
         } catch (Exception e) {
-            onError(gen);
+            onError(gen, WHY_OPEN, 0);
             return;
         }
         updateSession();
@@ -431,6 +452,11 @@ public final class PlaybackService extends Service {
         main.removeCallbacks(prepareTimeout);
         prepared = true;
         errorStreak = 0;
+        final Track ready = queue.current();
+        if (ready != null && otherWayTriedFor == ready.id) {
+            preferPath = viaPath;   // the first way failed for this song and this one worked: use it first from now on
+        }
+        otherWayTriedFor = -1;
         if (pendingSeek > 0) {
             try {
                 player.seekTo(pendingSeek, MediaPlayer.SEEK_CLOSEST);
@@ -509,16 +535,44 @@ public final class PlaybackService extends Service {
     }
 
     private void onError(int gen) {
+        onError(gen, 0, 0);
+    }
+
+    /** The words for an error code, so that the message says why a song did not play. */
+    private String reasonFor(int what, int extra) {
+        if (what == WHY_TIMEOUT || extra == MediaPlayer.MEDIA_ERROR_TIMED_OUT) return getString(R.string.reason_timeout);
+        if (what == WHY_OPEN) return getString(R.string.reason_open);
+        if (extra == MediaPlayer.MEDIA_ERROR_IO) return getString(R.string.reason_io);
+        if (extra == MediaPlayer.MEDIA_ERROR_UNSUPPORTED) return getString(R.string.reason_unsupported);
+        if (extra == MediaPlayer.MEDIA_ERROR_MALFORMED) return getString(R.string.reason_malformed);
+        return getString(R.string.reason_unknown, what, extra);
+    }
+
+    private void onError(int gen, int what, int extra) {
         if (gen != generation) return;
         main.removeCallbacks(prepareTimeout);
+        final boolean wasLoading = !prepared;
+        final boolean byPath = viaPath;
+        final Track failed = queue.current();
         releasePlayer();
         playing = false;
         prepared = false;
+        // A song that could not be opened one way is tried once the other way, by file path or by content
+        // address. Some car stereos and old Android versions open a USB drive only one of the two ways.
+        if (wasLoading && failed != null && otherWayTriedFor != failed.id && what != WHY_TIMEOUT
+                && (byPath || !failed.dir.isEmpty())) {
+            otherWayTriedFor = failed.id;
+            nextWay = byPath ? WAY_URI : WAY_PATH;
+            startCurrent(wantPlay, pendingSeek);
+            return;
+        }
+        final String reason = reasonFor(what, extra);
+        Diag.playFailed((failed == null ? "" : failed.title + ": ") + reason);
         errorStreak++;
         if (errorStreak > Math.min(queue.size(), 5)) {
             errorStreak = 0;
             wantPlay = false;
-            Toast.makeText(this, R.string.toast_cant_play, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_cant_play_reason, reason), Toast.LENGTH_LONG).show();
             updateSession();
             postNotification();
             notifyChanged();
@@ -561,7 +615,7 @@ public final class PlaybackService extends Service {
     private final Runnable prepareTimeout = () -> {
         if (timeoutGeneration == generation && player != null && !prepared) {
             Diag.count(Diag.PREPARE_TIMEOUT);
-            onError(generation);
+            onError(generation, WHY_TIMEOUT, 0);
         }
     };
 
