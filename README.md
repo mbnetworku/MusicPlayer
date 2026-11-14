@@ -28,7 +28,7 @@ iPhone Music look &nbsp;·&nbsp; Liquid Glass &nbsp;·&nbsp; every folder &nbsp;
 
 | | |
 |---|---|
-| **Latest version** | **1.25.0**, 14 November 2026 · [what's new](#whats-new) |
+| **Latest version** | **1.25.1**, 14 November 2026 · [what's new](#whats-new) |
 | **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 204 KB · Android 8.0 or newer |
 | **All versions** | [the Releases page](https://github.com/mbnetworku/MusicPlayer/releases) · [version history](#versions) |
 
@@ -42,10 +42,12 @@ Good to know:
 
 * **Updates install over the old app and keep your settings.** Every version from 1.7.1 is built by GitHub and signed with the owner's own private key. The app also offers new versions itself, with a pop-up while you use it.
 * **Versions before 1.7.1 used a different test key.** If you still have one, uninstall it once and install the latest version. After that, updates install over it.
-* It is a young app, checked by 353 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
+* It is a young app, checked by 360 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.25.1**: **the vibration follows the bass better.** A light bass gives a gentle buzz, a medium bass a firmer one, and a heavy bass the full buzz without gaps. The buzz also starts a little ahead of the sound, so it is felt with the beat.
 
 **1.25.0**: **None** for the equalizer design (Settings → Equalizer design): no moving bars on the cover, in the mini player or in the lists. And a **redesigned Settings** screen in the New design: rounded groups with coloured icons and rounded segmented choices.
 
@@ -79,7 +81,8 @@ Every row is a release you can download. Newest first.
 
 | Version | Date | What changed |
 |---|---|---|
-| **[1.25.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.0)** (latest) | 2026-11-14 | None for the equalizer design. Redesigned Settings in the New design. |
+| **[1.25.1](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.1)** (latest) | 2026-11-14 | The vibration follows the bass: gentle for light bass, full for heavy bass. |
+| [1.25.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.0) | 2026-11-14 | None for the equalizer design. Redesigned Settings in the New design. |
 | [1.24.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.24.0) | 2026-11-14 | The New (iOS Liquid Glass) design as an option next to Classic, with its own choice for the playing screen. |
 | [1.23.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.23.0) | 2026-11-13 | Glass transparency setting. See-through glass. |
 | [1.22.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.22.0) | 2026-11-13 | Round glass search button next to the mini player. |
@@ -207,7 +210,7 @@ The app remembers your queue and position and carries on where you left off.
 <summary><b>Vibration</b></summary>
 
 * **Vibration** (on by default): a short buzz when you tap a song, a button or a tab. It also follows Android's own touch feedback setting.
-* **Vibrate with the music** (off until you turn it on): the phone buzzes on the strong low notes of the song, the drums and the bass. Heavy music gives a strong buzz and quiet parts give none. When a song starts, the app reads the song file once in the background and measures its bass. It does not use the microphone and records nothing. A song the phone cannot read gives no buzz.
+* **Vibrate with the music** (off until you turn it on): the phone buzzes on the strong low notes of the song, the drums and the bass. A light bass gives a gentle buzz, a heavy bass gives the full buzz without gaps, and quiet parts give none. When a song starts, the app reads the song file once in the background and measures its bass. It does not use the microphone and records nothing. A song the phone cannot read gives no buzz.
 
 </details>
 
@@ -267,7 +270,7 @@ The app remembers your queue and position and carries on where you left off.
 
 ## Status and limits
 
-* **Checked:** 353 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
+* **Checked:** 360 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
 * **Not yet run on many real phones or car stereos.** Actual sound output, the hardware equalizer, notifications, head-unit details, and how the new features feel on a real device have not been checked. This includes swiping the cover, dragging the player down, the volume slider, the ambient drift and the New design (which was checked by tests and by renders of the real screens, not on a real phone or car stereo).
 * **Vibrating with the music** reads each song file once, which uses some battery. Its strength control depends on your phone: a phone that cannot vary the strength buzzes at one strength.
 * The glass look is see-through but not blurred (see above).
