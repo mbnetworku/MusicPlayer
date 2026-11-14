@@ -15,7 +15,7 @@ iPhone Music look &nbsp;·&nbsp; Liquid Glass &nbsp;·&nbsp; every folder &nbsp;
 
 <a href="https://github.com/mbnetworku/MusicPlayer/releases/latest"><img src="https://img.shields.io/github/v/release/mbnetworku/MusicPlayer?label=version&color=E5202B&style=for-the-badge" alt="Latest version"></a>
 <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0 and newer">
-<img src="https://img.shields.io/badge/APK-208%20KB-555555?style=for-the-badge" alt="APK size 208 KB">
+<img src="https://img.shields.io/badge/APK-210%20KB-555555?style=for-the-badge" alt="APK size 210 KB">
 <a href="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml"><img src="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml/badge.svg" alt="Build status" height="28"></a>
 
 <br><br>
@@ -28,8 +28,8 @@ iPhone Music look &nbsp;·&nbsp; Liquid Glass &nbsp;·&nbsp; every folder &nbsp;
 
 | | |
 |---|---|
-| **Latest version** | **1.25.3**, 14 November 2026 · [what's new](#whats-new) |
-| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 208 KB · Android 8.0 or newer |
+| **Latest version** | **1.25.4**, 14 November 2026 · [what's new](#whats-new) |
+| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 210 KB · Android 8.0 or newer |
 | **All versions** | [the Releases page](https://github.com/mbnetworku/MusicPlayer/releases) · [version history](#versions) |
 
 **Install it in three steps**
@@ -42,10 +42,12 @@ Good to know:
 
 * **Updates install over the old app and keep your settings.** Every version from 1.7.1 is built by GitHub and signed with the owner's own private key. The app also offers new versions itself, with a pop-up while you use it.
 * **Versions before 1.7.1 used a different test key.** If you still have one, uninstall it once and install the latest version. After that, updates install over it.
-* It is a young app, checked by 387 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
+* It is a young app, checked by 399 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.25.4**: **songs on a USB drive in a car radio with Android 14.** The app now has a third way to open a song: it reads the file itself and gives the bytes to the player. The ways are tried in turn (the music library's address, the file path, reading the file) and the one that works is remembered. If nothing works, the app offers once to open Android's **All files access** page, which some car radios need. Settings → Library has a row for it too.
 
 **1.25.3**: **fix for "Can't play this file" on a car USB drive.** A song that cannot be opened one way is now tried the other way (by its file path or by its address in the music library), and the way that worked goes first from then on. The message says why a song did not play, and Settings shows the last one. A device that cannot vibrate no longer reads song files for the bass buzz.
 
@@ -85,7 +87,8 @@ Every row is a release you can download. Newest first.
 
 | Version | Date | What changed |
 |---|---|---|
-| **[1.25.3](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.3)** (latest) | 2026-11-14 | Songs that fail to open are tried the other way. The message says why. |
+| **[1.25.4](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.4)** (latest) | 2026-11-14 | A third way to open songs, and an optional All files access step, for Android 14 car radios. |
+| [1.25.3](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.3) | 2026-11-14 | Songs that fail to open are tried the other way. The message says why. |
 | [1.25.2](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.2) | 2026-11-14 | Fixes from the queue and overload audit: limits, deadlines and a Background work note in Settings. |
 | [1.25.1](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.1) | 2026-11-14 | The vibration follows the bass: gentle for light bass, full for heavy bass. |
 | [1.25.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.0) | 2026-11-14 | None for the equalizer design. Redesigned Settings in the New design. |
@@ -268,6 +271,7 @@ The app remembers your queue and position and carries on where you left off.
 | `WAKE_LOCK` | Stop the CPU sleeping in the middle of a song. |
 | `MODIFY_AUDIO_SETTINGS` | Standard permission for apps that use audio effects. |
 | `VIBRATE` | The vibration options. Android grants it without asking. |
+| `MANAGE_EXTERNAL_STORAGE` (**optional**, Android 11+) | Only if you allow it on Android's own page: some car radios let an app open a USB drive only with it. Off until you turn it on. The app still only reads music. |
 | `WRITE_EXTERNAL_STORAGE` (Android 10 and older only) | Delete songs. Android 11 and newer never grant it and ask per delete instead. |
 | `INTERNET` | Only to look for updates and download them from GitHub. |
 | `REQUEST_INSTALL_PACKAGES` | Only so Android lets the app hand a downloaded update to the installer. |
@@ -276,7 +280,7 @@ The app remembers your queue and position and carries on where you left off.
 
 ## Status and limits
 
-* **Checked:** 387 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
+* **Checked:** 399 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
 * **Not yet run on many real phones or car stereos.** Actual sound output, the hardware equalizer, notifications, head-unit details, and how the new features feel on a real device have not been checked. This includes swiping the cover, dragging the player down, the volume slider, the ambient drift and the New design (which was checked by tests and by renders of the real screens, not on a real phone or car stereo).
 * **Vibrating with the music** reads each song file once, which uses some battery. Its strength control depends on your phone: a phone that cannot vary the strength buzzes at one strength.
 * The glass look is see-through but not blurred (see above).
