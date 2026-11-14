@@ -11,8 +11,8 @@ import java.util.Arrays;
 final class BassEnvelope {
     /** One value of the envelope covers this much of the song. */
     static final int WINDOW_MS = 50;
-    /** Notes below this pitch count as bass, in Hz. */
-    static final float CUTOFF_HZ = 150f;
+    /** Notes below this pitch count as bass, in Hz. Two filters in a row, so voices and guitars stay out. */
+    static final float CUTOFF_HZ = 200f;
     /** The bass loudness that counts as fully heavy, at least (about what ordinary music has). */
     static final float MIN_REFERENCE = 0.08f;
 
@@ -21,6 +21,7 @@ final class BassEnvelope {
     private final int windowFrames;
     private final float alpha;
     private final float[] low;
+    private final float[] lower;
     private float[] values = new float[256];
     private int count;
     private double sum;
@@ -32,6 +33,7 @@ final class BassEnvelope {
         this.windowFrames = Math.max(1, this.sampleRate * WINDOW_MS / 1000);
         this.alpha = (float) (1.0 - Math.exp(-2.0 * Math.PI * CUTOFF_HZ / this.sampleRate));
         this.low = new float[this.channels];
+        this.lower = new float[this.channels];
     }
 
     /** Sound as 16 bit numbers, the way the player's decoder gives it: the channels take turns. */
@@ -41,8 +43,9 @@ final class BassEnvelope {
             double energy = 0;
             for (int c = 0; c < channels; c++) {
                 final float x = pcm[f * channels + c] / 32768f;
-                low[c] += alpha * (x - low[c]);   // keeps only the low notes
-                energy += low[c] * low[c];
+                low[c] += alpha * (x - low[c]);             // keeps the low notes ...
+                lower[c] += alpha * (low[c] - lower[c]);    // ... and a second time, so the mids are cut harder
+                energy += lower[c] * lower[c];
             }
             sum += energy / channels;
             if (++framesInWindow >= windowFrames) closeWindow();
@@ -70,15 +73,33 @@ final class BassEnvelope {
         return out;
     }
 
+    /** Bass lighter than this (0 to 1, compared with the heaviest moments of the song) gives no buzz. */
+    static final float FLOOR = 0.12f;
+    /** From this much bass up, the buzz is the strongest there is and has no gaps. */
+    static final float HEAVY = 0.8f;
+    /** The weakest and the strongest buzz, as Android amplitudes (1 to 255). */
+    static final int WEAKEST = 30;
+    static final int STRONGEST = 255;
+    /** The strongest a buzz can be below {@link #HEAVY}: the last step up is for heavy bass only. */
+    private static final int BELOW_HEAVY = 230;
+    /** How much of its strength a steady bass keeps, when it is not a new beat. */
+    private static final float STEADY = 0.55f;
+    /** The buzz starts this early, because a phone's motor needs a moment to get going. */
+    static final int LEAD_MS = 40;
+
     /**
-     * How strong the buzz at window {@code i} should be, from 0 (none) to 255. A buzz is made when
-     * the bass is strong and has just risen, like a drum beat, and it is stronger for heavier bass.
-     * Heavy sections buzz on every window.
+     * How strong the buzz at window {@code i} should be, from 0 (none) to 255. It follows the bass:
+     * a light bass gives a gentle buzz, a medium bass a firmer one, and heavy bass the full buzz.
+     * A new beat (the bass has just risen) gets the full strength for its level; a bass that only
+     * stays where it was gets a softer buzz, so that a steady bass line does not drone.
      */
     static int strengthAt(float[] env, int i) {
         if (env == null || i < 0 || i >= env.length) return 0;
         final float e = env[i];
-        if (e < 0.22f) return 0;
+        if (e < FLOOR) return 0;
+        if (e >= HEAVY) return STRONGEST;
+        final float level = (e - FLOOR) / (HEAVY - FLOOR);
+        float strength = WEAKEST + (BELOW_HEAVY - WEAKEST) * level;
         float before = 0;
         int n = 0;
         for (int k = Math.max(0, i - 6); k < i; k++) {
@@ -86,9 +107,19 @@ final class BassEnvelope {
             n++;
         }
         final float average = n == 0 ? 0f : before / n;
-        final boolean hit = e > average * 1.25f + 0.05f;
-        final boolean heavy = e > 0.85f;
-        if (!hit && !heavy) return 0;
-        return Math.round(Math.min(255f, 40f + 215f * e * e));
+        final boolean beat = e > average * 1.2f + 0.03f;
+        if (!beat) strength *= STEADY;
+        return Math.round(Math.max(0f, Math.min(STRONGEST, strength)));
+    }
+
+    /**
+     * How long one buzz lasts: short for a gentle one, and longer than a window for the strongest,
+     * so that heavy bass runs on without a gap, "complete".
+     */
+    static int durationMs(int strength) {
+        if (strength >= 230) return WINDOW_MS + 30;
+        if (strength >= 150) return 55;
+        if (strength >= 80) return 40;
+        return 25;
     }
 }

@@ -79,4 +79,75 @@ public class BassEnvelopeTest {
         assertTrue("the hit buzzes", BassEnvelope.strengthAt(env, 20) > 100);
         assertTrue("outside the song nothing buzzes", BassEnvelope.strengthAt(env, 400) == 0);
     }
+
+    /** A song that is quiet, then has one moment of bass at this level (a new beat). */
+    private static float[] beatAt(float level) {
+        float[] env = new float[40];
+        java.util.Arrays.fill(env, 0.02f);
+        env[20] = level;
+        return env;
+    }
+
+    @Test
+    public void lightBassGivesAGentleBuzz() {
+        int s = BassEnvelope.strengthAt(beatAt(0.2f), 20);
+        assertTrue("a light bass is felt: " + s, s >= BassEnvelope.WEAKEST);
+        assertTrue("but it is gentle: " + s, s < 90);
+    }
+
+    @Test
+    public void mediumBassGivesAFirmerBuzz() {
+        int s = BassEnvelope.strengthAt(beatAt(0.5f), 20);
+        assertTrue("firmer than gentle: " + s, s > 100);
+        assertTrue("not yet the full buzz: " + s, s < 200);
+    }
+
+    @Test
+    public void heavyBassGivesTheFullBuzzWithoutGaps() {
+        for (float level : new float[]{0.8f, 0.9f, 1f}) {
+            int s = BassEnvelope.strengthAt(beatAt(level), 20);
+            assertEquals("heavy bass is the strongest buzz", BassEnvelope.STRONGEST, s);
+            assertTrue("and it lasts longer than a window, so the next buzz joins it",
+                    BassEnvelope.durationMs(s) > BassEnvelope.WINDOW_MS);
+        }
+        float[] steadyHeavy = new float[40];
+        java.util.Arrays.fill(steadyHeavy, 0.95f);
+        for (int i = 0; i < steadyHeavy.length; i++) {
+            assertEquals("every window of a heavy section buzzes fully", BassEnvelope.STRONGEST,
+                    BassEnvelope.strengthAt(steadyHeavy, i));
+        }
+    }
+
+    @Test
+    public void aHeavierBassNeverBuzzesWeaker() {
+        int last = 0;
+        for (int step = 0; step <= 100; step++) {
+            float level = step / 100f;
+            int s = BassEnvelope.strengthAt(beatAt(level), 20);
+            assertTrue("level " + level + " gave " + s + " after " + last, s >= last);
+            last = s;
+        }
+    }
+
+    @Test
+    public void aGentleBuzzIsShorterThanAFullOne() {
+        assertTrue(BassEnvelope.durationMs(40) < BassEnvelope.durationMs(120));
+        assertTrue(BassEnvelope.durationMs(120) < BassEnvelope.durationMs(200));
+        assertTrue(BassEnvelope.durationMs(200) < BassEnvelope.durationMs(255));
+    }
+
+    @Test
+    public void aSteadyBassIsSofterThanANewBeatAtTheSameLevel() {
+        float[] steady = new float[40];
+        java.util.Arrays.fill(steady, 0.5f);
+        int steadyStrength = BassEnvelope.strengthAt(steady, 20);
+        int beatStrength = BassEnvelope.strengthAt(beatAt(0.5f), 20);
+        assertTrue("steady " + steadyStrength + " against beat " + beatStrength, steadyStrength < beatStrength);
+        assertTrue("a steady bass still gives some buzz", steadyStrength > 0);
+    }
+
+    @Test
+    public void theBuzzStartsABitBeforeTheSound() {
+        assertTrue(BassEnvelope.LEAD_MS > 0 && BassEnvelope.LEAD_MS < BassEnvelope.WINDOW_MS * 2);
+    }
 }

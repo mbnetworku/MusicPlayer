@@ -132,7 +132,9 @@ final class BeatBuzz {
             stopTicking();
             return;
         }
-        final int strength = BassEnvelope.strengthAt(envelope, positionMs.getAsInt() / (int) STEP_MS);
+        // A little ahead of the sound: the motor needs a moment before the buzz is felt.
+        final int strength = BassEnvelope.strengthAt(envelope,
+                (positionMs.getAsInt() + BassEnvelope.LEAD_MS) / (int) STEP_MS);
         if (strength > 0) buzz(strength);
         handler.postDelayed(tick, STEP_MS);
     }
@@ -143,7 +145,7 @@ final class BeatBuzz {
         final Vibrator v = context.getSystemService(Vibrator.class);
         if (v == null || !v.hasVibrator()) return;
         final int amplitude = v.hasAmplitudeControl() ? strength : VibrationEffect.DEFAULT_AMPLITUDE;
-        v.vibrate(VibrationEffect.createOneShot(strength > 180 ? 55 : 35, amplitude));
+        v.vibrate(VibrationEffect.createOneShot(BassEnvelope.durationMs(strength), amplitude));
     }
 
     int lastStrength() {

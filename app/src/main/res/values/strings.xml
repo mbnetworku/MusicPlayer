@@ -147,7 +147,7 @@
     <string name="set_vibrate">Vibration</string>
     <string name="set_vibrate_sub">A short buzz when you tap.</string>
     <string name="set_vibrate_playing">Vibrate with the music</string>
-    <string name="set_vibrate_playing_sub">The phone buzzes with the bass of the song: stronger for heavy music, nothing for quiet parts. It reads the song file, not the microphone.</string>
+    <string name="set_vibrate_playing_sub">The phone buzzes with the bass of the song: a light bass gives a gentle buzz, a heavy bass gives a full buzz that does not stop, and quiet parts give none. It reads the song file, not the microphone.</string>
     <string name="set_cover_tap">Swipe the cover to change song</string>
     <string name="set_cover_tap_sub">Swipe left for the next song, right for the previous one.</string>
     <string name="set_design">Design</string>

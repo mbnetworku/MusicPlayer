@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.25.1] - 2026-11-14
+
+- Fixed: "Vibrate with the music" now follows the bass much better. A light bass gives a gentle buzz, a medium bass a firmer one, and a heavy bass gives the full buzz without gaps. Before, a light bass was mostly ignored and a heavy bass never reached full strength.
+- Changed: the buzz starts a little ahead of the sound, so it is felt together with the beat and not after it.
+- Changed: the bass is now measured with a sharper filter, so voices and guitars count less and the drums and the bass line count more.
+
 ## [1.25.0] - 2026-11-14
 
 - New: "None" for the equalizer design. In Settings, under Equalizer design, choose None to turn the moving bars off everywhere: on the cover, in the mini player and in the song lists. The Equalizer button stays, as a still picture, so you can still open the equalizer.
