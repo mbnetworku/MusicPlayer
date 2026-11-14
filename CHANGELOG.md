@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.25.4] - 2026-11-14
+
+- Fixed: songs on a USB drive in a car radio with Android 14 that said "Can't play this file". The app now has a third way to open a song: it reads the file itself and gives the bytes to the player. The ways are tried in turn: the music library's address, the file path, then reading the file. The way that works is remembered, also after the app is closed.
+- New: if no way works, the app offers once to open Android's "All files access" page, which some car radios need before an app may read a USB drive. Settings, under Library, has a row for it too. It is optional, and the app still only reads music.
+- Changed: a song that cannot be played in any way is given up at once when it is the only song in the queue, and the note in Settings says how many ways were tried.
+
 ## [1.25.3] - 2026-11-14
 
 - Fixed: "Can't play this file" on a USB drive in a car stereo. A song that cannot be opened one way is now tried the other way, by its file path or by its address in the music library. When one way works, the app uses it first for the next songs.

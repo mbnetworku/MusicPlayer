@@ -69,9 +69,18 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         render();
     }
 
+    /** Says whether the permission is on (it is changed on Android's own page, so this is read again on return). */
+    private void refreshAllFilesRow() {
+        final View row = findViewById(R.id.row_all_files);
+        if (row == null || row.getVisibility() != View.VISIBLE) return;
+        ((TextView) row.findViewById(R.id.set_sub)).setText(
+                Permissions.hasAllFiles() ? R.string.set_all_files_on : R.string.set_all_files_sub);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        refreshAllFilesRow();
         // Back from Android's "install unknown apps" screen with the permission granted: carry on.
         if (updater.state() == Updater.State.NEEDS_PERMISSION && Updater.canInstall(this)) {
             updater.install(this);
@@ -343,6 +352,16 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         View scan = findViewById(R.id.row_scan);
         setupRow(R.id.row_scan, R.string.set_scan, R.string.set_scan_sub, false);
         scan.setOnClickListener(v -> startScan());
+
+        // Android 11 and newer: the special permission that some car radios need to play from a USB drive.
+        final View allFiles = findViewById(R.id.row_all_files);
+        if (!Permissions.allFilesNeeded()) {
+            allFiles.setVisibility(View.GONE);
+        } else {
+            setupRow(R.id.row_all_files, R.string.set_all_files, R.string.set_all_files_sub, false);
+            allFiles.setOnClickListener(v -> Permissions.openAllFilesSettings(this));
+            refreshAllFilesRow();
+        }
     }
 
     private void startScan() {
@@ -587,6 +606,9 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         } else if (rowId == R.id.row_scan) {
             icon = R.drawable.ic_refresh;
             color = 0xFF34C759;
+        } else if (rowId == R.id.row_all_files) {
+            icon = R.drawable.ic_folder;
+            color = 0xFFFF9500;
         } else if (rowId == R.id.row_auto) {
             icon = R.drawable.ic_system_update;
             color = 0xFFFF3B30;

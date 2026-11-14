@@ -310,6 +310,11 @@ public class LibraryActivity extends BoundActivity
         eqBars.setPlaying(service.isPlaying());
         if (mini != null) mini.refresh();
         if (panel != null) panel.refresh();
+        // Songs on a USB drive would not open: offer "All files access" once (Settings keeps a row for it later).
+        if (service.takeAllFilesHint() && !prefs.askedAllFiles() && !isFinishing()) {
+            prefs.setAskedAllFiles(true);
+            Permissions.askForAllFiles(this);
+        }
     }
 
     @Override

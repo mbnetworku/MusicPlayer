@@ -98,6 +98,11 @@
     <string name="toast_skipped">Skipped a file that can\'t be played</string>
     <string name="toast_cant_play">Can\'t play this file</string>
     <string name="toast_cant_play_reason">Can\'t play this file: %1$s</string>
+    <string name="perm_allfiles_title">Allow access to all files?</string>
+    <string name="perm_allfiles_body">This car radio does not let the app play songs from the USB drive the normal way. If you allow access to all files in Android\'s settings, the songs can play. The app still only reads music, and nothing is sent anywhere.</string>
+    <string name="set_all_files">Allow access to all files</string>
+    <string name="set_all_files_sub">Needed on some car radios to play from a USB drive. Opens Android\'s settings.</string>
+    <string name="set_all_files_on">Allowed. The app can open songs on a USB drive directly.</string>
     <string name="reason_io">the file could not be read</string>
     <string name="reason_unsupported">this format is not supported</string>
     <string name="reason_malformed">the file is damaged</string>
@@ -105,6 +110,7 @@
     <string name="reason_open">the file could not be opened</string>
     <string name="reason_unknown">error %1$d, %2$d</string>
     <string name="diag_play_failed">%1$d songs could not be played.</string>
+    <string name="diag_ways_tried"> (%1$d ways tried)</string>
     <string name="diag_play_last">The last one: %1$s</string>
 
     <string name="eq_title">Equalizer</string>

@@ -85,6 +85,50 @@ final class Permissions {
                 .show();
     }
 
+    // ---- all files access (optional) -------------------------------------------------------------------
+
+    /** Android 11 and newer have this special permission; older versions do not need it. */
+    static boolean allFilesNeeded() {
+        return Build.VERSION.SDK_INT >= 30;
+    }
+
+    /** For the tests: pretend the permission is on or off. Null uses Android's answer. */
+    static Boolean allFilesForTests;
+
+    static boolean hasAllFiles() {
+        if (allFilesForTests != null) return allFilesForTests;
+        try {
+            return Build.VERSION.SDK_INT >= 30 && android.os.Environment.isExternalStorageManager();
+        } catch (RuntimeException e) {
+            return false;   // a radio whose system cannot answer: treat it as not allowed, and never crash the player
+        }
+    }
+
+    /** Opens Android's own page where the user allows or refuses access to all files. */
+    static void openAllFilesSettings(Activity a) {
+        try {
+            a.startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.fromParts("package", a.getPackageName(), null)));
+        } catch (android.content.ActivityNotFoundException e) {
+            try {
+                a.startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
+            } catch (android.content.ActivityNotFoundException ignored) {
+                openAppSettings(a);   // a radio without that page: the app's general page
+            }
+        }
+    }
+
+    /** Explains why, then opens that page. Asked once on its own; Settings has a row for later. */
+    static void askForAllFiles(final Activity a) {
+        GlassDialog.alert(a)
+                .icon(R.drawable.ic_folder)
+                .title(R.string.perm_allfiles_title)
+                .message(R.string.perm_allfiles_body)
+                .positive(R.string.perm_open_settings, () -> openAllFilesSettings(a))
+                .negative(R.string.perm_not_now, null)
+                .show();
+    }
+
     static void openAppSettings(Activity a) {
         a.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.fromParts("package", a.getPackageName(), null)));

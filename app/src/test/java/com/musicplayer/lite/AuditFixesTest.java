@@ -170,11 +170,10 @@ public class AuditFixesTest {
         assertEquals(0, Diag.get(Diag.PREPARE_TIMEOUT));
         ShadowLooper.idleMainLooper(PlaybackService.PREPARE_TIMEOUT_MS + 1000, TimeUnit.MILLISECONDS);
         assertEquals("the deadline passed: it counts as an error", 1, Diag.get(Diag.PREPARE_TIMEOUT));
-        // The player tries the next song (here the same one again). When that is too slow too, it gives up
-        // and does not keep waiting for ever.
-        ShadowLooper.idleMainLooper(PlaybackService.PREPARE_TIMEOUT_MS + 1000, TimeUnit.MILLISECONDS);
-        assertEquals(2, Diag.get(Diag.PREPARE_TIMEOUT));
+        // It was the only song, so there is nothing to skip to: the player gives up and does not wait for ever.
         assertFalse("and it stops trying", service.isPlaying());
+        ShadowLooper.idleMainLooper(PlaybackService.PREPARE_TIMEOUT_MS + 1000, TimeUnit.MILLISECONDS);
+        assertEquals("no second wait", 1, Diag.get(Diag.PREPARE_TIMEOUT));
     }
 
     @Test

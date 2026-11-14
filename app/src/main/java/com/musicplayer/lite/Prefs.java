@@ -94,6 +94,29 @@ final class Prefs {
         sp.edit().putInt("sort_key", key).putBoolean("sort_reverse", reverse).apply();
     }
 
+    // ---- how songs are opened -----------------------------------------------------
+
+    /** The way that worked after another failed (PlaybackService.WAY_*), so it goes first next time too. */
+    int playWay() {
+        final int v = sp.getInt("play_way", PlaybackService.WAY_URI);
+        return v == PlaybackService.WAY_PATH || v == PlaybackService.WAY_STREAM ? v : PlaybackService.WAY_URI;
+    }
+
+    void setPlayWay(int way) {
+        sp.edit().putInt("play_way", way).apply();
+    }
+
+    // ---- all files access ---------------------------------------------------------
+
+    /** The pop-up that offers "All files access" was shown once already. */
+    boolean askedAllFiles() {
+        return sp.getBoolean("asked_all_files", false);
+    }
+
+    void setAskedAllFiles(boolean asked) {
+        sp.edit().putBoolean("asked_all_files", asked).apply();
+    }
+
     // ---- moving bars --------------------------------------------------------------
 
     /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave, 4 none (no moving bars at all). */

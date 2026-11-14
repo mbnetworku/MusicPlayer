@@ -109,6 +109,7 @@ public final class PlaybackService extends Service {
     public void onCreate() {
         super.onCreate();
         prefs = Prefs.get(this);
+        preferredWay = prefs.playWay();   // the way that worked last time on this device
         library = Library.get(this);
         audio = getSystemService(AudioManager.class);
         notifications = getSystemService(NotificationManager.class);
@@ -382,18 +383,26 @@ public final class PlaybackService extends Service {
 
     // ---- starting a track -----------------------------------------------------------
 
-    /** The two ways to open a song: by its content address (the default) or by its file path. */
-    private static final int WAY_AUTO = 0;
-    private static final int WAY_PATH = 1;
-    private static final int WAY_URI = 2;
-    /** How the next start opens the song. Set when the first way failed, so the other is tried. */
-    private int nextWay = WAY_AUTO;
-    /** The song that is loading was opened by its file path. */
-    private boolean viaPath;
-    /** The song whose other way in was already tried, so it is tried only once. */
-    private long otherWayTriedFor = -1;
-    /** Songs failed by one way and worked by the other: from now on the way that worked goes first. */
-    private boolean preferPath;
+    /**
+     * The ways to open a song. The content address from the music library is the default. If it does
+     * not work the file path is tried, then the app reads the file itself and gives the bytes to the player.
+     */
+    static final int WAY_URI = 1;
+    static final int WAY_PATH = 2;
+    static final int WAY_STREAM = 4;
+    /** The way the next start must use (0: the one that worked last time, or the content address). */
+    private int nextWay;
+    /** The way the song that is loading was opened with. */
+    private int wayNow = WAY_URI;
+    /** The ways already tried for {@link #triedFor}, so that each is tried once. */
+    private int triedMask;
+    private long triedFor = -1;
+    /** The way that worked after another had failed: it goes first from then on (this radio needs it). */
+    private int preferredWay = WAY_URI;
+    /** The app reads the file itself: this is the source. It is closed when the player is released. */
+    private android.media.MediaDataSource streamSource;
+    /** A message to show the user that "All files access" may fix this. Taken once by the library screen. */
+    private boolean allFilesHint;
     /** Why the last song could not be played: a MediaPlayer error code, or one of the values below. */
     private static final int WHY_OPEN = -9001;
     private static final int WHY_TIMEOUT = -9002;
@@ -415,10 +424,14 @@ public final class PlaybackService extends Service {
         }
         final int gen = ++generation;
         loadArt(t, gen);
-        final boolean byPath = !t.dir.isEmpty()
-                && (nextWay == WAY_PATH || (nextWay == WAY_AUTO && preferPath));
-        nextWay = WAY_AUTO;
-        viaPath = byPath;
+        final int way = chooseWay(t);
+        nextWay = 0;
+        wayNow = way;
+        if (triedFor != t.id) {
+            triedFor = t.id;
+            triedMask = 0;
+        }
+        triedMask |= way;
 
         MediaPlayer mp = new MediaPlayer();
         player = mp;
@@ -432,8 +445,14 @@ public final class PlaybackService extends Service {
                 onError(gen, what, extra);
                 return true;
             });
-            if (byPath) mp.setDataSource(t.path());
-            else mp.setDataSource(getApplicationContext(), t.uri());
+            if (way == WAY_PATH) {
+                mp.setDataSource(t.path());
+            } else if (way == WAY_STREAM) {
+                streamSource = openStream(t);
+                mp.setDataSource(streamSource);
+            } else {
+                mp.setDataSource(getApplicationContext(), t.uri());
+            }
             mp.prepareAsync();
             timeoutGeneration = gen;
             main.removeCallbacks(prepareTimeout);
@@ -452,11 +471,12 @@ public final class PlaybackService extends Service {
         main.removeCallbacks(prepareTimeout);
         prepared = true;
         errorStreak = 0;
-        final Track ready = queue.current();
-        if (ready != null && otherWayTriedFor == ready.id) {
-            preferPath = viaPath;   // the first way failed for this song and this one worked: use it first from now on
+        if (Integer.bitCount(triedMask) > 1 && preferredWay != wayNow) {
+            preferredWay = wayNow;   // another way failed for this song and this one worked: use it first from now on
+            prefs.setPlayWay(wayNow);
         }
-        otherWayTriedFor = -1;
+        triedFor = -1;
+        triedMask = 0;
         if (pendingSeek > 0) {
             try {
                 player.seekTo(pendingSeek, MediaPlayer.SEEK_CLOSEST);
@@ -552,24 +572,33 @@ public final class PlaybackService extends Service {
         if (gen != generation) return;
         main.removeCallbacks(prepareTimeout);
         final boolean wasLoading = !prepared;
-        final boolean byPath = viaPath;
         final Track failed = queue.current();
         releasePlayer();
         playing = false;
         prepared = false;
-        // A song that could not be opened one way is tried once the other way, by file path or by content
-        // address. Some car stereos and old Android versions open a USB drive only one of the two ways.
-        if (wasLoading && failed != null && otherWayTriedFor != failed.id && what != WHY_TIMEOUT
-                && (byPath || !failed.dir.isEmpty())) {
-            otherWayTriedFor = failed.id;
-            nextWay = byPath ? WAY_URI : WAY_PATH;
-            startCurrent(wantPlay, pendingSeek);
-            return;
+        // A song that could not be opened one way is tried the other ways, each once. Some car radios open a
+        // USB drive only one way: by address, by file path, or only when the app reads the file itself.
+        if (wasLoading && failed != null && what != WHY_TIMEOUT) {
+            final int next = nextUntriedWay(failed);
+            if (next != 0) {
+                nextWay = next;
+                startCurrent(wantPlay, pendingSeek);
+                return;
+            }
         }
         final String reason = reasonFor(what, extra);
-        Diag.playFailed((failed == null ? "" : failed.title + ": ") + reason);
+        final int ways = failed != null && triedFor == failed.id ? Integer.bitCount(triedMask) : 0;
+        Diag.playFailed((failed == null ? "" : failed.title + ": ") + reason
+                + (ways > 1 ? getString(R.string.diag_ways_tried, ways) : ""));
+        triedFor = -1;   // a later try of this song starts again with the first way
+        triedMask = 0;
+        if ((what == WHY_OPEN || extra == MediaPlayer.MEDIA_ERROR_IO) && Permissions.allFilesNeeded()
+                && !Permissions.hasAllFiles() && !prefs.askedAllFiles()) {
+            allFilesHint = true;   // the library screen offers "All files access" once
+        }
         errorStreak++;
-        if (errorStreak > Math.min(queue.size(), 5)) {
+        // After the last try of the only song there is nothing to skip to; with more songs the usual limit applies.
+        if (errorStreak > Math.min(queue.size(), 5) || queue.size() <= 1) {
             errorStreak = 0;
             wantPlay = false;
             Toast.makeText(this, getString(R.string.toast_cant_play_reason, reason), Toast.LENGTH_LONG).show();
@@ -619,6 +648,42 @@ public final class PlaybackService extends Service {
         }
     };
 
+    /** The way to open this song first: the one that worked before, if this song can use it. */
+    private int chooseWay(Track t) {
+        if (nextWay != 0) return nextWay;
+        if (preferredWay == WAY_PATH && !t.dir.isEmpty()) return WAY_PATH;
+        if (preferredWay == WAY_STREAM) return WAY_STREAM;
+        return WAY_URI;
+    }
+
+    /** A way that was not tried yet for this song, or 0 when all were. */
+    private int nextUntriedWay(Track t) {
+        final int mask = triedFor == t.id ? triedMask : 0;
+        if ((mask & WAY_URI) == 0) return WAY_URI;
+        if ((mask & WAY_PATH) == 0 && !t.dir.isEmpty()) return WAY_PATH;
+        if ((mask & WAY_STREAM) == 0) return WAY_STREAM;
+        return 0;
+    }
+
+    /** Opens the song file in the app: through the music library first, then by its path. */
+    private android.media.MediaDataSource openStream(Track t) throws java.io.IOException {
+        try {
+            final android.os.ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(t.uri(), "r");
+            if (pfd != null) return FileDataSource.of(pfd);
+        } catch (java.io.IOException | RuntimeException e) {
+            // not through the library: try the path below
+        }
+        if (!t.dir.isEmpty()) return FileDataSource.of(t.path());
+        throw new java.io.IOException("the file cannot be read");
+    }
+
+    /** True once if "All files access" may fix the songs that did not play. The library screen shows the offer. */
+    boolean takeAllFilesHint() {
+        final boolean hint = allFilesHint;
+        allFilesHint = false;
+        return hint;
+    }
+
     private void releasePlayer() {
         main.removeCallbacks(prepareTimeout);
         generation++;
@@ -635,6 +700,14 @@ public final class PlaybackService extends Service {
                 // nothing to reset
             }
             old.release();
+        }
+        if (streamSource != null) {
+            try {
+                streamSource.close();
+            } catch (java.io.IOException ignored) {
+                // already closed
+            }
+            streamSource = null;
         }
     }
 
