@@ -15,7 +15,7 @@ iPhone Music look &nbsp;·&nbsp; Liquid Glass &nbsp;·&nbsp; every folder &nbsp;
 
 <a href="https://github.com/mbnetworku/MusicPlayer/releases/latest"><img src="https://img.shields.io/github/v/release/mbnetworku/MusicPlayer?label=version&color=E5202B&style=for-the-badge" alt="Latest version"></a>
 <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0 and newer">
-<img src="https://img.shields.io/badge/APK-198%20KB-555555?style=for-the-badge" alt="APK size 198 KB">
+<img src="https://img.shields.io/badge/APK-204%20KB-555555?style=for-the-badge" alt="APK size 204 KB">
 <a href="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml"><img src="https://github.com/mbnetworku/MusicPlayer/actions/workflows/build.yml/badge.svg" alt="Build status" height="28"></a>
 
 <br><br>
@@ -28,8 +28,8 @@ iPhone Music look &nbsp;·&nbsp; Liquid Glass &nbsp;·&nbsp; every folder &nbsp;
 
 | | |
 |---|---|
-| **Latest version** | **1.24.0**, 14 November 2026 · [what's new](#whats-new) |
-| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 198 KB · Android 8.0 or newer |
+| **Latest version** | **1.25.0**, 14 November 2026 · [what's new](#whats-new) |
+| **Get it** | [**MusicPlayer.apk**](https://github.com/mbnetworku/MusicPlayer/releases/latest/download/MusicPlayer.apk) · 204 KB · Android 8.0 or newer |
 | **All versions** | [the Releases page](https://github.com/mbnetworku/MusicPlayer/releases) · [version history](#versions) |
 
 **Install it in three steps**
@@ -42,10 +42,12 @@ Good to know:
 
 * **Updates install over the old app and keep your settings.** Every version from 1.7.1 is built by GitHub and signed with the owner's own private key. The app also offers new versions itself, with a pop-up while you use it.
 * **Versions before 1.7.1 used a different test key.** If you still have one, uninstall it once and install the latest version. After that, updates install over it.
-* It is a young app, checked by 340 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
+* It is a young app, checked by 353 automated tests, but not yet tried on many real phones and car stereos. See [Status and limits](#status-and-limits).
 * From a computer you can also use `adb install -r MusicPlayer.apk`.
 
 ## What's new
+
+**1.25.0**: **None** for the equalizer design (Settings → Equalizer design): no moving bars on the cover, in the mini player or in the lists. And a **redesigned Settings** screen in the New design: rounded groups with coloured icons and rounded segmented choices.
 
 **1.24.0**: a second design, the **iOS Liquid Glass look**. Turn it on in **Settings → Design**: choose **Classic** (the look you know, still the default) or **New**. New has a slim glass tab bar and mini player (Songs, Folders, Albums, Favorites), rounded shapes, a blue accent, white or black icons, and the volume bar right under the buttons, in a car too. The **playing screen has its own choice**, so it can stay Classic while the rest is New. On a car screen the New design puts the player in a rounded glass panel on the left.
 
@@ -77,7 +79,8 @@ Every row is a release you can download. Newest first.
 
 | Version | Date | What changed |
 |---|---|---|
-| **[1.24.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.24.0)** (latest) | 2026-11-14 | The New (iOS Liquid Glass) design as an option next to Classic, with its own choice for the playing screen. |
+| **[1.25.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.25.0)** (latest) | 2026-11-14 | None for the equalizer design. Redesigned Settings in the New design. |
+| [1.24.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.24.0) | 2026-11-14 | The New (iOS Liquid Glass) design as an option next to Classic, with its own choice for the playing screen. |
 | [1.23.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.23.0) | 2026-11-13 | Glass transparency setting. See-through glass. |
 | [1.22.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.22.0) | 2026-11-13 | Round glass search button next to the mini player. |
 | [1.21.0](https://github.com/mbnetworku/MusicPlayer/releases/tag/v1.21.0) | 2026-11-13 | Round glass back buttons. White shuffle and repeat. |
@@ -101,7 +104,7 @@ Versions 1.0.0 to 1.7.0 were test builds signed with a different key. They are o
 * **It looks like Apple Music.** Pure black or pure white pages, large titles, round glass buttons and a floating tab bar, with see-through Liquid Glass panels.
 * **It plays every folder.** Songs, Folders, Albums, Artists and Favorites, including music on an SD card or a USB drive.
 * **You control it with your fingers.** Swipe the cover to change song. Drag the player down to close it. Sort the list your way.
-* **The equalizer moves.** Moving bars on the song that plays, in four designs, and the equalizer of your phone is one tap away.
+* **The equalizer moves.** Moving bars on the song that plays, in four designs (or none at all), and the equalizer of your phone is one tap away.
 * **Your phone vibrates with the bass.** An option, off until you turn it on.
 * **It updates itself.** A pop-up tells you when a new version is out.
 * **It is tiny.** About 187 KB, plain Java, no libraries, no ads, no account.
@@ -171,7 +174,7 @@ The app remembers your queue and position and carries on where you left off.
 <details>
 <summary><b>The player</b></summary>
 
-* The cover colours the screen when the ambient background is on. Moving bars over the cover show the music in one of four designs.
+* The cover colours the screen when the ambient background is on. Moving bars over the cover show the music in one of four designs, or you can turn them off.
 * **Swipe the cover** left or right to change song. The cover follows your finger and the next one slides in. You can turn this off in Settings.
 * **Drag the player down** to close it. The sliders keep their own drag.
 * A **volume slider** with speaker icons follows the phone's music volume.
@@ -184,7 +187,7 @@ The app remembers your queue and position and carries on where you left off.
 
 * The **Equalizer** screen reads and controls the equalizer built into your phone (best effort: many devices do not let an app see it, and the screen then says so).
 * The **moving bars** on the playing song and on the cover are an animation made to look like a spectrum. They are not measured from the sound, so the app needs no microphone permission.
-* **Equalizer design** in Settings: **Bars**, **Dots**, **Mirror** or **Wave**. It changes the bars everywhere. The equalizer button is always in the top corner.
+* **Equalizer design** in Settings: **Bars**, **Dots**, **Mirror**, **Wave** or **None**. It changes the bars everywhere. **None** turns the moving bars off on the cover, in the mini player and in the lists. The equalizer button is always in the top corner, and it stays as a still picture.
 
 </details>
 
@@ -218,7 +221,7 @@ The app remembers your queue and position and carries on where you left off.
 | Appearance | Glass transparency | Clear, Soft or Frosted. |
 | Appearance | Ambient background | Colours from the song fill the background. |
 | Background | Tiles | White or black, the cover, your picture, or your wallpaper. |
-| Equalizer design | Tiles | Bars, Dots, Mirror or Wave. |
+| Equalizer design | Tiles | Bars, Dots, Mirror, Wave or None. |
 | Playing | Vibration | A short buzz on taps. |
 | Playing | Vibrate with the music | The phone buzzes with the bass. |
 | Playing | Swipe the cover to change song | Swipe left for next, right for previous. |
@@ -264,7 +267,7 @@ The app remembers your queue and position and carries on where you left off.
 
 ## Status and limits
 
-* **Checked:** 340 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
+* **Checked:** 353 automated tests, Android lint, and a release build whose version, signature and permissions were inspected with `apksigner` and `aapt2`. The screens were rendered in every look.
 * **Not yet run on many real phones or car stereos.** Actual sound output, the hardware equalizer, notifications, head-unit details, and how the new features feel on a real device have not been checked. This includes swiping the cover, dragging the player down, the volume slider, the ambient drift and the New design (which was checked by tests and by renders of the real screens, not on a real phone or car stereo).
 * **Vibrating with the music** reads each song file once, which uses some battery. Its strength control depends on your phone: a phone that cannot vary the strength buzzes at one strength.
 * The glass look is see-through but not blurred (see above).
