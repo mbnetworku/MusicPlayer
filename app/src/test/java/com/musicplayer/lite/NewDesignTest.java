@@ -285,4 +285,49 @@ public class NewDesignTest {
         assertEquals("a car has its own volume knob in Classic", View.GONE,
                 a.findViewById(R.id.np_volume_row).getVisibility());
     }
+
+    // ---- the redesigned Settings ----------------------------------------------------------------------------
+
+    @Test
+    public void theNewSettingsHasEveryChoiceOfTheClassicOneExceptTheGlassSwitch() {
+        SettingsActivity classic = open(SettingsActivity.class).get();
+        assertNotNull(classic.findViewById(R.id.row_glass));
+        prefs.setDesign(Design.NEW);
+        SettingsActivity a = open(SettingsActivity.class).get();
+        assertNull("the New design is always glass, so there is no switch for it", a.findViewById(R.id.row_glass));
+        for (int id : new int[]{R.id.design_group, R.id.player_design_group, R.id.theme_group, R.id.clarity_group,
+                R.id.row_ambient, R.id.bg_group, R.id.bar_style_group, R.id.row_vibrate, R.id.row_vibrate_playing,
+                R.id.row_cover_tap, R.id.row_show_all, R.id.row_scan, R.id.row_version, R.id.row_auto,
+                R.id.upd_action, R.id.about_text, R.id.about_source, R.id.settings_scroll}) {
+            assertNotNull("missing in the New settings: " + a.getResources().getResourceEntryName(id), a.findViewById(id));
+        }
+    }
+
+    @Test
+    public void theNewSettingsChoicesStillWork() {
+        prefs.setDesign(Design.NEW);
+        SettingsActivity a = open(SettingsActivity.class).get();
+        ((RadioGroup) a.findViewById(R.id.clarity_group)).check(R.id.clarity_frosted);
+        assertEquals(2, prefs.glassClarity());
+        SettingsActivity b = open(SettingsActivity.class).get();
+        ((RadioGroup) b.findViewById(R.id.theme_group)).check(R.id.theme_dark);
+        assertEquals(Appearance.DARK, prefs.themeMode());
+        SettingsActivity c = open(SettingsActivity.class).get();
+        ((RadioGroup) c.findViewById(R.id.bar_style_group)).check(R.id.bar_style_none);
+        assertEquals(EqBarsView.STYLE_NONE, prefs.barStyle());
+        SettingsActivity d = open(SettingsActivity.class).get();
+        d.findViewById(R.id.row_vibrate).performClick();   // a whole row is a switch
+        assertFalse(prefs.vibrate());
+    }
+
+    @Test
+    public void theNewSettingsOpensInBothLooksAndBothSizes() {
+        prefs.setDesign(Design.NEW);
+        for (int mode : new int[]{Appearance.DARK, Appearance.LIGHT}) {
+            prefs.setThemeMode(mode);
+            ActivityController<SettingsActivity> c = open(SettingsActivity.class);
+            assertNotNull(c.get().findViewById(R.id.settings_scroll));
+            c.pause().stop().destroy();
+        }
+    }
 }

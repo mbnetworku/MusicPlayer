@@ -96,10 +96,10 @@ final class Prefs {
 
     // ---- moving bars --------------------------------------------------------------
 
-    /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave. */
+    /** How the moving bars look: 0 bars, 1 dots, 2 mirror, 3 wave, 4 none (no moving bars at all). */
     int barStyle() {
         int v = sp.getInt("bar_style", 0);
-        return v < 0 || v > 3 ? 0 : v;
+        return v < 0 || v > 4 ? 0 : v;
     }
 
     void setBarStyle(int style) {

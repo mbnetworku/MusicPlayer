@@ -35,7 +35,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.activity_settings);
+        setContentView(Design.isNew(this) ? R.layout.activity_settings_new : R.layout.activity_settings);
         prepareWindow();
         prefs = Prefs.get(this);
         library = Library.get(this);
@@ -129,16 +129,18 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         ((TextView) findViewById(R.id.theme_system_now)).setText(getString(R.string.theme_system_now,
                 getString(deviceDark ? R.string.mode_dark : R.string.mode_light)));
 
-        Switch glass = setupRow(R.id.row_glass, R.string.set_glass, R.string.set_glass_sub, true);
-        glass.setChecked(prefs.glass());
-        glass.setOnCheckedChangeListener((b, on) -> {
-            prefs.setGlass(on);
-            recreate();
-        });
-        if (Design.isNew(this)) {   // the New design is always glass
-            glass.setOnCheckedChangeListener(null);
-            glass.setChecked(true);
-            glass.setEnabled(false);
+        if (findViewById(R.id.row_glass) != null) {   // the New design's Settings has no switch: it is always glass
+            Switch glass = setupRow(R.id.row_glass, R.string.set_glass, R.string.set_glass_sub, true);
+            glass.setChecked(prefs.glass());
+            glass.setOnCheckedChangeListener((b, on) -> {
+                prefs.setGlass(on);
+                recreate();
+            });
+            if (Design.isNew(this)) {
+                glass.setOnCheckedChangeListener(null);
+                glass.setChecked(true);
+                glass.setEnabled(false);
+            }
         }
 
         Switch vibrate = setupRow(R.id.row_vibrate, R.string.set_vibrate, R.string.set_vibrate_sub, true);
@@ -177,7 +179,8 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     }
 
     private void bindBarStyle() {
-        final int[] ids = {R.id.bar_style_bars, R.id.bar_style_dots, R.id.bar_style_mirror, R.id.bar_style_wave};
+        final int[] ids = {R.id.bar_style_bars, R.id.bar_style_dots, R.id.bar_style_mirror, R.id.bar_style_wave,
+                R.id.bar_style_none};
         RadioGroup g = findViewById(R.id.bar_style_group);
         g.check(ids[prefs.barStyle()]);
         g.setOnCheckedChangeListener((group, id) -> {

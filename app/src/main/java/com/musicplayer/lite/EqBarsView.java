@@ -183,7 +183,7 @@ public class EqBarsView extends View {
     private long frozenAt;
     private float[] envelope;
 
-    static final int STYLE_BARS = 0, STYLE_DOTS = 1, STYLE_MIRROR = 2, STYLE_WAVE = 3;
+    static final int STYLE_BARS = 0, STYLE_DOTS = 1, STYLE_MIRROR = 2, STYLE_WAVE = 3, STYLE_NONE = 4;
     /** -1 reads the setting; the tests and pictures set it. */
     private int style = -1;
     private float[] frames = new float[0];
@@ -191,7 +191,22 @@ public class EqBarsView extends View {
 
     void setStyle(int s) {
         style = s;
+        if (hideWhenNone && isNone()) super.setVisibility(GONE);
+        update();
         invalidate();
+    }
+
+    /** True when the equalizer design is None: no moving bars anywhere. */
+    private boolean isNone() {
+        return (style >= 0 ? style : Prefs.get(getContext()).barStyle()) == STYLE_NONE;
+    }
+
+    /** A view that is only decoration (the cover bars, the mini player, a row) goes away for None. */
+    private final boolean hideWhenNone;
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(hideWhenNone && isNone() ? GONE : visibility);
     }
 
     public EqBarsView(Context context, AttributeSet attrs) {
@@ -203,6 +218,7 @@ public class EqBarsView extends View {
         restScale = Math.max(0f, a.getFloat(R.styleable.EqBarsView_barRest, 1f));
         roundness = Math.max(0f, Math.min(0.5f, a.getFloat(R.styleable.EqBarsView_barRadius, 0.5f)));
         ownShape = a.getBoolean(R.styleable.EqBarsView_spectrum, false) ? spectrumEnvelope(bars) : null;
+        hideWhenNone = a.getBoolean(R.styleable.EqBarsView_hideWhenNone, false);
         a.recycle();
         paint.setStyle(Paint.Style.FILL);
     }
@@ -273,6 +289,12 @@ public class EqBarsView extends View {
     }
 
     private void update() {
+        if (isNone()) {   // the Equalizer button stays as a still picture; nothing moves
+            moving = 0f;
+            leaveClock();
+            invalidate();
+            return;
+        }
         if (!onScreen() || frozen || pinned >= 0) {
             moving = playing ? 1f : 0f;   // nobody is looking: no easing, no clock
             leaveClock();
@@ -313,6 +335,7 @@ public class EqBarsView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        if (hideWhenNone && isNone()) super.setVisibility(GONE);
         motion = Settings.Global.getFloat(getContext().getContentResolver(),
                 Settings.Global.ANIMATOR_DURATION_SCALE, 1f) != 0f;
         update();
@@ -349,7 +372,8 @@ public class EqBarsView extends View {
             final float base = height(i, t, moving, restScale);
             fr[i] = Math.max(0f, Math.min(1f, base * envelopeAt(shape, i, n)));
         }
-        final int look = style >= 0 ? style : Prefs.get(getContext()).barStyle();
+        final int chosen = style >= 0 ? style : Prefs.get(getContext()).barStyle();
+        final int look = chosen == STYLE_NONE ? STYLE_BARS : chosen;   // None: the button's still bars
         if (look == STYLE_WAVE) {
             drawWave(canvas, fr, w, h, bottom);
             return;

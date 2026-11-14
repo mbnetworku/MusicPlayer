@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Overdraw"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grouped_bg"
+    android:orientation="vertical"
+    android:tag="glass:clear">
+
+    <LinearLayout
+        style="@style/TopBar"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_marginStart="6dp"
+            android:tag="glass:pill"
+            style="@style/IconButton"
+            android:contentDescription="@string/cd_back"
+            android:src="@drawable/ic_arrow_back" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/LargeTitle"
+        android:layout_marginStart="@dimen/gutter"
+        android:layout_marginBottom="4dp"
+        android:text="@string/settings_title" />
+
+    <ScrollView
+        android:id="@+id/settings_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/gutter"
+            android:paddingTop="8dp"
+            android:paddingEnd="@dimen/gutter"
+            android:paddingBottom="32dp">
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_design" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="46dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/n_bg_set_icon"
+                        android:backgroundTint="#007AFF"
+                        android:importantForAccessibility="no"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_image"
+                        android:tint="#FFFFFF" />
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/set_design_app" />
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/design_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/n_bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/design_classic"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/design_classic" />
+
+                    <RadioButton
+                        android:id="@+id/design_new"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/design_new" />
+                </RadioGroup>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="46dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/n_bg_set_icon"
+                        android:backgroundTint="#34C759"
+                        android:importantForAccessibility="no"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_play"
+                        android:tint="#FFFFFF" />
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/set_design_player" />
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/player_design_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/n_bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/player_design_classic"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/design_classic" />
+
+                    <RadioButton
+                        android:id="@+id/player_design_new"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/design_new" />
+                </RadioGroup>
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingBottom="10dp"
+                    android:text="@string/set_design_sub" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_appearance" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="46dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/n_bg_set_icon"
+                        android:backgroundTint="#5856D6"
+                        android:importantForAccessibility="no"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_settings"
+                        android:tint="#FFFFFF" />
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/set_theme" />
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/theme_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/n_bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/theme_system"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/theme_system" />
+
+                    <RadioButton
+                        android:id="@+id/theme_light"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/theme_light" />
+
+                    <RadioButton
+                        android:id="@+id/theme_dark"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/theme_dark" />
+                </RadioGroup>
+                <TextView
+                    android:id="@+id/theme_system_now"
+                    style="@style/SettingSub"
+                    android:paddingBottom="10dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="46dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/n_bg_set_icon"
+                        android:backgroundTint="#32ADE6"
+                        android:importantForAccessibility="no"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_image"
+                        android:tint="#FFFFFF" />
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/set_clarity" />
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/clarity_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/n_bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/clarity_clear"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/clarity_clear" />
+
+                    <RadioButton
+                        android:id="@+id/clarity_soft"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/clarity_soft" />
+
+                    <RadioButton
+                        android:id="@+id/clarity_frosted"
+                        style="@style/SegmentRadioNew"
+                        android:text="@string/clarity_frosted" />
+                </RadioGroup>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <include
+                    android:id="@+id/row_ambient"
+                    layout="@layout/row_setting" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_background" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/set_bg_note" />
+
+                <RadioGroup
+                    android:id="@+id/bg_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/bg_plain"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_plain"
+                        android:text="@string/set_bg_plain" />
+                    <RadioButton
+                        android:id="@+id/bg_cover"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_cover"
+                        android:text="@string/set_bg_cover" />
+                    <RadioButton
+                        android:id="@+id/bg_picture"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_picture"
+                        android:text="@string/set_bg_picture" />
+                    <RadioButton
+                        android:id="@+id/bg_wallpaper"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/sw_wallpaper"
+                        android:text="@string/set_bg_wallpaper" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/bg_picture_sub"
+                    style="@style/SettingSub"
+                    android:paddingTop="8dp" />
+
+                <TextView
+                    android:id="@+id/bg_wallpaper_sub"
+                    style="@style/SettingSub"
+                    android:paddingTop="2dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/bg_pick"
+                        style="@style/PillSmall"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/bg_wallpaper_update"
+                        style="@style/PillSmall"
+                        android:layout_marginStart="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/set_bg_update" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_bar_style_section" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="46dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/n_bg_set_icon"
+                        android:backgroundTint="#FF2D55"
+                        android:importantForAccessibility="no"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_bars"
+                        android:tint="#FFFFFF" />
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/set_bar_style" />
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/bar_style_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="6dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/bar_style_bars"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_bars"
+                        android:text="@string/bar_style_bars" />
+                    <RadioButton
+                        android:id="@+id/bar_style_dots"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_dots"
+                        android:text="@string/bar_style_dots" />
+                    <RadioButton
+                        android:id="@+id/bar_style_mirror"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_mirror"
+                        android:text="@string/bar_style_mirror" />
+                    <RadioButton
+                        android:id="@+id/bar_style_wave"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_wave"
+                        android:text="@string/bar_style_wave" />
+                    <RadioButton
+                        android:id="@+id/bar_style_none"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_none"
+                        android:text="@string/bar_style_none" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingBottom="10dp"
+                    android:text="@string/set_bar_style_sub" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_playing" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <include
+                    android:id="@+id/row_vibrate"
+                    layout="@layout/row_setting" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <include
+                    android:id="@+id/row_vibrate_playing"
+                    layout="@layout/row_setting" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <include
+                    android:id="@+id/row_cover_tap"
+                    layout="@layout/row_setting" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:layout_marginTop="6dp"
+                android:text="@string/set_library" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <include
+                    android:id="@+id/row_show_all"
+                    layout="@layout/row_setting" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="40dp"
+                    android:background="@color/divider" />
+                <include
+                    android:id="@+id/row_scan"
+                    layout="@layout/row_setting" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/set_updates" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <include
+                    android:id="@+id/row_version"
+                    layout="@layout/row_setting" />
+
+                <TextView
+                    android:id="@+id/upd_notes_title"
+                    style="@style/SectionLabel"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/upd_notes"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/upd_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="10"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/upd_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="14dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/seek_progress"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/upd_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="6dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/upd_action"
+                        style="@style/PillAccent"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:id="@+id/upd_secondary"
+                        style="@style/PillOutline"
+                        android:layout_marginStart="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider" />
+
+                <include
+                    android:id="@+id/row_auto"
+                    layout="@layout/row_setting" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="@string/set_about" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <TextView
+                    android:id="@+id/about_text"
+                    style="@style/SettingSub"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingMultiplier="1.1"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/about_source"
+                    style="@style/BannerAction"
+                    android:layout_marginStart="-14dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/set_source"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

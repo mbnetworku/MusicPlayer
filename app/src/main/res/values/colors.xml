@@ -27,5 +27,7 @@
 
     <!-- The New design: a blue accent. -->
     <color name="n_accent">#3B9BFF</color>
+    <color name="n_segment_track">#2C2C2E</color>
+    <color name="n_segment_on">#636366</color>
     <color name="n_accent_fill">#3B9BFF</color>
 </resources>

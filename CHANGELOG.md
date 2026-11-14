@@ -4,6 +4,12 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.25.0] - 2026-11-14
+
+- New: "None" for the equalizer design. In Settings, under Equalizer design, choose None to turn the moving bars off everywhere: on the cover, in the mini player and in the song lists. The Equalizer button stays, as a still picture, so you can still open the equalizer.
+- New: Settings has a new look in the New design. The choices are in rounded groups with coloured icons, and the segmented choices are rounded pills. The Design choices come first, and the equalizer bars have their own group. Classic keeps its Settings screen.
+- Changed: in the New design the main glass buttons, such as "Check for updates", are blue like the rest of the New design.
+
 ## [1.24.0] - 2026-11-14
 
 - New: a second design, the iOS Liquid Glass look. Turn it on in Settings under Design: choose Classic or New. Classic is the look you know and stays the default.

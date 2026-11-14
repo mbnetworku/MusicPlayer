@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "None" for the equalizer design: a circle with a slash. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="30dp" android:height="22dp" android:viewportWidth="30" android:viewportHeight="22">
+    <path android:fillColor="#FF8E8E93" android:fillType="evenOdd" android:pathData="M15,2a9,9 0 1,1 0,18a9,9 0 1,1 0,-18zM15,4a7,7 0 1,0 0,14a7,7 0 1,0 0,-14z" />
+    <path android:fillColor="#FF8E8E93" android:pathData="M8.7,16.3L19.5,5.5l1.4,1.4L10.1,17.7z" />
+</vector>

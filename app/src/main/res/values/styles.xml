@@ -317,6 +317,13 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- The segmented choices of the New design's Settings: rounder, with a pill for the chosen part. -->
+    <style name="SegmentRadioNew" parent="SegmentRadio">
+        <item name="android:layout_height">38dp</item>
+        <item name="android:background">@drawable/n_bg_segment</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="TileRadio">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

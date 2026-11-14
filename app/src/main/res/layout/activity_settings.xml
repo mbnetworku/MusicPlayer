@@ -311,7 +311,17 @@
                         style="@style/TileRadio"
                         android:drawableTop="@drawable/ic_style_wave"
                         android:text="@string/bar_style_wave" />
+                    <RadioButton
+                        android:id="@+id/bar_style_none"
+                        style="@style/TileRadio"
+                        android:drawableTop="@drawable/ic_style_none"
+                        android:text="@string/bar_style_none" />
                 </RadioGroup>
+
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingBottom="10dp"
+                    android:text="@string/set_bar_style_sub" />
             </LinearLayout>
 
             <TextView

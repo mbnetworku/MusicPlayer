@@ -60,6 +60,7 @@
 
             <!-- Moving bars while music plays; their heights follow the equalizer sliders below. -->
             <com.musicplayer.lite.EqBarsView
+            app:hideWhenNone="true"
                 android:id="@+id/eq_bars"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/eq_bars_height"

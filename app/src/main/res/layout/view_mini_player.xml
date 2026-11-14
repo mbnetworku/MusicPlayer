@@ -48,6 +48,7 @@
             </LinearLayout>
 
             <com.musicplayer.lite.EqBarsView
+            app:hideWhenNone="true"
                 android:id="@+id/mini_bars"
                 android:layout_width="26dp"
                 android:layout_height="22dp"

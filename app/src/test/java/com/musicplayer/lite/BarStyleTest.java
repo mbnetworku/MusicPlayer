@@ -105,7 +105,7 @@ public class BarStyleTest {
         Prefs p = Prefs.get(RuntimeEnvironment.getApplication());
         SettingsActivity a = Robolectric.buildActivity(SettingsActivity.class).create().start().resume().get();
         RadioGroup g = a.findViewById(R.id.bar_style_group);
-        assertEquals(4, g.getChildCount());
+        assertEquals(5, g.getChildCount());   // bars, dots, mirror, wave and none
         assertEquals(R.id.bar_style_bars, g.getCheckedRadioButtonId());
         g.check(R.id.bar_style_dots);
         assertEquals(1, p.barStyle());

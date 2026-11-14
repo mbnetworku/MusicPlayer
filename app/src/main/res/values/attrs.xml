@@ -14,6 +14,8 @@
         <attr name="barRest" format="float" />
         <!-- While playing without the real sound, move like a music spectrum: tall at the bass end. -->
         <attr name="spectrum" format="boolean" />
+        <!-- Hide this view completely when the equalizer design is None. Without it, None draws the bars still. -->
+        <attr name="hideWhenNone" format="boolean" />
     </declare-styleable>
 
     <!-- The accent and the shapes that differ between the Classic and the New design. The theme sets them;

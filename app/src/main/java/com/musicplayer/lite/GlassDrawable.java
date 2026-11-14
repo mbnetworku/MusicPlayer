@@ -26,6 +26,8 @@ final class GlassDrawable extends Drawable {
     private final int shape;
     private final boolean accent;
     private final boolean strong;
+    /** The accent glass is blue in the New design and red in Classic. */
+    private final int accentFill;
 
     private final float cardRadius;
     private final float stroke;
@@ -63,13 +65,19 @@ final class GlassDrawable extends Drawable {
     static GlassDrawable create(Context c, int shape, boolean accent, boolean strong) {
         return new GlassDrawable(c.getResources().getDisplayMetrics().density,
                 Appearance.isNight(c), shape, accent, strong,
-                Appearance.glassPlain(c) ? STYLE_PLAIN : STYLE_GLASS, scaleFor(Prefs.get(c).glassClarity()));
+                Appearance.glassPlain(c) ? STYLE_PLAIN : STYLE_GLASS, scaleFor(Prefs.get(c).glassClarity()),
+                accentFillFor(c));
     }
 
     /** The card of a glass dialog or action sheet. */
     static GlassDrawable dialog(Context c) {
         return new GlassDrawable(c.getResources().getDisplayMetrics().density,
-                Appearance.isNight(c), CARD, false, false, STYLE_DIALOG, 1f);
+                Appearance.isNight(c), CARD, false, false, STYLE_DIALOG, 1f, 0xF2E5202B);
+    }
+
+    private static int accentFillFor(Context c) {
+        if (!Design.isNew(c)) return 0xF2E5202B;
+        return Appearance.isNight(c) ? 0xF23B9BFF : 0xF20A7AFF;
     }
 
     /** How much of the glass fill shows: clear glass is mostly see-through, frosted glass is the full fill. */
@@ -84,7 +92,9 @@ final class GlassDrawable extends Drawable {
     private final float scale;
     private final float k;
 
-    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong, int style, float scale) {
+    private GlassDrawable(float density, boolean night, int shape, boolean accent, boolean strong, int style, float scale,
+                          int accentFill) {
+        this.accentFill = accentFill;
         this.scale = scale;
         this.k = (accent || style == STYLE_DIALOG) ? 1f : scale;
         this.density = density;
@@ -97,7 +107,7 @@ final class GlassDrawable extends Drawable {
         stroke = 1.2f * density;
 
         if (accent) {
-            fillColor = 0xF2E5202B;
+            fillColor = accentFill;
             highlight = 0x4DFFFFFF;
             shade = 0x26000000;
             rimBright = 0xA6FFFFFF;
@@ -243,10 +253,11 @@ final class GlassDrawable extends Drawable {
         final boolean st = strong;
         final int sty = style;
         final float sc = scale;
+        final int af = accentFill;
         return new ConstantState() {
             @Override
             public Drawable newDrawable() {
-                return new GlassDrawable(d, n, s, a, st, sty, sc);
+                return new GlassDrawable(d, n, s, a, st, sty, sc, af);
             }
 
             @Override

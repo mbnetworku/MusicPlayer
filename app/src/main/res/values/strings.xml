@@ -136,11 +136,14 @@
     <string name="mode_dark">dark</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="set_bar_style_section">Moving bars</string>
     <string name="set_bar_style">Equalizer design</string>
     <string name="bar_style_bars">Bars</string>
     <string name="bar_style_dots">Dots</string>
     <string name="bar_style_mirror">Mirror</string>
     <string name="bar_style_wave">Wave</string>
+    <string name="bar_style_none">None</string>
+    <string name="set_bar_style_sub">None turns the moving bars off everywhere: on the cover, in the mini player and in the lists. The Equalizer button stays.</string>
     <string name="set_vibrate">Vibration</string>
     <string name="set_vibrate_sub">A short buzz when you tap.</string>
     <string name="set_vibrate_playing">Vibrate with the music</string>

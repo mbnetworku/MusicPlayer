@@ -22,5 +22,7 @@
 
     <!-- The New design: a blue accent. -->
     <color name="n_accent">#0A7AFF</color>
+    <color name="n_segment_track">#E9E9EB</color>
+    <color name="n_segment_on">#FFFFFF</color>
     <color name="n_accent_fill">#0A7AFF</color>
 </resources>
