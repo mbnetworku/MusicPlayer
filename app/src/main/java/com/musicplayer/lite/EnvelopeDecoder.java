@@ -14,10 +14,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * about twenty numbers for each second of the song.
  */
 final class EnvelopeDecoder {
+    /** A song longer than this is not read: the whole file would have to be decoded, which takes too long. */
+    static final long MAX_DURATION_MS = 40L * 60 * 1000;
+
     private EnvelopeDecoder() {}
 
     /** The envelope of {@code track}, or null when the file cannot be read or {@code cancel} was set. */
     static float[] decode(Context context, Track track, AtomicBoolean cancel) {
+        if (cancel.get()) return null;   // cancelled while it waited: do not even open the file
         final MediaExtractor extractor = new MediaExtractor();
         MediaCodec codec = null;
         try {

@@ -93,6 +93,9 @@ public class LibraryActivityTest {
         a.findViewById(R.id.tab_songs).performClick();
         a.findViewById(R.id.btn_search).performClick();
         ((android.widget.EditText) a.findViewById(R.id.search_input)).setText("glass");
+        // The search waits for a pause in the typing.
+        org.robolectric.shadows.ShadowLooper.idleMainLooper(LibraryActivity.SEARCH_PAUSE_MS + 20,
+                java.util.concurrent.TimeUnit.MILLISECONDS);
         assertEquals(1, list.getAdapter().getCount());
         a.findViewById(R.id.search_close).performClick();
         assertEquals("back on Songs: a Play row, five letters and five songs", 11, list.getAdapter().getCount());

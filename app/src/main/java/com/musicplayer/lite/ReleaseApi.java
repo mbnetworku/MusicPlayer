@@ -47,6 +47,10 @@ final class ReleaseApi {
     private static final int CONNECT_MS = 10_000;
     private static final int READ_MS = 20_000;
     private static final int MAX_TEXT = 512 * 1024;
+    /** The most an update file may be when its size is not announced. */
+    static final long MAX_APK_BYTES = 150L * 1024 * 1024;
+    /** The longest a download may take in all, however slowly it comes. */
+    static final long MAX_DOWNLOAD_MS = 30L * 60 * 1000;
 
     /** Asks GitHub for the newest published release of {@code repo} ("owner/name"). */
     static Release fetchLatest(String apiBase, String repo, String userAgent, boolean allowInsecure)
@@ -104,12 +108,22 @@ final class ReleaseApi {
                 throw new ApiException(ApiException.SPACE, "low space");
             }
             MessageDigest md = MessageDigest.getInstance("SHA-256");
+            final long limit = expectedSize > 0 ? expectedSize : (total > 0 ? total : MAX_APK_BYTES);
+            final long started = System.nanoTime();
             try (InputStream in = c.getInputStream(); FileOutputStream out = new FileOutputStream(dest)) {
                 byte[] buf = new byte[32 * 1024];
                 long done = 0;
                 int n;
                 while ((n = in.read(buf)) > 0) {
                     if (cancel.get()) throw new ApiException(ApiException.CANCELLED, "cancelled");
+                    if (done + n > limit) {
+                        Diag.count(Diag.DOWNLOAD_STOPPED);
+                        throw new ApiException(ApiException.CHECKSUM, "more data than announced");
+                    }
+                    if (System.nanoTime() - started > MAX_DOWNLOAD_MS * 1_000_000L) {
+                        Diag.count(Diag.DOWNLOAD_STOPPED);
+                        throw new ApiException(ApiException.NETWORK, "the download took too long");
+                    }
                     out.write(buf, 0, n);
                     md.update(buf, 0, n);
                     done += n;

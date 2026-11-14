@@ -399,3 +399,32 @@ dependency that would need them beyond the single GitHub call, which is already 
 | Mitigations fit the architecture | Done (section 13) |
 | Tests, load runs or destructive actions performed for this audit | **None** |
 | Source code, configuration or other documents changed | **No.** Only this file was added. |
+
+---
+
+## 17. Fix Status (version 1.25.2)
+
+The findings above were fixed after this audit, as requested. The audit text above is kept as it was written, so it
+describes version 1.25.1. Each fix has a test in `app/src/test/java/com/musicplayer/lite/AuditFixesTest.java`
+unless noted. The tests were run in the project's unit-test setup (a simulated Android), not on a real phone.
+
+| ID | Fixed in 1.25.2 | How | Left over |
+|---|---|---|---|
+| QBP-01 | **Fixed** | `ArtLoader.LifoQueue.offer` keeps at most 96 waiting cover requests and drops the oldest (counted in `Diag`). | A dropped row keeps its placeholder until it is shown again. |
+| QBP-02 | **Fixed** | `ArtLoader.loadAsync` takes a "still wanted?" check. `PlaybackService.loadArt` and `BoundActivity.updateBackdrop` use it. The playing song's cover has its own thread (`nowPlayingPool`), so scrolling cannot delay or drop it. | None. |
+| QBP-03 | **Fixed** | A cancelled bass task returns before opening the file (`BeatBuzz.setTrack`, `EnvelopeDecoder.decode`). A song longer than 40 minutes gets no bass reading (`EnvelopeDecoder.MAX_DURATION_MS`). | Very long songs have no bass buzz. |
+| QBP-04 | **Fixed** | `PlaybackService.prepareTimeout`: a song that is not ready after 30 s counts as an error (`PREPARE_TIMEOUT_MS`), and the existing skip-and-give-up rule applies. | A very slow source needs more than 30 s to start. |
+| QBP-05 | **Fixed** | `PlaybackService.queueChanged` writes the queue once, 400 ms after the last change (`QUEUE_SAVE_DELAY_MS`). It is written at once when the service stops or the task is removed. | A kill in the 400 ms gap loses the last change. The queue still has no size cap. |
+| QBP-06 | **Mostly fixed** | `LibraryActivity` searches when the typing pauses for 180 ms (`SEARCH_PAUSE_MS`); leaving the search is instant. | The search itself still runs on the main thread, once per pause. Not measured on a large library. |
+| QBP-07 | **Fixed** | `StorageScanner` tells the caller once, and after at most 120 s (`SCAN_TIMEOUT_MS`) even if the system scanner never answers. The walk stops after 300 000 entries (`MAX_VISITED`). | The walk itself has no time limit. The scan-finished test covers the "only once" rule, not a real scan. |
+| QBP-08 | **Fixed** | `ReleaseApi.download` stops when more data arrives than announced, and after 30 minutes (`MAX_DOWNLOAD_MS`). | None. |
+| QBP-09 | **Partly fixed** | New `Diag` class: counters for skipped covers, slow starts, stopped scans, long songs, stopped downloads and big covers, the last reload time, a system-log line on the 1st, 10th, 100th ... event, and a "Background work" block in Settings. | Still no queue depth, throughput or alerts. The counters live in memory and reset when the app restarts. |
+| QBP-10 | **Fixed** | `PlayerWidget.publish` does nothing when the song, play state and cover are the same, and scales the cover only when it is new. | None. |
+| QBP-11 | **Fixed in code, not tested** | `SettingsActivity.pictureBusy` ignores a second tap while a picture or wallpaper is being read. | No test covers it. |
+| QBP-12 | **Fixed** | `Library` still waits for quiet, but never longer than 10 s in all (`MAX_CHANGE_WAIT_MS`). | None. |
+| QBP-13 | **Reduced** | A cover picture over 12 MB is not loaded, and running out of memory while decoding is caught and counted (`ArtLoader.decode`). | The platform still reads the whole picture into memory first on Android 8 to 9. No test covers this. |
+| P-04 | **Fixed** | The "no cover" list holds at most 4096 entries (`MAX_MISSING`). | None. |
+
+Not changed: P-01 (decoder sharing), P-02 (vibration command rate), P-03 (waiting tasks keep views alive, now limited by
+the 96 cap), P-05 (large libraries) and P-06 (a cover decoded twice). These depend on devices or have no
+measurable harm. The unknowns in section 14 remain unknown.

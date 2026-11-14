@@ -31,6 +31,8 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
 
     private TextView action;
     private TextView secondary;
+    /** A picture is being read; another tap waits until it is done. */
+    private boolean pictureBusy;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -53,6 +55,10 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         bindLibrary();
         bindUpdates();
         ((TextView) findViewById(R.id.about_text)).setText(R.string.about_body);
+        final String diag = Diag.summary(this);
+        final TextView diagView = findViewById(R.id.diag_text);
+        diagView.setText(getString(R.string.set_diag) + "\n" + diag);
+        diagView.setVisibility(diag.isEmpty() ? View.GONE : View.VISIBLE);
         findViewById(R.id.about_source).setOnClickListener(v -> openUrl(repoUrl()));
     }
 
@@ -279,10 +285,13 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
     }
 
     private void readWallpaperNow() {
+        if (pictureBusy) return;
+        pictureBusy = true;
         final Context app = getApplicationContext();
         new Thread(() -> {
             final int result = BackgroundStore.saveWallpaper(app);
             runOnUiThread(() -> {
+                pictureBusy = false;
                 if (isFinishing() || isDestroyed()) return;
                 if (result == BackgroundStore.FAILED) {
                     toast(R.string.bg_wallpaper_failed);
@@ -299,10 +308,13 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != REQ_PICK || resultCode != RESULT_OK || data == null || data.getData() == null) return;
         final Uri uri = data.getData();
+        if (pictureBusy) return;
+        pictureBusy = true;
         final Context app = getApplicationContext();
         new Thread(() -> {
             final boolean ok = BackgroundStore.savePicture(app, uri);
             runOnUiThread(() -> {
+                pictureBusy = false;
                 if (isFinishing() || isDestroyed()) return;
                 if (ok) applyBackground(Appearance.BG_PICTURE);
                 else toast(R.string.bg_pick_failed);

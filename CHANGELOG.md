@@ -4,6 +4,20 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.25.2] - 2026-11-14
+
+- Fixed: the cover pictures no longer pile up when you scroll very fast through a long list. Only the newest requests wait, and the cover of the song that is playing is never held up.
+- Fixed: a song that does not start within 30 seconds, for example from a USB drive that was removed, is now given up, and the player moves on.
+- Fixed: a scan of the storage no longer stays busy for ever if the system never answers. It ends after two minutes.
+- Fixed: an update download now stops if it brings more data than announced or takes more than 30 minutes.
+- Fixed: Search waits until you pause typing, so a long list is not searched for every letter.
+- Fixed: changes to the play queue are saved once, a moment after the last change, and always when the player stops.
+- Fixed: the home-screen widget is not redrawn when nothing changed.
+- Fixed: the list of songs is reloaded at least every 10 seconds while the storage keeps changing.
+- Fixed: the bass buzz skips songs longer than 40 minutes and no longer opens the file of a song you already skipped.
+- New: Settings, under About, shows a short "Background work" note when something unusual happened, such as a song that took too long to start.
+- Note: the file QUEUE-BACKPRESSURE.md explains these checks.
+
 ## [1.25.1] - 2026-11-14
 
 - Fixed: "Vibrate with the music" now follows the bass much better. A light bass gives a gentle buzz, a medium bass a firmer one, and a heavy bass gives the full buzz without gaps. Before, a light bass was mostly ignored and a heavy bass never reached full strength.

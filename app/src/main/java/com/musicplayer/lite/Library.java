@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 
 import java.text.Collator;
@@ -87,6 +88,11 @@ final class Library {
     private final List<Runnable> waiting = new ArrayList<>();
     private final Runnable delayedRefresh = this::refresh;
 
+    /** Changes that keep coming still lead to a reload at least this often. */
+    private static final long MAX_CHANGE_WAIT_MS = 10_000;
+    private static final long CHANGE_QUIET_MS = 1500;
+    private long firstChangeAt;
+
     private Snapshot data = new Snapshot();
     private boolean loaded;
     private boolean loading;
@@ -99,8 +105,12 @@ final class Library {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, new ContentObserver(main) {
                     @Override
                     public void onChange(boolean selfChange) {
+                        // Wait until the changes calm down, but never longer than MAX_CHANGE_WAIT_MS in all.
+                        final long now = SystemClock.elapsedRealtime();
+                        if (firstChangeAt == 0) firstChangeAt = now;
+                        final long left = firstChangeAt + MAX_CHANGE_WAIT_MS - now;
                         main.removeCallbacks(delayedRefresh);
-                        main.postDelayed(delayedRefresh, 1500);
+                        main.postDelayed(delayedRefresh, Math.max(0, Math.min(CHANGE_QUIET_MS, left)));
                     }
                 });
     }
@@ -205,9 +215,12 @@ final class Library {
         }
         loading = true;
         dirty = false;
+        firstChangeAt = 0;
         final boolean showAll = Prefs.get(app).showAllAudio();
         io.execute(() -> {
+            final long started = SystemClock.elapsedRealtime();
             final Snapshot s = query(showAll);
+            Diag.reloaded(SystemClock.elapsedRealtime() - started, s.tracks.size());
             main.post(() -> {
                 data = s;
                 loaded = true;

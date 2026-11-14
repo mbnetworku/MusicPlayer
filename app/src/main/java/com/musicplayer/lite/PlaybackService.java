@@ -63,6 +63,10 @@ public final class PlaybackService extends Service {
     /** "Previous" restarts the song when it is further in than this. */
     private static final int RESTART_MS = 3000;
     private static final int SAVE_EVERY_MS = 15000;
+    /** A song that has not started after this long is treated as one that cannot be played. */
+    static final int PREPARE_TIMEOUT_MS = 30000;
+    /** Queue changes that come close together are written once. */
+    static final int QUEUE_SAVE_DELAY_MS = 400;
     private static final int ART_PX = 512;
 
     private final IBinder binder = new LocalBinder();
@@ -169,11 +173,13 @@ public final class PlaybackService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        saveQueueNow();
         if (!playing && !wantPlay) stopAndRelease();
     }
 
     @Override
     public void onDestroy() {
+        saveQueueNow();   // before the timers are cleared: a change that waits must not be lost
         main.removeCallbacksAndMessages(null);
         saveProgress();
         releasePlayer();
@@ -408,6 +414,9 @@ public final class PlaybackService extends Service {
             });
             mp.setDataSource(getApplicationContext(), t.uri());
             mp.prepareAsync();
+            timeoutGeneration = gen;
+            main.removeCallbacks(prepareTimeout);
+            main.postDelayed(prepareTimeout, PREPARE_TIMEOUT_MS);
         } catch (Exception e) {
             onError(gen);
             return;
@@ -419,6 +428,7 @@ public final class PlaybackService extends Service {
 
     private void onPrepared(int gen) {
         if (gen != generation || player == null) return;
+        main.removeCallbacks(prepareTimeout);
         prepared = true;
         errorStreak = 0;
         if (pendingSeek > 0) {
@@ -500,6 +510,7 @@ public final class PlaybackService extends Service {
 
     private void onError(int gen) {
         if (gen != generation) return;
+        main.removeCallbacks(prepareTimeout);
         releasePlayer();
         playing = false;
         prepared = false;
@@ -545,7 +556,17 @@ public final class PlaybackService extends Service {
         notifyChanged();
     }
 
+    /** The song of this generation has been waiting to start; if it still is, it counts as an error. */
+    private int timeoutGeneration = -1;
+    private final Runnable prepareTimeout = () -> {
+        if (timeoutGeneration == generation && player != null && !prepared) {
+            Diag.count(Diag.PREPARE_TIMEOUT);
+            onError(generation);
+        }
+    };
+
     private void releasePlayer() {
+        main.removeCallbacks(prepareTimeout);
         generation++;
         MediaPlayer old = player;
         player = null;
@@ -564,6 +585,7 @@ public final class PlaybackService extends Service {
     }
 
     private void stopAndRelease() {
+        saveQueueNow();
         wantPlay = false;
         playing = false;
         pausedByFocus = false;
@@ -771,7 +793,7 @@ public final class PlaybackService extends Service {
             updateMetadata();
             if (queue.current() != null) postNotification();
             PlayerWidget.publish(PlaybackService.this, queue.current(), playing, art);
-        });
+        }, () -> gen == generation);
     }
 
     private void broadcastEffectSession(String action) {
@@ -877,10 +899,24 @@ public final class PlaybackService extends Service {
         }
     };
 
+    private boolean queueSavePending;
+    private final Runnable queueSave = this::saveQueueNow;
+
     private void queueChanged() {
+        // Many changes in a row (dragging songs, adding a few albums) are written once, a moment later.
+        queueSavePending = true;
+        main.removeCallbacks(queueSave);
+        main.postDelayed(queueSave, QUEUE_SAVE_DELAY_MS);
+        notifyChanged();
+    }
+
+    /** Writes the queue now if a change is waiting to be written. */
+    private void saveQueueNow() {
+        main.removeCallbacks(queueSave);
+        if (!queueSavePending) return;
+        queueSavePending = false;
         Track t = queue.current();
         prefs.saveQueue(queue.tracks(), t == null ? -1 : t.id, queue.isShuffle(), queue.repeat());
-        notifyChanged();
     }
 
     /** A different track became current: remember it at 0:00 without rewriting the id list. */

@@ -20,6 +20,10 @@ public final class PlayerWidget extends AppWidgetProvider {
     // The last state the service reported, so a widget added later still shows it.
     private static Bitmap lastArt;
     private static boolean lastPlaying;
+    // What was last published, so the same state is not drawn twice.
+    private static long publishedTrack = -2;
+    private static boolean publishedPlaying;
+    private static java.lang.ref.WeakReference<Bitmap> publishedArt = new java.lang.ref.WeakReference<>(null);
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
@@ -32,11 +36,24 @@ public final class PlayerWidget extends AppWidgetProvider {
         for (int id : ids) prefs.removeWidget(id);
     }
 
+    /** Makes the next {@link #publish} draw even if the state is the same (for the tests). */
+    static synchronized void forgetPublished() {
+        publishedTrack = -2;
+        publishedArt = new java.lang.ref.WeakReference<>(null);
+    }
+
     /** Called by the playback service when the song, the play state or the cover changes. */
     static void publish(Context context, Track track, boolean playing, Bitmap art) {
+        final long id = track == null ? -1 : track.id;
         synchronized (PlayerWidget.class) {
+            if (id == publishedTrack && playing == publishedPlaying && art == publishedArt.get()) return;   // nothing new
+            publishedTrack = id;
+            publishedPlaying = playing;
+            if (art != publishedArt.get()) {
+                publishedArt = new java.lang.ref.WeakReference<>(art);
+                lastArt = art == null ? null : Bitmap.createScaledBitmap(art, ART_PX, ART_PX, true);   // only for a new cover
+            }
             lastPlaying = playing;
-            lastArt = art == null ? null : Bitmap.createScaledBitmap(art, ART_PX, ART_PX, true);
         }
         if (track != null) Prefs.get(context).setNowPlayingText(track.title, track.artist);
         refreshAll(context);

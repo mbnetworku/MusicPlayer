@@ -149,7 +149,7 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
         }
         ArtLoader.get(this).loadAsync(t, BACKDROP_ART_PX, bitmap -> {
             if (backdrop != null && key.equals(backdropKey)) backdrop.setArt(bitmap, key, true);
-        });
+        }, () -> key.equals(backdropKey));
     }
 
     /**

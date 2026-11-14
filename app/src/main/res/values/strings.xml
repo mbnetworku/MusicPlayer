@@ -129,6 +129,14 @@
     <string name="cd_dismiss">Dismiss</string>
 
     <string name="set_appearance">Appearance</string>
+    <string name="set_diag">Background work</string>
+    <string name="diag_art_skipped">%1$d cover requests were skipped while scrolling fast.</string>
+    <string name="diag_prepare_timeout">%1$d songs took too long to start.</string>
+    <string name="diag_scan_stopped">%1$d scans were stopped after waiting too long.</string>
+    <string name="diag_bass_too_long">%1$d songs were too long for the bass buzz.</string>
+    <string name="diag_download_stopped">%1$d downloads were stopped (too large or too slow).</string>
+    <string name="diag_art_too_big">%1$d cover pictures were too big to load.</string>
+    <string name="diag_reload">The last list reload took %1$d ms for %2$d songs.</string>
     <string name="set_theme">Theme</string>
     <string name="theme_system">Follow my device</string>
     <string name="theme_system_now">Your device is using %1$s mode right now.</string>

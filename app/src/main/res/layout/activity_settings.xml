@@ -474,6 +474,13 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/diag_text"
+                    style="@style/SettingSub"
+                    android:layout_marginTop="6dp"
+                    android:paddingBottom="4dp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/about_source"
                     style="@style/BannerAction"
                     android:layout_marginStart="-14dp"

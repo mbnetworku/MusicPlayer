@@ -79,6 +79,13 @@ public class LibraryActivity extends BoundActivity
 
     /** The New design has no Artists tab. */
     private boolean newDesign;
+    /** How long the typing must pause before the list is searched again. */
+    static final int SEARCH_PAUSE_MS = 180;
+    private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable searchRebuild = () -> {
+        rebuild();
+        list.setSelection(0);
+    };
     private int tab;
     /** Null means the top of the folder tree. */
     private FolderTree.Node folder;
@@ -175,8 +182,14 @@ public class LibraryActivity extends BoundActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 query = s.toString();
-                rebuild();
-                list.setSelection(0);
+                searchHandler.removeCallbacks(searchRebuild);
+                if (query.trim().isEmpty()) {
+                    rebuild();   // leaving the search is instant
+                    list.setSelection(0);
+                } else {
+                    // The search is repeated when the typing pauses, not for every letter.
+                    searchHandler.postDelayed(searchRebuild, SEARCH_PAUSE_MS);
+                }
             }
 
             @Override
@@ -263,6 +276,7 @@ public class LibraryActivity extends BoundActivity
 
     @Override
     protected void onDestroy() {
+        searchHandler.removeCallbacks(searchRebuild);
         library.removeListener(this);
         super.onDestroy();
     }

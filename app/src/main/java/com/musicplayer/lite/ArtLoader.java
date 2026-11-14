@@ -17,10 +17,11 @@ import android.util.Size;
 import android.widget.ImageView;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.BooleanSupplier;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,10 +46,24 @@ final class ArtLoader {
             {0xFF38202F, 0xFF703F5E},
     };
 
-    /** Runs the most recently submitted task first. */
+    /** Most cover requests that may wait at once. A fling through a long list makes more; the oldest go. */
+    private static final int MAX_WAITING = 96;
+    /** Most "no cover found" answers remembered between two reloads of the song list. */
+    private static final int MAX_MISSING = 4096;
+    /** A cover picture inside a song file larger than this is not loaded (older Android reads it whole). */
+    private static final int MAX_EMBEDDED_BYTES = 12 * 1024 * 1024;
+
+    /**
+     * Runs the most recently submitted task first, and keeps at most {@link #MAX_WAITING} waiting:
+     * when it is full the oldest request (the row scrolled away longest ago) is dropped.
+     */
     private static final class LifoQueue extends LinkedBlockingDeque<Runnable> {
         @Override
         public boolean offer(Runnable r) {
+            while (size() >= MAX_WAITING) {
+                if (pollLast() == null) break;
+                Diag.count(Diag.ART_SKIPPED);
+            }
             return offerFirst(r);
         }
     }
@@ -65,8 +80,16 @@ final class ArtLoader {
     private final Context app;
     private final Handler main = new Handler(Looper.getMainLooper());
     private final LruCache<String, Bitmap> cache;
-    private final Set<String> missing = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> missing = Collections.newSetFromMap(Collections.synchronizedMap(
+            new java.util.LinkedHashMap<String, Boolean>(64, 0.75f, false) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
+                    return size() > MAX_MISSING;
+                }
+            }));
     private final ThreadPoolExecutor pool;
+    /** The cover of the playing song has its own lane, so a fast scroll can never delay or drop it. */
+    private final ThreadPoolExecutor nowPlayingPool;
     private final Drawable.ConstantState[] placeholders = new Drawable.ConstantState[PALETTE.length];
 
     private ArtLoader(Context app) {
@@ -80,6 +103,8 @@ final class ArtLoader {
         };
         pool = new ThreadPoolExecutor(2, 2, 20, TimeUnit.SECONDS, new LifoQueue());
         pool.allowCoreThreadTimeOut(true);
+        nowPlayingPool = new ThreadPoolExecutor(1, 1, 20, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+        nowPlayingPool.allowCoreThreadTimeOut(true);
     }
 
     void forgetMisses() {
@@ -112,6 +137,11 @@ final class ArtLoader {
     }
 
     void loadAsync(final Track t, final int px, final Callback cb) {
+        loadAsync(t, px, cb, null);
+    }
+
+    /** As above; {@code wanted} says whether the answer is still needed once it is this request's turn. */
+    void loadAsync(final Track t, final int px, final Callback cb, final BooleanSupplier wanted) {
         final String key = t.artKey() + "@" + px;
         Bitmap hit = cache.get(key);
         if (hit != null) {
@@ -122,7 +152,8 @@ final class ArtLoader {
             cb.onArt(null);
             return;
         }
-        pool.execute(() -> {
+        nowPlayingPool.execute(() -> {
+            if (wanted != null && !wanted.getAsBoolean()) return;   // the song changed while this waited
             final Bitmap b = decode(t, px);
             if (b != null) cache.put(key, b);
             else missing.add(key);
@@ -159,8 +190,12 @@ final class ArtLoader {
         try {
             if (t.dir.isEmpty()) r.setDataSource(app, t.uri());
             else r.setDataSource(t.path());
-            byte[] pic = r.getEmbeddedPicture();
+            byte[] pic = r.getEmbeddedPicture();   // there is no way to read it in pieces: it comes whole
             if (pic == null) return null;
+            if (pic.length > MAX_EMBEDDED_BYTES) {
+                Diag.count(Diag.ART_TOO_BIG);
+                return null;
+            }
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeByteArray(pic, 0, pic.length, o);
@@ -169,7 +204,8 @@ final class ArtLoader {
             o.inJustDecodeBounds = false;
             o.inSampleSize = sample;
             return BitmapFactory.decodeByteArray(pic, 0, pic.length, o);
-        } catch (Exception e) {
+        } catch (Exception | OutOfMemoryError e) {
+            if (e instanceof OutOfMemoryError) Diag.count(Diag.ART_TOO_BIG);
             return null;
         } finally {
             try {

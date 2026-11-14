@@ -59,6 +59,10 @@ final class BeatBuzz {
         cancel.set(true);
         cancel = new AtomicBoolean();
         if (track == null || !Prefs.get(context).vibratePlaying()) return;
+        if (track.durationMs > EnvelopeDecoder.MAX_DURATION_MS) {
+            Diag.count(Diag.BASS_TOO_LONG);   // a very long recording: reading all of it would take too long
+            return;
+        }
         final float[] known = cache.get(id);
         if (known != null) {
             envelope = known;
@@ -76,6 +80,7 @@ final class BeatBuzz {
             });
         }
         worker.execute(() -> {
+            if (mine.get()) return;   // the song changed while this waited its turn
             final float[] result = EnvelopeDecoder.decode(context, track, mine);
             handler.post(() -> {
                 if (mine.get() || result == null) return;

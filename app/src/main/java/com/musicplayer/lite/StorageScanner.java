@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -32,22 +33,37 @@ final class StorageScanner {
             "mp3", "m4a", "aac", "flac", "ogg", "oga", "opus", "wav", "amr", "mka", "mid", "midi"));
     private static final int MAX_DEPTH = 12;
     private static final int MAX_FILES = 50000;
+    /** Entries (files and folders) looked at in one scan, so a huge or looping tree cannot keep it busy for ever. */
+    private static final int MAX_VISITED = 300000;
+    /** How long to wait for the system scanner before the scan is reported as done anyway. */
+    static final long SCAN_TIMEOUT_MS = 120_000;
 
     static void scan(Context context, final Set<String> known, final Callback cb) {
         final Context app = context.getApplicationContext();
         final Handler main = new Handler(Looper.getMainLooper());
+        final AtomicBoolean finished = new AtomicBoolean();   // the caller is told once, by whoever comes first
         new Thread(() -> {
             final List<String> found = new ArrayList<>();
-            for (File root : roots(app)) walk(root, 0, known, found);
+            final int[] visited = {0};
+            for (File root : roots(app)) walk(root, 0, known, found, visited);
             if (found.isEmpty()) {
-                main.post(() -> cb.onDone(0));
+                finish(finished, main, cb, 0);
                 return;
             }
             final AtomicInteger left = new AtomicInteger(found.size());
             MediaScannerConnection.scanFile(app, found.toArray(new String[0]), null, (path, uri) -> {
-                if (left.decrementAndGet() == 0) main.post(() -> cb.onDone(found.size()));
+                if (left.decrementAndGet() == 0) finish(finished, main, cb, found.size());
             });
+            // If the system scanner never answers for some file, the scan must not stay "busy" for ever.
+            main.postDelayed(() -> {
+                if (!finished.get()) Diag.count(Diag.SCAN_STOPPED);
+                finish(finished, main, cb, found.size());
+            }, SCAN_TIMEOUT_MS);
         }, "storage-scan").start();
+    }
+
+    private static void finish(AtomicBoolean finished, Handler main, Callback cb, int requested) {
+        if (finished.compareAndSet(false, true)) main.post(() -> cb.onDone(requested));
     }
 
     private static Set<File> roots(Context app) {
@@ -81,19 +97,20 @@ final class StorageScanner {
         if (f != null && f.isDirectory() && f.canRead()) roots.add(f);
     }
 
-    private static void walk(File dir, int depth, Set<String> known, List<String> out) {
-        if (depth > MAX_DEPTH || out.size() >= MAX_FILES) return;
+    private static void walk(File dir, int depth, Set<String> known, List<String> out, int[] visited) {
+        if (depth > MAX_DEPTH || out.size() >= MAX_FILES || visited[0] >= MAX_VISITED) return;
         File[] kids = dir.listFiles();
         if (kids == null) return;
         for (File f : kids) {
             if (f.getName().equals(".nomedia")) return; // the owner asked for this folder to be skipped
         }
         for (File f : kids) {
+            if (++visited[0] > MAX_VISITED) return;
             String name = f.getName();
             if (name.startsWith(".")) continue;
             if (f.isDirectory()) {
                 if (depth == 0 && name.equals("Android")) continue;
-                walk(f, depth + 1, known, out);
+                walk(f, depth + 1, known, out, visited);
             } else {
                 int dot = name.lastIndexOf('.');
                 if (dot > 0 && EXTENSIONS.contains(name.substring(dot + 1).toLowerCase(Locale.ROOT))) {
