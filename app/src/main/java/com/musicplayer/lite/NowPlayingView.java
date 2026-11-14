@@ -40,6 +40,8 @@ public class NowPlayingView extends LinearLayout {
         void onMore(Track track);
     }
 
+    /** The New playing screen: a rounder cover, glass buttons and the volume always shown. */
+    private final boolean newLook;
     private PlaybackService service;
     private MoreListener moreListener;
     private boolean dragging;
@@ -66,6 +68,8 @@ public class NowPlayingView extends LinearLayout {
         more = findViewById(R.id.np_more);
         favorite = findViewById(R.id.np_fav);
         bars = findViewById(R.id.np_bars);
+        newLook = Design.playerNew(context);
+        if (newLook) styleNew();
         bindVolume();
         favorites = Favorites.get(context);
         accent = ColorStateList.valueOf(context.getColor(R.color.accent_text));
@@ -127,6 +131,18 @@ public class NowPlayingView extends LinearLayout {
 
     void setMoreListener(MoreListener l) {
         moreListener = l;
+    }
+
+    /** The shapes of the New playing screen: a rounder cover and glass round buttons. */
+    private void styleNew() {
+        final android.content.Context c = getContext();
+        final View cover = (View) art.getParent();
+        cover.setBackgroundResource(R.drawable.n_bg_art_big);
+        art.setBackgroundResource(R.drawable.n_bg_art_big);
+        if (Appearance.glass(c)) {
+            favorite.setBackground(Glass.pill(c, false));
+            more.setBackground(Glass.pill(c, false));
+        }
     }
 
     @Override
@@ -324,7 +340,8 @@ public class NowPlayingView extends LinearLayout {
     private void bindVolume() {
         final View row = findViewById(R.id.np_volume_row);
         if (row == null) return;
-        if (!getResources().getBoolean(R.bool.np_show_volume)) {
+        // The New playing screen shows the volume under the buttons everywhere, in a car too.
+        if (!newLook && !getResources().getBoolean(R.bool.np_show_volume)) {
             row.setVisibility(GONE);
             return;
         }

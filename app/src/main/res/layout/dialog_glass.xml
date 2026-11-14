@@ -27,7 +27,7 @@
             android:importantForAccessibility="no"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            android:tint="@color/accent_text" />
+            android:tint="?attr/appAccent" />
 
         <TextView
             android:id="@+id/gd_title"
@@ -64,7 +64,7 @@
             style="@style/Pill"
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_pill_tint"
+            android:background="?attr/appPillTint"
             android:clickable="true"
             android:focusable="true"
             android:textColor="@color/text_primary" />

@@ -19,4 +19,8 @@
     <color name="playing_scrim">#B3000000</color>
     <color name="grouped_bg">#F2F2F7</color>
     <color name="grouped_card">#FFFFFF</color>
+
+    <!-- The New design: a blue accent. -->
+    <color name="n_accent">#0A7AFF</color>
+    <color name="n_accent_fill">#0A7AFF</color>
 </resources>

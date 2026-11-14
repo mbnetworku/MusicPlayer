@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_pill_tint"
+            android:background="?attr/appPillTint"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="4dp"
@@ -84,7 +84,7 @@
             android:layout_height="20dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_system_update"
-            android:tint="@color/accent_text" />
+            android:tint="?attr/appAccent" />
 
         <TextView
             android:id="@+id/update_banner_text"
@@ -116,7 +116,7 @@
         android:layout_marginStart="@dimen/gutter"
         android:layout_marginEnd="@dimen/gutter"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_search"
+        android:background="?attr/appSearch"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">

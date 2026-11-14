@@ -131,6 +131,24 @@ final class Prefs {
         sp.edit().putInt("glass_clarity", level).apply();
     }
 
+    /** {@link Design#CLASSIC} (the default) or {@link Design#NEW}: the look of the lists, bars and settings. */
+    int design() {
+        return sp.getInt("design", Design.CLASSIC) == Design.NEW ? Design.NEW : Design.CLASSIC;
+    }
+
+    void setDesign(int design) {
+        sp.edit().putInt("design", design).apply();
+    }
+
+    /** The look of the Now Playing screen, chosen on its own: {@link Design#CLASSIC} (the default) or {@link Design#NEW}. */
+    int playerDesign() {
+        return sp.getInt("player_design", Design.CLASSIC) == Design.NEW ? Design.NEW : Design.CLASSIC;
+    }
+
+    void setPlayerDesign(int design) {
+        sp.edit().putInt("player_design", design).apply();
+    }
+
     /** What the glass look shows behind its panels: one of the Appearance.BG_* values. */
     int glassBackground() {
         return sp.getInt("glass_bg", Appearance.BG_PLAIN);

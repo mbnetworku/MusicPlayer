@@ -16,6 +16,14 @@
         <item name="android:alertDialogTheme">@style/AppDialog</item>
         <item name="android:popupMenuStyle">@style/AppPopup</item>
         <item name="android:switchStyle">@style/AppSwitch</item>
+        <item name="appAccent">@color/accent_text</item>
+        <item name="appAccentFill">@color/accent</item>
+        <item name="appArt">@drawable/bg_art</item>
+        <item name="appArtBig">@drawable/bg_art_big</item>
+        <item name="appCard">@drawable/bg_card</item>
+        <item name="appPillTint">@drawable/bg_pill_tint</item>
+        <item name="appSearch">@drawable/bg_search</item>
+        <item name="appTile">@drawable/bg_tile</item>
     </style>
 
     <!-- The window of a glass dialog: see-through, dimmed behind, no title. The card draws the glass. -->
@@ -26,6 +34,14 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.4</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="appAccent">@color/accent_text</item>
+        <item name="appAccentFill">@color/accent</item>
+        <item name="appArt">@drawable/bg_art</item>
+        <item name="appArtBig">@drawable/bg_art_big</item>
+        <item name="appCard">@drawable/bg_card</item>
+        <item name="appPillTint">@drawable/bg_pill_tint</item>
+        <item name="appSearch">@drawable/bg_search</item>
+        <item name="appTile">@drawable/bg_tile</item>
     </style>
 
     <style name="AppDialog" parent="android:Theme.Material.Dialog.Alert">
@@ -126,6 +142,25 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <!-- One item of the New design's slim tab bar. -->
+    <style name="TabNew">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/n_tabbar_height</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_tab</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:drawablePadding">1dp</item>
+        <item name="android:drawableTint">@color/n_tab_text</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textSize">@dimen/n_text_tab</item>
+        <item name="android:textColor">@color/n_tab_text</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="RowTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -166,9 +201,9 @@
     <style name="PillTint" parent="Pill">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/bg_pill_tint</item>
-        <item name="android:textColor">@color/accent_text</item>
-        <item name="android:drawableTint">@color/accent_text</item>
+        <item name="android:background">?attr/appPillTint</item>
+        <item name="android:textColor">?attr/appAccent</item>
+        <item name="android:drawableTint">?attr/appAccent</item>
     </style>
 
     <!-- A small action button inside a settings card. -->
@@ -176,8 +211,8 @@
         <item name="android:layout_height">40dp</item>
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
-        <item name="android:background">@drawable/bg_pill_tint</item>
-        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:background">?attr/appPillTint</item>
+        <item name="android:textColor">?attr/appAccent</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -214,7 +249,7 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:textColor">?attr/appAccent</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">bold</item>
@@ -225,7 +260,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">12dp</item>
-        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:background">?attr/appCard</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingStart">14dp</item>
         <item name="android:paddingEnd">14dp</item>
@@ -293,9 +328,23 @@
         <item name="android:drawablePadding">6dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:background">@drawable/bg_tile</item>
+        <item name="android:background">?attr/appTile</item>
         <item name="android:textColor">@color/seg_text</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- The New design, laid over AppTheme (Design.apply): a blue accent and rounder shapes. -->
+    <style name="NewDesign">
+        <item name="android:colorAccent">@color/n_accent</item>
+        <item name="android:colorControlActivated">@color/n_accent</item>
+        <item name="appAccent">@color/n_accent</item>
+        <item name="appAccentFill">@color/n_accent_fill</item>
+        <item name="appArt">@drawable/n_bg_art</item>
+        <item name="appArtBig">@drawable/n_bg_art_big</item>
+        <item name="appCard">@drawable/n_bg_card</item>
+        <item name="appPillTint">@drawable/n_bg_pill_tint</item>
+        <item name="appSearch">@drawable/n_bg_search</item>
+        <item name="appTile">@drawable/n_bg_tile</item>
     </style>
 </resources>

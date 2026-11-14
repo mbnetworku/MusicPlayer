@@ -46,6 +46,69 @@
 
             <TextView
                 style="@style/SectionLabel"
+                android:text="@string/set_design" />
+
+            <LinearLayout
+                style="@style/SettingsCard"
+                android:tag="glass:card">
+
+                <TextView
+                    style="@style/SettingTitle"
+                    android:paddingTop="10dp"
+                    android:text="@string/set_design_app" />
+
+                <RadioGroup
+                    android:id="@+id/design_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/design_classic"
+                        style="@style/SegmentRadio"
+                        android:text="@string/design_classic" />
+
+                    <RadioButton
+                        android:id="@+id/design_new"
+                        style="@style/SegmentRadio"
+                        android:text="@string/design_new" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/SettingTitle"
+                    android:paddingTop="14dp"
+                    android:text="@string/set_design_player" />
+
+                <RadioGroup
+                    android:id="@+id/player_design_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_segment_track"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/player_design_classic"
+                        style="@style/SegmentRadio"
+                        android:text="@string/design_classic" />
+
+                    <RadioButton
+                        android:id="@+id/player_design_new"
+                        style="@style/SegmentRadio"
+                        android:text="@string/design_new" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/SettingSub"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/set_design_sub" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionLabel"
                 android:text="@string/set_appearance" />
 
             <LinearLayout

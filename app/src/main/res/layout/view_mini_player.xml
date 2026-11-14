@@ -24,7 +24,7 @@
                 android:id="@+id/mini_art"
                 android:layout_width="@dimen/mini_art"
                 android:layout_height="@dimen/mini_art"
-                android:background="@drawable/bg_art"
+                android:background="?attr/appArt"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop" />
 
@@ -54,7 +54,7 @@
                 android:layout_marginEnd="4dp"
                 android:importantForAccessibility="no"
                 android:visibility="gone"
-                app:barColor="@color/accent_text"
+                app:barColor="?attr/appAccent"
                 app:bars="4" />
 
             <ImageButton

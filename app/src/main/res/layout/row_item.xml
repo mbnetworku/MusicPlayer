@@ -18,7 +18,7 @@
             android:id="@+id/row_art"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_art"
+            android:background="?attr/appArt"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop" />
 
@@ -30,7 +30,7 @@
             android:importantForAccessibility="no"
             android:padding="14dp"
             android:visibility="gone"
-            app:barColor="@color/accent"
+            app:barColor="?attr/appAccentFill"
             app:bars="4" />
     </FrameLayout>
 

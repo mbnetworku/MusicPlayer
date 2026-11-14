@@ -41,6 +41,7 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         library = Library.get(this);
         updater = Updater.get(this);
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+        bindDesign();
         bindAppearance();
         bindBackground();
         bindClarity();
@@ -82,6 +83,30 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
         render();
     }
 
+    // ---- design ---------------------------------------------------------------------------------------
+
+    /** Classic or New for the whole app, and Classic or New for the playing screen on its own. */
+    private void bindDesign() {
+        final RadioGroup app = findViewById(R.id.design_group);
+        app.check(prefs.design() == Design.NEW ? R.id.design_new : R.id.design_classic);
+        app.setOnCheckedChangeListener((g, id) -> {
+            final int chosen = id == R.id.design_new ? Design.NEW : Design.CLASSIC;
+            if (chosen == prefs.design()) return;
+            g.setOnCheckedChangeListener(null);   // the screen is rebuilt; keep the new choice as shown
+            prefs.setDesign(chosen);
+            recreate();
+        });
+        final RadioGroup player = findViewById(R.id.player_design_group);
+        player.check(prefs.playerDesign() == Design.NEW ? R.id.player_design_new : R.id.player_design_classic);
+        player.setOnCheckedChangeListener((g, id) -> {
+            final int chosen = id == R.id.player_design_new ? Design.NEW : Design.CLASSIC;
+            if (chosen == prefs.playerDesign()) return;
+            g.setOnCheckedChangeListener(null);
+            prefs.setPlayerDesign(chosen);
+            recreate();
+        });
+    }
+
     // ---- appearance --------------------------------------------------------------------------------
 
     private void bindAppearance() {
@@ -110,6 +135,11 @@ public class SettingsActivity extends BoundActivity implements Updater.Listener 
             prefs.setGlass(on);
             recreate();
         });
+        if (Design.isNew(this)) {   // the New design is always glass
+            glass.setOnCheckedChangeListener(null);
+            glass.setChecked(true);
+            glass.setEnabled(false);
+        }
 
         Switch vibrate = setupRow(R.id.row_vibrate, R.string.set_vibrate, R.string.set_vibrate_sub, true);
         vibrate.setChecked(prefs.vibrate());

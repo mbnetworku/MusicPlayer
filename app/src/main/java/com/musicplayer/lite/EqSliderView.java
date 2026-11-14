@@ -43,11 +43,11 @@ public class EqSliderView extends View {
         thumbRadius = 11 * d;
         inset = thumbRadius + 2 * d;
         tickHalf = 9 * d;
-        accent = context.getColor(R.color.accent);
+        accent = Design.isNew(context) ? Design.accent(context) : context.getColor(R.color.accent);
         dim = context.getColor(R.color.icon_dim);
         ring.setStyle(Paint.Style.STROKE);
         ring.setStrokeWidth(2 * d);
-        ring.setColor(context.getColor(R.color.accent_text));
+        ring.setColor(Design.accent(context));
 
         track.setColor(context.getColor(R.color.eq_track));
         track.setStrokeWidth(6 * d);

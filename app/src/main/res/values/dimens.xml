@@ -34,4 +34,10 @@
     <dimen name="eq_bars_height">96dp</dimen>
     <dimen name="eq_band_height">210dp</dimen>
     <dimen name="eq_chip_height">40dp</dimen>
+
+    <!-- The New design: slim bars. -->
+    <dimen name="n_tabbar_height">46dp</dimen>
+    <dimen name="n_mini_height">48dp</dimen>
+    <dimen name="n_mini_art">36dp</dimen>
+    <dimen name="n_text_tab">10sp</dimen>
 </resources>

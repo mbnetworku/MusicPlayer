@@ -17,6 +17,14 @@
         <item name="android:alertDialogTheme">@style/AppDialog</item>
         <item name="android:popupMenuStyle">@style/AppPopup</item>
         <item name="android:switchStyle">@style/AppSwitch</item>
+        <item name="appAccent">@color/accent_text</item>
+        <item name="appAccentFill">@color/accent</item>
+        <item name="appArt">@drawable/bg_art</item>
+        <item name="appArtBig">@drawable/bg_art_big</item>
+        <item name="appCard">@drawable/bg_card</item>
+        <item name="appPillTint">@drawable/bg_pill_tint</item>
+        <item name="appSearch">@drawable/bg_search</item>
+        <item name="appTile">@drawable/bg_tile</item>
     </style>
 
     <style name="AppDialog" parent="android:Theme.Material.Light.Dialog.Alert">

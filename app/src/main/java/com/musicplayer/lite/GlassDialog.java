@@ -167,6 +167,7 @@ final class GlassDialog {
     GlassDialog show() {
         View content = build();
         dialog = new Dialog(context, R.style.GlassDialogTheme);
+        Design.apply(dialog.getContext());
         dialog.setContentView(content);
         style(dialog.getWindow());
         dialog.show();

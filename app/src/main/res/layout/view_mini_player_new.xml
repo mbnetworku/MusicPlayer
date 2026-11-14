@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The mini player of the New design: a slim glass capsule with a small round cover, no progress line. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/mini_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_mini"
+        android:contentDescription="@string/cd_now_playing"
+        android:foreground="@drawable/bg_ripple_round"
+        android:orientation="vertical"
+        android:tag="glass:pill">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/n_mini_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="7dp"
+            android:paddingEnd="8dp">
+
+            <com.musicplayer.lite.RoundedImageView
+                android:id="@+id/mini_art"
+                android:layout_width="@dimen/n_mini_art"
+                android:layout_height="@dimen/n_mini_art"
+                android:background="@drawable/n_bg_art_mini"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/mini_title"
+                    style="@style/RowTitle"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/mini_artist"
+                    style="@style/RowSub"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.musicplayer.lite.EqBarsView
+                android:id="@+id/mini_bars"
+                android:layout_width="24dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="2dp"
+                android:importantForAccessibility="no"
+                android:visibility="gone"
+                app:barColor="?attr/appAccent"
+                app:bars="4" />
+
+            <ImageButton
+                android:id="@+id/mini_play"
+                style="@style/IconButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/cd_play"
+                android:src="@drawable/ic_play" />
+
+            <ImageButton
+                android:id="@+id/mini_next"
+                style="@style/IconButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/cd_next"
+                android:src="@drawable/ic_skip_next" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/mini_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:max="1000"
+            android:progressDrawable="@drawable/mini_progress"
+            android:visibility="gone" />
+    </LinearLayout>
+</merge>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +128,16 @@ final class Glass {
     /** One segment of the tab bar: transparent, brighter glass when selected. */
     static Drawable segment(Context c) {
         StateListDrawable s = new StateListDrawable();
+        if (Design.isNew(c)) {
+            // New design: the chosen tab sits in a rounded pill, darker than the bar on black, softer on white.
+            GradientDrawable chosen = new GradientDrawable();
+            chosen.setColor(Appearance.isNight(c) ? 0x66000000 : 0x14000000);
+            chosen.setCornerRadius(200f * c.getResources().getDisplayMetrics().density);
+            s.addState(new int[]{android.R.attr.state_selected}, chosen);
+            s.addState(new int[]{android.R.attr.state_pressed}, GlassDrawable.create(c, GlassDrawable.PILL, false, false));
+            s.addState(new int[]{}, new ColorDrawable(Color.TRANSPARENT));
+            return s;
+        }
         s.addState(new int[]{android.R.attr.state_selected}, GlassDrawable.create(c, GlassDrawable.PILL, false, true));
         s.addState(new int[]{android.R.attr.state_pressed}, GlassDrawable.create(c, GlassDrawable.PILL, false, false));
         s.addState(new int[]{}, new ColorDrawable(Color.TRANSPARENT));

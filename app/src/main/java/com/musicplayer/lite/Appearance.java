@@ -44,8 +44,9 @@ final class Appearance {
         return night == Configuration.UI_MODE_NIGHT_YES;
     }
 
+    /** The New design is always glass; Classic has the switch in Settings. */
     static boolean glass(Context c) {
-        return Prefs.get(c).glass();
+        return Design.isNew(c) || Prefs.get(c).glass();
     }
 
     static int glassBackground(Context c) {
@@ -60,7 +61,8 @@ final class Appearance {
     /** Changes whenever the chosen look changes, so an open screen can notice and rebuild itself. */
     static int signature(Context c) {
         Prefs p = Prefs.get(c);
-        return ((p.themeMode() * 8 + p.glassBackground()) * 2 + (p.glass() ? 1 : 0)) * 4 + p.glassClarity();
+        final int look = ((p.themeMode() * 8 + p.glassBackground()) * 2 + (p.glass() ? 1 : 0)) * 4 + p.glassClarity();
+        return look * 4 + Design.signature(c);
     }
 
     /** Dark icons on light backgrounds and light icons on dark ones; clear bars for glass. */

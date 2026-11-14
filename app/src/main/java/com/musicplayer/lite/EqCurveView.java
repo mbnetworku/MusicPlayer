@@ -33,7 +33,7 @@ public class EqCurveView extends View {
         super(context, attrs);
         final float d = getResources().getDisplayMetrics().density;
         pad = 10 * d;
-        accent = context.getColor(R.color.accent_text);
+        accent = Design.accent(context);
         dim = context.getColor(R.color.icon_dim);
 
         grid.setColor(context.getColor(R.color.divider));

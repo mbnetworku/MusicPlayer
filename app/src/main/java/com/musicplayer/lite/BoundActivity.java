@@ -75,6 +75,7 @@ abstract class BoundActivity extends Activity implements PlaybackService.Listene
     @Override
     protected void onCreate(Bundle state) {
         look = Appearance.signature(this);
+        Design.apply(this);   // the New design's colours and shapes, before any layout is inflated
         super.onCreate(state);
     }
 

@@ -4,6 +4,13 @@ The newest version is first. The release workflow publishes a version's entry as
 release's notes, and the app shows those notes under Settings > Updates. Keep each entry
 short and in plain sentences: the app shows it as plain text.
 
+## [1.24.0] - 2026-11-14
+
+- New: a second design, the iOS Liquid Glass look. Turn it on in Settings under Design: choose Classic or New. Classic is the look you know and stays the default.
+- The New design has a slim glass tab bar and a slim glass mini player, rounded shapes everywhere, a blue accent and white or black icons. The folder icon has two layers and is white on black and black on white. The tabs are Songs, Folders, Albums and Favorites.
+- The playing screen has its own choice, so it can stay Classic while the rest of the app is New, or the other way round. The New playing screen has a rounder cover, glass heart and menu buttons, and the volume bar right under the buttons. It also shows the volume in a car, where Classic hides it.
+- On a car screen the New design puts the player in a rounded glass panel on the left, with the library on the right.
+
 ## [1.23.0] - 2026-11-13
 
 - New: a "Glass transparency" setting with three levels: Clear, Soft and Frosted. It is in Settings under Appearance. The glass panels, the capsule at the top, the mini player and the tab bar change together.

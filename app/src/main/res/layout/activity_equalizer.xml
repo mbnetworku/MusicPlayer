@@ -65,11 +65,11 @@
                 android:layout_height="@dimen/eq_bars_height"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_card"
+                android:background="?attr/appCard"
                 android:importantForAccessibility="no"
                 android:padding="16dp"
                 android:tag="glass:card"
-                app:barColor="@color/accent"
+                app:barColor="?attr/appAccentFill"
                 app:bars="20" />
 
             <include layout="@layout/part_eq_device" />

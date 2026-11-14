@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The New design: tiles (folder icons, choices in Settings) are rounder; a chosen tile gets a blue ring. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/divider" />
+            <stroke android:width="2dp" android:color="?attr/appAccentFill" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/divider" />
+            <stroke android:width="2dp" android:color="#00000000" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</selector>

@@ -15,4 +15,15 @@
         <!-- While playing without the real sound, move like a music spectrum: tall at the bass end. -->
         <attr name="spectrum" format="boolean" />
     </declare-styleable>
+
+    <!-- The accent and the shapes that differ between the Classic and the New design. The theme sets them;
+         see Design.java. -->
+    <attr name="appAccent" format="color" />
+    <attr name="appAccentFill" format="color" />
+    <attr name="appArt" format="reference" />
+    <attr name="appArtBig" format="reference" />
+    <attr name="appCard" format="reference" />
+    <attr name="appPillTint" format="reference" />
+    <attr name="appSearch" format="reference" />
+    <attr name="appTile" format="reference" />
 </resources>

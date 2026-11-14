@@ -140,6 +140,10 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
     private final int accent;
     private final int primary;
     private final ColorStateList accentTint;
+    private final ColorStateList primaryTint;
+    private final boolean newDesign;
+    private final int artBackground;
+    private final int tileBackground;
     private final boolean glass;
     private final Favorites favorites;
 
@@ -159,9 +163,13 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         this.inflater = LayoutInflater.from(context);
         this.headerListener = headerListener;
         this.artPx = context.getResources().getDimensionPixelSize(R.dimen.row_art);
-        this.accent = context.getColor(R.color.accent_text);
+        this.accent = Design.accent(context);
         this.primary = context.getColor(R.color.text_primary);
         this.accentTint = ColorStateList.valueOf(accent);
+        this.primaryTint = ColorStateList.valueOf(primary);
+        this.newDesign = Design.isNew(context);
+        this.artBackground = Design.drawableRes(context, R.attr.appArt, R.drawable.bg_art);
+        this.tileBackground = Design.drawableRes(context, R.attr.appTile, R.drawable.bg_tile);
         this.glass = Appearance.glass(context);
         this.favorites = Favorites.get(context);
     }
@@ -295,14 +303,16 @@ final class RowAdapter extends BaseAdapter implements SectionIndexer {
         if (r.track != null) {
             h.art.setScaleType(ImageView.ScaleType.CENTER_CROP);
             h.art.setImageTintList(null);
-            h.art.setBackgroundResource(R.drawable.bg_art);
+            h.art.setBackgroundResource(artBackground);
             ArtLoader.get(context).load(r.track, h.art, artPx);
         } else {
             h.art.setTag(R.id.tag_art, null);
-            h.art.setBackgroundResource(R.drawable.bg_tile);
+            h.art.setBackgroundResource(tileBackground);
             h.art.setScaleType(ImageView.ScaleType.CENTER);
-            h.art.setImageTintList(accentTint);
-            h.art.setImageResource(r.icon);
+            // New design: folder, album and artist icons are one plain colour (white on black, black on
+            // white), and the folder has two layers.
+            h.art.setImageTintList(newDesign ? primaryTint : accentTint);
+            h.art.setImageResource(newDesign && r.icon == R.drawable.ic_folder ? R.drawable.ic_folder_duo : r.icon);
         }
         return v;
     }

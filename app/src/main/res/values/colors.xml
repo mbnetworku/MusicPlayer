@@ -24,4 +24,8 @@
     <!-- Settings and other grouped lists: a page colour and the colour of the cards on it. -->
     <color name="grouped_bg">#000000</color>
     <color name="grouped_card">#1C1C1E</color>
+
+    <!-- The New design: a blue accent. -->
+    <color name="n_accent">#3B9BFF</color>
+    <color name="n_accent_fill">#3B9BFF</color>
 </resources>

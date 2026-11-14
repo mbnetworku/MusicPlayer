@@ -28,7 +28,8 @@ public class MiniPlayerView extends LinearLayout {
     public MiniPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
-        LayoutInflater.from(context).inflate(R.layout.view_mini_player, this, true);
+        LayoutInflater.from(context).inflate(
+                Design.isNew(context) ? R.layout.view_mini_player_new : R.layout.view_mini_player, this, true);
         progress = findViewById(R.id.mini_progress);
         art = findViewById(R.id.mini_art);
         title = findViewById(R.id.mini_title);

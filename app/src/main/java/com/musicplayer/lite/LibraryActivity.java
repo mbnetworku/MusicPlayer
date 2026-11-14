@@ -77,6 +77,8 @@ public class LibraryActivity extends BoundActivity
     private TextView updateBannerText;
     private Updater updater;
 
+    /** The New design has no Artists tab. */
+    private boolean newDesign;
     private int tab;
     /** Null means the top of the folder tree. */
     private FolderTree.Node folder;
@@ -95,7 +97,8 @@ public class LibraryActivity extends BoundActivity
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.activity_library);
+        newDesign = Design.isNew(this);
+        setContentView(newDesign ? R.layout.activity_library_new : R.layout.activity_library);
         prepareWindow();
         library = Library.get(this);
         prefs = Prefs.get(this);
@@ -129,7 +132,7 @@ public class LibraryActivity extends BoundActivity
         tabViews[TAB_SONGS] = findViewById(R.id.tab_songs);
         tabViews[TAB_FOLDERS] = findViewById(R.id.tab_folders);
         tabViews[TAB_ALBUMS] = findViewById(R.id.tab_albums);
-        tabViews[TAB_ARTISTS] = findViewById(R.id.tab_artists);
+        tabViews[TAB_ARTISTS] = findViewById(R.id.tab_artists);   // null in the New design
         tabViews[TAB_FAVORITES] = findViewById(R.id.tab_favorites);
 
         adapter = new RowAdapter(this, this);
@@ -142,6 +145,7 @@ public class LibraryActivity extends BoundActivity
         list.setOnItemLongClickListener((p, v, position, id) -> onRowLongClick(adapter.getItem(position)));
 
         for (int i = 0; i < tabViews.length; i++) {
+            if (tabViews[i] == null) continue;
             final int t = i;
             tabViews[i].setOnClickListener(v -> {
                 Haptics.tap(v);
@@ -181,7 +185,7 @@ public class LibraryActivity extends BoundActivity
         });
 
         if (state != null) {
-            tab = state.getInt(STATE_TAB, 0);
+            tab = skipHiddenTab(state.getInt(STATE_TAB, 0));
             restoreFolder = state.getString(STATE_FOLDER);
             restoreGroup = state.getString(STATE_GROUP);
             query = state.getString(STATE_QUERY, "");
@@ -189,7 +193,7 @@ public class LibraryActivity extends BoundActivity
                 searchBar.setVisibility(View.VISIBLE);
             }
         } else {
-            tab = Fmt.clamp(prefs.lastTab(), 0, tabViews.length - 1);
+            tab = skipHiddenTab(Fmt.clamp(prefs.lastTab(), 0, tabViews.length - 1));
         }
 
         library.addListener(this);
@@ -330,6 +334,11 @@ public class LibraryActivity extends BoundActivity
         super.onBackPressed();
     }
 
+    /** A tab that this design does not show (Artists in the New design) opens Songs instead. */
+    private int skipHiddenTab(int t) {
+        return tabViews[t] == null ? TAB_SONGS : t;
+    }
+
     // ---- permissions -------------------------------------------------------------------------
 
     private void requestPermission() {
@@ -420,7 +429,9 @@ public class LibraryActivity extends BoundActivity
         }
         adapter.setRows(rows, indexed);
         list.setFastScrollEnabled(rows.size() > 40);
-        for (int i = 0; i < tabViews.length; i++) tabViews[i].setSelected(i == shown);
+        for (int i = 0; i < tabViews.length; i++) {
+            if (tabViews[i] != null) tabViews[i].setSelected(i == shown);
+        }
         titleView.setText(searching ? R.string.search_title : TAB_TITLES[shown]);
         updateSubtitle(shown);
         updateEmpty(searching, shown, rows.isEmpty());

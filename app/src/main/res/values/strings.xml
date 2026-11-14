@@ -147,6 +147,12 @@
     <string name="set_vibrate_playing_sub">The phone buzzes with the bass of the song: stronger for heavy music, nothing for quiet parts. It reads the song file, not the microphone.</string>
     <string name="set_cover_tap">Swipe the cover to change song</string>
     <string name="set_cover_tap_sub">Swipe left for the next song, right for the previous one.</string>
+    <string name="set_design">Design</string>
+    <string name="set_design_app">App design</string>
+    <string name="set_design_player">Playing screen</string>
+    <string name="design_classic">Classic</string>
+    <string name="design_new">New</string>
+    <string name="set_design_sub">Classic is the look you know. New is the iOS Liquid Glass look: a slim glass tab bar and mini player, rounded shapes, a blue accent and the volume under the buttons. Choose the playing screen on its own, for example New everywhere and Classic in the car.</string>
     <string name="set_glass">Liquid glass</string>
     <string name="set_glass_sub">Frosted glass panels.</string>
 
